@@ -6,9 +6,12 @@
     width: 100%;
 }
 .p-float-label > label{
-    right: 5px;
+    right: 10px;
     text-align: right;
 }
 #button{
     text-align: center;
+}
+.card{
+    margin-top: 15px;
 }
