@@ -1,0 +1,40 @@
+* {
+    direction: rtl;
+}
+
+td{
+    text-align:right;
+}
+
+th{
+    text-align:right;
+}
+.p-datatable-wrapper{
+    border:solid 1px gray;
+}
+
+.p-datatable-header{
+/* background-color:red; */
+}
+
+.p-icon-field.p-icon-field-left{
+    height: 15%;
+    width: 100%
+}
+
+.p-icon-field.p-icon-field-left input{
+    height: 100%;
+    width: 100%
+}
+
+.p-column-filter.p-dropdown.p-component.p-inputwrapper.p-dropdown-clearable.p-inputwrapper-filled svg{
+    /* color:red;
+    position:absolute;
+    left: 1px; */
+}
+
+.p-icon.p-dropdown-clear-icon.p-clickable{
+    color:white;
+    /* position:absolute; */
+    /* left:1px */
+}
