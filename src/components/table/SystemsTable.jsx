@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useRef} from 'react';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -11,7 +11,7 @@ import { Tag } from 'primereact/tag';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { CustomerService } from '../../services/CustomerService';
-
+import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 
 import imageSkyvar from "../assets/skyvar.png";
@@ -22,7 +22,18 @@ import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 
 export default function SystemsTable() {
-    const [customers, setCustomers] = useState(null);
+
+    let emptyProject = {
+        id: null,
+        name: '',
+        goal: null,
+        representative: null,
+        status: null,
+        date: null,
+        type: null,
+    };
+
+    const [projects, setProjects] = useState(null);
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -42,6 +53,12 @@ export default function SystemsTable() {
     ]);
     const [statuses] = useState(['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר']);
     const [types] = useState(['חיצוני', 'פנימי']);
+    const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
+    const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
+    const [project, setProject] = useState(emptyProject);
+    const [selectedProjects, setSelectedProjects] = useState(null);
+    const toast = useRef(null);
+    const dt = useRef(null);
 
     const getStatusSeverity = (status) => {
         switch (status) {
@@ -76,12 +93,12 @@ export default function SystemsTable() {
 
     useEffect(() => {
         CustomerService.getCustomersMedium().then((data) => {
-            setCustomers(getCustomers(data));
+            setProjects(getProjects(data));
             setLoading(false);
         });
     }, []);
 
-    const getCustomers = (data) => {
+    const getProjects = (data) => {
         return [...(data || [])].map((d) => {
             d.date = new Date(d.date);
             return d;
@@ -98,6 +115,14 @@ export default function SystemsTable() {
         setGlobalFilterValue(value);
     };
 
+    const confirmDeleteSelected = () => {
+        setDeleteProjectsDialog(true);
+    };
+
+    const exportCSV = () => {
+        dt.current.exportCSV();
+    };
+
     const renderHeader = () => {
         return (
             <div className="flex justify-content-end">
@@ -109,6 +134,8 @@ export default function SystemsTable() {
                 <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisible(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
+                <Button id='delete_selected' icon="pi pi-trash" severity="danger"  outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
+                <Button id='download' icon="pi pi-download" className="p-button-help" outlined onClick={exportCSV} />
             </div>
         );
     };
@@ -224,7 +251,9 @@ export default function SystemsTable() {
     };
 
     const dateBodyTemplate = (rowData) => {
-        return formatDate(rowData.date);
+        if (rowData.date!='Invalid Date') {
+            return formatDate(rowData.date);
+        }
     };
 
     const formatDate = (value) => {
@@ -240,12 +269,12 @@ export default function SystemsTable() {
     };
 
     const onRowEditComplete = (e) => {
-        let _products = [...customers];
+        let _projects = [...projects];
         let { newData, index } = e;
 
-        _products[index] = newData;
-
-        setCustomers(_products);
+        _projects[index] = newData;
+        _projects[index] = { ...newData, date: new Date() };
+        setProjects(_projects);
     };
 
     const allowEdit = (rowData) => {
@@ -286,20 +315,92 @@ export default function SystemsTable() {
         return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
     }
 
+    const hideDeleteProjectDialog = () => {
+        setDeleteProjectDialog(false);
+    };
 
-    return (
+    const hideDeleteProjectsDialog = () => {
+        setDeleteProjectsDialog(false);
+    };
+
+
+    const confirmDeleteProject = (customer) => {
+        setProject(customer);
+        setDeleteProjectDialog(true);
+    };
+
+    const deleteProject = () => {
+        let _projects = projects.filter((val) => val.id !== project.id);
+
+        setProjects(_projects);
+        setDeleteProjectDialog(false);
+        setProject(emptyProject);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הפרויקט נמחק בהצלחה', life: 3000 });
+    };
+
+    const deleteSelectedProjects = () => {
+        let _projects = projects.filter((val) => !selectedProjects.includes(val));
+
+        setProjects(_projects);
+        setDeleteProjectsDialog(false);
+        setSelectedProjects(null);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: ' הפרויקטים המסומנים נמחקו בהצלחה', life: 3000 });
+    };
+
+    const deleteBodyTemplate = (rowData) => {
+        return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => confirmDeleteProject(rowData)} />;
+    };
+
+    const deleteProjectDialogFooter = (
+        <React.Fragment>
+            <Button label=" No " icon="pi pi-times" outlined onClick={hideDeleteProjectDialog} />
+            <Button label=" Yes " icon="pi pi-check" outlined severity="danger" onClick={deleteProject} />
+        </React.Fragment>
+    );
+    const deleteProjectsDialogFooter = (
+        <React.Fragment>
+            <Button label=" No " icon="pi pi-times" outlined onClick={hideDeleteProjectsDialog} />
+            <Button label=" Yes " icon="pi pi-check" outlined severity="danger" onClick={deleteSelectedProjects} />
+        </React.Fragment>
+    );
+
+    return (<div>
+        <Toast ref={toast} />
         <div className="card">
-            <DataTable value={customers} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
-                globalFilterFields={['name', 'goal', 'representative.name', 'status', 'type']} header={header} emptyMessage="No customers found.">
+            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+                selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+                globalFilterFields={['name', 'goal', 'representative.name', 'status', 'type']} header={header} emptyMessage="No projects found.">
+                <Column selectionMode="multiple" exportable={false}></Column>
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
                     body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column header="תאריך עליה לאויר" editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                
+                <Column field="date" header="תאריך עליה לאויר" filterField="date" dataType="date" style={{ minWidth: '14rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                
                 <Column field="type" class="column" header="סוג" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
-                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'left' }}></Column>
+                <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
+
+            <Dialog visible={deleteProjectDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProjectDialogFooter} onHide={hideDeleteProjectDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    {project && (
+                        <span>
+                            האם למחוק  <b>{project.name}</b>?
+                        </span>
+                    )}
+                </div>
+            </Dialog>
+
+            <Dialog visible={deleteProjectsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProjectsDialogFooter} onHide={hideDeleteProjectsDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    {project && <span>האם למחוק ?</span>}
+                </div>
+            </Dialog>
         </div>
-    );
+    </div>);
 }
