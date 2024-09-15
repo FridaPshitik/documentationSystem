@@ -1,0 +1,17 @@
+.card{
+    padding: 0;
+}
+.card #calendar{
+    direction: ltr;
+    width: 100%;
+}
+.p-float-label > label{
+    right: 10px;
+    text-align: right;
+}
+#button{
+    text-align: center;
+}
+.card{
+    margin-top: 15px;
+}

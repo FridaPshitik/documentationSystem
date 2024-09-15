@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { FilterMatchMode, FilterOperator, SortOrder } from 'primereact/api';
+import React, { useState, useEffect, useRef } from 'react';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
@@ -8,28 +8,44 @@ import { InputIcon } from 'primereact/inputicon';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import { Tag } from 'primereact/tag';
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
 import { CustomerService } from '../../services/CustomerService';
+import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 
 import imageSkyvar from "../assets/skyvar.png";
 import imageElbit from "../assets/elbit.png";
 import imageInside from "../assets/inside.png";
 import e from "../assets/e.png";
-import './SystemsTable.css';
+import './SystemsTable.css' ;
+import AddProjectForm from '../form/AddProjectForm';
 
 
 export default function SystemsTable() {
-    const [customers, setCustomers] = useState(null);
+
+    let emptyProject = {
+        id: null,
+        name: '',
+        goal: null,
+        representative: null,
+        status: null,
+        date: null,
+        type: null,
+    };
+
+    const [projects, setProjects] = useState(null);
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.CONTAINS },
         goal: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        representative: { value: null, matchMode: FilterMatchMode.IN },
-        demand: { value: null, matchMode: FilterMatchMode.CONTAINS },
         status: { value: null, matchMode: FilterMatchMode.EQUALS },
         date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-        type: { value: null, matchMode: FilterMatchMode.EQUALS }
+        'demand.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
+        type: { value: null, matchMode: FilterMatchMode.EQUALS },
+        representative: { value: null, matchMode: FilterMatchMode.IN }
     });
+    const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [representatives] = useState([
@@ -39,6 +55,12 @@ export default function SystemsTable() {
     ]);
     const [statuses] = useState(['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר']);
     const [types] = useState(['חיצוני', 'פנימי']);
+    const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
+    const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
+    const [project, setProject] = useState(emptyProject);
+    const [selectedProjects, setSelectedProjects] = useState(null);
+    const toast = useRef(null);
+    const dt = useRef(null);
 
     const getStatusSeverity = (status) => {
         switch (status) {
@@ -73,12 +95,12 @@ export default function SystemsTable() {
 
     useEffect(() => {
         CustomerService.getCustomersMedium().then((data) => {
-            setCustomers(getCustomers(data));
+            setProjects(getProjects(data));
             setLoading(false);
         });
     }, []);
 
-    const getCustomers = (data) => {
+    const getProjects = (data) => {
         return [...(data || [])].map((d) => {
             d.date = new Date(d.date);
             return d;
@@ -95,6 +117,14 @@ export default function SystemsTable() {
         setGlobalFilterValue(value);
     };
 
+    const confirmDeleteSelected = () => {
+        setDeleteProjectsDialog(true);
+    };
+
+    const exportCSV = () => {
+        dt.current.exportCSV();
+    };
+
     const renderHeader = () => {
         return (
             <div className="flex justify-content-end">
@@ -102,9 +132,16 @@ export default function SystemsTable() {
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
+                <Button id='add_project' icon="pi pi-plus" outlined onClick={() => setVisible(true)} />
+                <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisible(false); }}>
+                    <AddProjectForm></AddProjectForm>
+                </Dialog>
+                <Button id='delete_selected' icon="pi pi-trash" severity="danger"  outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
+                <Button id='download' icon="pi pi-download" className="p-button-help" outlined onClick={exportCSV} />
             </div>
         );
     };
+
 
     const representativesItemTemplate = (option) => {
         return (
@@ -138,22 +175,22 @@ export default function SystemsTable() {
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
         return (
-            <div>
+              <div>
             <div className="flex align-items-center gap-2">
-                {representative.name === "סקייבר" ? (
-                    <img alt={representative.image} src={imageSkyvar} width="32" />
-                ) : representative.name === "אלביט" ? (
-                    <img alt={representative.image} src={imageElbit} width="32" />
-                ) : (
-                    <img alt={representative.image} src={imageInside} width="32" />
-                )}
-                <p>{representative.name}</p>
+                    {representative.name === "סקייבר" ? (
+                          <img alt={representative.image} src={imageSkyvar} width="32" />
+                    ) : representative.name === "אלביט" ? (
+                          <img alt={representative.image} src={imageElbit} width="32" />
+                    ) : (
+                          <img alt={representative.image} src={imageInside} width="32" />
+                    )}
+                    <p>{representative.name}</p>
                 
             </div>
                 {representative.section ? (
                     <p> מדור {representative.section}</p>
                     ): ''}
-            </div>
+              </div>
         );
     };
     const demandBodyTemplate = (rowData) => {
@@ -231,7 +268,9 @@ export default function SystemsTable() {
     };
 
     const dateBodyTemplate = (rowData) => {
-        return formatDate(rowData.date);
+        if (rowData.date!='Invalid Date') {
+            return formatDate(rowData.date);
+        }
     };
 
     const formatDate = (value) => {
@@ -248,12 +287,12 @@ export default function SystemsTable() {
     };
 
     const onRowEditComplete = (e) => {
-        let _products = [...customers];
+        let _projects = [...projects];
         let { newData, index } = e;
 
-        _products[index] = newData;
-
-        setCustomers(_products);
+        _projects[index] = newData;
+        _projects[index] = { ...newData, date: new Date() };
+        setProjects(_projects);
     };
 
     const allowEdit = (rowData) => {
@@ -289,28 +328,97 @@ export default function SystemsTable() {
         );
     };
 
-    const dateEditor = (options) => {
+    const dateEditor = (options) =>  {
         // return <InputNumber value={options.value} onValueChange={(e) => options.editorCallback(e.value)} mode="currency" currency="USD" locale="en-US" />;
         return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
     }
 
-    
-    return (
+    const hideDeleteProjectDialog = () => {
+        setDeleteProjectDialog(false);
+    };
+
+    const hideDeleteProjectsDialog = () => {
+        setDeleteProjectsDialog(false);
+    };
+
+
+    const confirmDeleteProject = (customer) => {
+        setProject(customer);
+        setDeleteProjectDialog(true);
+    };
+
+    const deleteProject = () => {
+        let _projects = projects.filter((val) => val.id !== project.id);
+
+        setProjects(_projects);
+        setDeleteProjectDialog(false);
+        setProject(emptyProject);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הפרויקט נמחק בהצלחה', life: 3000 });
+    };
+
+    const deleteSelectedProjects = () => {
+        let _projects = projects.filter((val) => !selectedProjects.includes(val));
+
+        setProjects(_projects);
+        setDeleteProjectsDialog(false);
+        setSelectedProjects(null);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: ' הפרויקטים המסומנים נמחקו בהצלחה', life: 3000 });
+    };
+
+    const deleteBodyTemplate = (rowData) => {
+        return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => confirmDeleteProject(rowData)} />;
+    };
+
+    const deleteProjectDialogFooter = (
+        <React.Fragment>
+            <Button  icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
+            <Button  icon="pi pi-check" outlined text severity="danger" onClick={deleteProject} />
+        </React.Fragment>
+    );
+    const deleteProjectsDialogFooter = (
+        <React.Fragment>
+            <Button  icon="pi pi-times" outlined text onClick={hideDeleteProjectsDialog} />
+            <Button  icon="pi pi-check" outlined text severity="danger" onClick={deleteSelectedProjects} />
+        </React.Fragment>
+    );
+
+    return (<div>
+        <Toast ref={toast} />
         <div className="card">
-            <DataTable value={customers} paginator  editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
-                globalFilterFields={['name', 'goal', 'status',  'representative.name', 'demand', 'type']} header={header} emptyMessage="No customers found.">
+            <DataTable value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+                    globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found.">
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field="date" header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)}  filterField="date" filterMenuStyle={{ width: '20rem' }} dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                <Column field='demand' header="גוף דורש"  style={{ minWidth: '12rem' }} filter filterPlaceholder="חיפוש גוף דורש"
+                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field='demand' header="גוף דורש"  style={{ minWidth: '12rem' }} filter filterField='demand.name' filterPlaceholder="חיפוש גוף דורש"
                     body={demandBodyTemplate}
                 />
-                <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ maxwidth: '10rem' }} style={{ minWidth: '8rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
-                <Column header="גוף מבצע" filterField="representative" showFilterMenu={false}  style={{ minWidth: '20rem' }}
-                    body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
+                <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
+                <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+                   body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
                 <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
+        
             </DataTable>
+
+            <Dialog visible={deleteProjectDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal footer={deleteProjectDialogFooter} onHide={hideDeleteProjectDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem',paddingLeft:'1rem' }} />
+                    {project && (
+                        <span>
+                            האם למחוק  <b>{project.name}</b>?
+                        </span>
+                    )}
+                </div>
+            </Dialog>
+
+            <Dialog visible={deleteProjectsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal footer={deleteProjectsDialogFooter} onHide={hideDeleteProjectsDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' ,paddingLeft:'1rem'}} />
+                    {project && <span>האם למחוק ?</span>}
+                </div>
+            </Dialog>
         </div>
-    );
+    </div>);
 }
