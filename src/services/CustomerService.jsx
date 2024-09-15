@@ -61,9 +61,10 @@ export const CustomerService = {
                 type: "פנימי",
                 representative: {
                     name: 'צה"ל',
-                    image: 'inside'
+                    image: 'inside',
+                    section: 8250
                 },
-              demand: {
+                demand: {
                     name: "יחידת נשר",
                     section: 8200,
                     branch: "100"

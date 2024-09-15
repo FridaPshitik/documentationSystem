@@ -138,6 +138,7 @@ export default function SystemsTable() {
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
         return (
+            <div>
             <div className="flex align-items-center gap-2">
                 {representative.name === "סקייבר" ? (
                     <img alt={representative.image} src={imageSkyvar} width="32" />
@@ -146,7 +147,12 @@ export default function SystemsTable() {
                 ) : (
                     <img alt={representative.image} src={imageInside} width="32" />
                 )}
-                <span>{representative.name}</span>
+                <p>{representative.name}</p>
+                
+            </div>
+                {representative.section ? (
+                    <p> מדור {representative.section}</p>
+                    ): ''}
             </div>
         );
     };
@@ -214,7 +220,7 @@ export default function SystemsTable() {
 
     const typeRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג" className="p-column-filter" showClear style={{ minWidth: '12rem' }} />
+            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" showClear style={{ minWidth: '12rem' }} />
         );
     };
 
@@ -292,17 +298,17 @@ export default function SystemsTable() {
     return (
         <div className="card">
             <DataTable value={customers} paginator  editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
-                globalFilterFields={['name', 'goal', 'representative.name', 'demand', 'status', 'type']} header={header} emptyMessage="No customers found.">
+                globalFilterFields={['name', 'goal', 'status',  'representative.name', 'demand', 'type']} header={header} emptyMessage="No customers found.">
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
-                <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
+                <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
+                <Column field="date" header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)}  filterField="date" filterMenuStyle={{ width: '20rem' }} dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column field='demand' header="גוף דורש"  style={{ minWidth: '12rem' }} filter filterPlaceholder="חיפוש גוף דורש"
                     body={demandBodyTemplate}
                 />
-                <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field="date" header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)}  filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                <Column field="type" class="column" header="סוג" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ maxwidth: '10rem' }} style={{ minWidth: '8rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
+                <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ maxwidth: '10rem' }} style={{ minWidth: '8rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
+                <Column header="גוף מבצע" filterField="representative" showFilterMenu={false}  style={{ minWidth: '20rem' }}
+                    body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
                 <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
             </DataTable>
         </div>
