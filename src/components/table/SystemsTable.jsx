@@ -353,14 +353,14 @@ export default function SystemsTable() {
 
     const deleteProjectDialogFooter = (
         <React.Fragment>
-            <Button label=" No " icon="pi pi-times" outlined onClick={hideDeleteProjectDialog} />
-            <Button label=" Yes " icon="pi pi-check" outlined severity="danger" onClick={deleteProject} />
+            <Button  icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
+            <Button  icon="pi pi-check" outlined text severity="danger" onClick={deleteProject} />
         </React.Fragment>
     );
     const deleteProjectsDialogFooter = (
         <React.Fragment>
-            <Button label=" No " icon="pi pi-times" outlined onClick={hideDeleteProjectsDialog} />
-            <Button label=" Yes " icon="pi pi-check" outlined severity="danger" onClick={deleteSelectedProjects} />
+            <Button  icon="pi pi-times" outlined text onClick={hideDeleteProjectsDialog} />
+            <Button  icon="pi pi-check" outlined text severity="danger" onClick={deleteSelectedProjects} />
         </React.Fragment>
     );
 
@@ -384,9 +384,9 @@ export default function SystemsTable() {
                 <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
 
-            <Dialog visible={deleteProjectDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProjectDialogFooter} onHide={hideDeleteProjectDialog}>
+            <Dialog visible={deleteProjectDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal footer={deleteProjectDialogFooter} onHide={hideDeleteProjectDialog}>
                 <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem',paddingLeft:'1rem' }} />
                     {project && (
                         <span>
                             האם למחוק  <b>{project.name}</b>?
@@ -395,9 +395,9 @@ export default function SystemsTable() {
                 </div>
             </Dialog>
 
-            <Dialog visible={deleteProjectsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProjectsDialogFooter} onHide={hideDeleteProjectsDialog}>
+            <Dialog visible={deleteProjectsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal footer={deleteProjectsDialogFooter} onHide={hideDeleteProjectsDialog}>
                 <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' ,paddingLeft:'1rem'}} />
                     {project && <span>האם למחוק ?</span>}
                 </div>
             </Dialog>
