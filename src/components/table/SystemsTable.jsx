@@ -18,9 +18,9 @@ import imageSkyvar from "../assets/skyvar.png";
 import imageElbit from "../assets/elbit.png";
 import imageInside from "../assets/inside.png";
 import e from "../assets/e.png";
-import './SystemsTable.css' ;
+import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
-
+import DialogSystem from '../form/DialogSystem'
 
 export default function SystemsTable() {
 
@@ -45,7 +45,8 @@ export default function SystemsTable() {
         type: { value: null, matchMode: FilterMatchMode.EQUALS },
         representative: { value: null, matchMode: FilterMatchMode.IN }
     });
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisibleAddProjectFormDialog] = useState(false);
+    const [visibleSystemDialog, setVisibleSystemDialog] = useState(false);
     const [loading, setLoading] = useState(true);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [representatives] = useState([
@@ -132,8 +133,8 @@ export default function SystemsTable() {
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
-                <Button id='add_project' icon="pi pi-plus" outlined onClick={() => setVisible(true)} />
-                <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisible(false); }}>
+                <Button id='add_project' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
+                <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
                 <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
@@ -175,22 +176,22 @@ export default function SystemsTable() {
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
         return (
-              <div>
-            <div className="flex align-items-center gap-2">
+            <div>
+                <div className="flex align-items-center gap-2">
                     {representative.name === "סקייבר" ? (
-                          <img alt={representative.image} src={imageSkyvar} width="32" />
+                        <img alt={representative.image} src={imageSkyvar} width="32" />
                     ) : representative.name === "אלביט" ? (
-                          <img alt={representative.image} src={imageElbit} width="32" />
+                        <img alt={representative.image} src={imageElbit} width="32" />
                     ) : (
-                          <img alt={representative.image} src={imageInside} width="32" />
+                        <img alt={representative.image} src={imageInside} width="32" />
                     )}
                     <p>{representative.name}</p>
-                
-            </div>
+
+                </div>
                 {representative.section ? (
                     <p> {representative.section}</p>
-                    ): ''}
-              </div>
+                ) : ''}
+            </div>
         );
     };
     const demandBodyTemplate = (rowData) => {
@@ -268,7 +269,7 @@ export default function SystemsTable() {
     };
 
     const dateBodyTemplate = (rowData) => {
-        return rowData.date!='Invalid Date'? formatDate(rowData.date):''
+        return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
     };
 
     const formatDate = (value) => {
@@ -277,7 +278,7 @@ export default function SystemsTable() {
             month: '2-digit',
             year: 'numeric'
         });
-        
+
     };
 
     const textEditor = (options) => {
@@ -326,7 +327,7 @@ export default function SystemsTable() {
         );
     };
 
-    const dateEditor = (options) =>  {
+    const dateEditor = (options) => {
         // return <InputNumber value={options.value} onValueChange={(e) => options.editorCallback(e.value)} mode="currency" currency="USD" locale="en-US" />;
         return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
     }
@@ -367,27 +368,33 @@ export default function SystemsTable() {
         return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => confirmDeleteProject(rowData)} />;
     };
 
+    const [dataSystem, setDataSystem] = useState({})
+
+    const ShowSystemDialog = (rowData) => {
+        setDataSystem(rowData)
+        setVisibleSystemDialog(true)
+    }
 
     return (<div>
         <Toast ref={toast} />
         <div className="card">
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
                     selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                    globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found.">
+                    globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found." onRowClick={(e) => ShowSystemDialog(e.data)}>
                 <Column selectionMode="multiple" exportable={false}></Column>
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                 <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                <Column field='demand' header="גוף דורש"  style={{ minWidth: '12rem' }} filter filterField='demand.name' filterPlaceholder="חיפוש גוף דורש"
+                <Column field='demand' header="גוף דורש" style={{ minWidth: '12rem' }} filter filterField='demand.name' filterPlaceholder="חיפוש גוף דורש"
                     body={demandBodyTemplate}
                 />
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
                 <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                   body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
+                    body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
                 <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
-        
+
             </DataTable>
 
             <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
@@ -412,6 +419,9 @@ export default function SystemsTable() {
                         <Button icon="pi pi-check" outlined text severity="danger" onClick={deleteSelectedProjects} />
                     </div>
                 </div>
+            </Dialog>
+            <Dialog visible={visibleSystemDialog} style={{ width: '50vw' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
+                <DialogSystem dataSystem={dataSystem}></DialogSystem>
             </Dialog>
         </div>
     </div>);
