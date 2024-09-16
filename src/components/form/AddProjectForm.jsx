@@ -86,7 +86,7 @@ const AddProjectForm = () => {
                             placeholder="בחר סטטוס" className="w-full md:w-14rem field" />
                     </div>
                     <div className="card field">
-                        <Calendar className="w-full md:w-14rem" id="calendar" value={date} onChange={(e) => setDate(e.value)} dateFormat="dd/mm/yy" placeholder="תאריך התחלה" showIcon />
+                        <Calendar className="w-full md:w-14rem" id="calendar" value={date} onChange={(e) => setDate(e.value)} dateFormat="mm/dd/yy" placeholder="תאריך עליה לאויר" showIcon />
                     </div>
                     <div className="card field">
                         <Dropdown value={selectedType} onChange={(e) => setSelectedType(e.value)} options={types}

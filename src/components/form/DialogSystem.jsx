@@ -77,7 +77,6 @@ export default function DialogSystem(data) {
 
                 <div>
                     {data.dataSystem.date != 'Invalid Date' ? <div>
-                        {console.log(data.dataSystem.date)}
                         < h3 > תאריך עליה לאוויר:</h3 >
                         <p className="m-0">
                             {formatDate(data.dataSystem.date)}
