@@ -2,6 +2,9 @@
     direction: rtl;
 }
 
+/* .card{
+    width: 100vw;
+} */
 td{
     text-align:right;
 }
