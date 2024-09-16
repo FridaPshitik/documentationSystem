@@ -21,15 +21,12 @@ const AddProjectForm = () => {
     const [selectedOperatingFactor, setSelectedOperatingFactor] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
-
     const [visible, setVisible] = useState(false);
     const [hide, setHide] = useState(false);
-
     const requiresFactors = ['x', 'y', 'z', 'אחר'];
     const [operatingFactors,setOperatingFactors] =useState(['אחר','סקייבר', 'אלביט', 'צהל' ]) ;
     const statuses = ['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר'];
     const types = ['פנימי', 'חיצוני'];
-
     const [factorName, setFactorName] = useState('');
     const [image, setImage] = useState('');
     const toast = useRef(null);
@@ -37,6 +34,7 @@ const AddProjectForm = () => {
     const onUpload = () => {
         toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
+    
     const setVariable = (factorName) => {
         setSelectedOperatingFactor(factorName)
         setFactorName(factorName)
