@@ -18,8 +18,9 @@ import imageSkyvar from "../assets/skyvar.png";
 import imageElbit from "../assets/elbit.png";
 import imageInside from "../assets/inside.png";
 import e from "../assets/e.png";
-import './SystemsTable.css';
+import './SystemsTable.css' ;
 import AddProjectForm from '../form/AddProjectForm';
+
 
 export default function SystemsTable() {
 
@@ -38,10 +39,11 @@ export default function SystemsTable() {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.CONTAINS },
         goal: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        representative: { value: null, matchMode: FilterMatchMode.IN },
         status: { value: null, matchMode: FilterMatchMode.EQUALS },
         date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-        type: { value: null, matchMode: FilterMatchMode.EQUALS }
+        'demand.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
+        type: { value: null, matchMode: FilterMatchMode.EQUALS },
+        representative: { value: null, matchMode: FilterMatchMode.IN }
     });
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -140,6 +142,7 @@ export default function SystemsTable() {
         );
     };
 
+
     const representativesItemTemplate = (option) => {
         return (
             <div className="flex align-items-center gap-2">
@@ -172,19 +175,33 @@ export default function SystemsTable() {
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
         return (
+              <div>
             <div className="flex align-items-center gap-2">
-                {representative.name === "סקייבר" ? (
-                    <img alt={representative.image} src={imageSkyvar} width="32" />
-                ) : representative.name === "אלביט" ? (
-                    <img alt={representative.image} src={imageElbit} width="32" />
-                ) : (
-                    <img alt={representative.image} src={imageInside} width="32" />
-                )}
-                <span>{representative.name}</span>
+                    {representative.name === "סקייבר" ? (
+                          <img alt={representative.image} src={imageSkyvar} width="32" />
+                    ) : representative.name === "אלביט" ? (
+                          <img alt={representative.image} src={imageElbit} width="32" />
+                    ) : (
+                          <img alt={representative.image} src={imageInside} width="32" />
+                    )}
+                    <p>{representative.name}</p>
+                
             </div>
+                {representative.section ? (
+                    <p> מדור {representative.section}</p>
+                    ): ''}
+              </div>
         );
     };
-
+    const demandBodyTemplate = (rowData) => {
+        const demand = rowData.demand;
+        return (
+            <div>
+                <p> {demand.name}</p>
+                <p> מדור {demand.section}</p>
+            </div>
+        )
+    }
     // const representativeBodyTemplate = (rowData) => {
     //     const representative = rowData.representative;
 
@@ -240,7 +257,7 @@ export default function SystemsTable() {
 
     const typeRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג" className="p-column-filter" showClear style={{ minWidth: '12rem' }} />
+            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" showClear style={{ minWidth: '12rem' }} />
         );
     };
 
@@ -260,6 +277,7 @@ export default function SystemsTable() {
             month: '2-digit',
             year: 'numeric'
         });
+        
     };
 
     const textEditor = (options) => {
@@ -308,7 +326,7 @@ export default function SystemsTable() {
         );
     };
 
-    const dateEditor = (options) => {
+    const dateEditor = (options) =>  {
         // return <InputNumber value={options.value} onValueChange={(e) => options.editorCallback(e.value)} mode="currency" currency="USD" locale="en-US" />;
         return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
     }
@@ -354,27 +372,28 @@ export default function SystemsTable() {
         <Toast ref={toast} />
         <div className="card">
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
-                selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                globalFilterFields={['name', 'goal', 'representative.name', 'status', 'type']} header={header} emptyMessage="No projects found.">
+                    selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+                    globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found.">
                 <Column selectionMode="multiple" exportable={false}></Column>
-                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
-                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
-                <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
+                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
+                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-
-                <Column field="date" header="תאריך עליה לאויר" filterField="date" dataType="date" style={{ minWidth: '14rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-
-                <Column field="type" class="column" header="סוג" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
-                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'left' }}></Column>
+                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field='demand' header="גוף דורש"  style={{ minWidth: '12rem' }} filter filterField='demand.name' filterPlaceholder="חיפוש גוף דורש"
+                    body={demandBodyTemplate}
+                />
+                <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
+                <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+                   body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
+                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
+        
             </DataTable>
 
             <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
-                    {project && (
-                        <span>האם למחוק <b>{project.name}</b>?</span>
+                    {project && (<span>האם למחוק <b>{project.name}</b>?</span>
                     )}
                     <div style={{ direction: "ltr", marginTop: "10px", marginLeft: '5px' }} >
                         <Button icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />

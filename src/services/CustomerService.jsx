@@ -30,11 +30,11 @@ export const CustomerService = {
                     image: 'elbit'
                 },
                 demand: {
-                    name: "יחידת נחל",
-                    section: 8250,
-                    branch: "100"
+                        name: "יחידת נחל",
+                        section: 8250,
+                        branch: "100"
+                    },
                 },
-            },
             {
                 id: 3000,
                 name: "מת\"ח",
@@ -92,8 +92,8 @@ export const CustomerService = {
     getCustomers(params) {
         const queryParams = params
             ? Object.keys(params)
-                  .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-                  .join('&')
+                .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+                .join('&')
             : '';
 
         return fetch('https://www.primefaces.org/data/customers?' + queryParams).then((res) => res.json());
