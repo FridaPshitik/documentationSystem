@@ -1,4 +1,4 @@
-import React, { useState ,useRef } from "react";
+import React, { useState, useRef } from "react";
 import { InputText } from 'primereact/inputtext';
 import { FloatLabel } from 'primereact/floatlabel';
 import { Dropdown } from 'primereact/dropdown';
@@ -11,21 +11,21 @@ import 'primeicons/primeicons.css';
 import './AddProjectForm.css';
 import { CustomerService } from "../../services/CustomerService"
 import { FileUpload } from 'primereact/fileupload';
-import AddRequiresFactorForm from './AddRequiresFactorForm'
+import AddDemandFactorForm from './AddDemandFactorForm'
 
 const AddProjectForm = () => {
 
     const [projectName, setProjectName] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedRequiresFactor, setSelectedRequiresFactor] = useState(null);
+    const [selectedDemandFactor, setSelectedDemandFactor] = useState('');
     const [selectedOperatingFactor, setSelectedOperatingFactor] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
     const [visible, setVisible] = useState(false);
     const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
-    const [hideAddRequiresFactor, setHideAddRequiresFactor] = useState(false);
-    const requiresFactors = ['יחידת ציפור','יחידת נחל','יחידת מעוף', 'אחר'];
-    const [operatingFactors,setOperatingFactors] =useState(['אחר','סקייבר', 'אלביט', 'צהל' ]) ;
+    const [hideAddDemandFactor, setHideAddDemandFactor] = useState(false);
+    const [demandFactors, setDemandFactors] = useState(['אחר', 'יחידת ציפור', 'יחידת נחל', 'יחידת מעוף']);
+    const [operatingFactors, setOperatingFactors] = useState(['אחר', 'סקייבר', 'אלביט', 'צהל']);
     const statuses = ['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר'];
     const types = ['פנימי', 'חיצוני'];
     const [factorName, setFactorName] = useState('');
@@ -35,14 +35,15 @@ const AddProjectForm = () => {
     const onUpload = () => {
         toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
-    
+
     const setVariable = (factorName) => {
         setSelectedOperatingFactor(factorName)
         setFactorName(factorName)
     }
 
     const addOperatingFactor = () => {
-        setOperatingFactors(operatingFactors=>[...operatingFactors,factorName])
+        setOperatingFactors(operatingFactors => [...operatingFactors, factorName])
+        setSelectedOperatingFactor(factorName)
         const factor = {}
         factor.factorName = factorName;
         factor.image = image;
@@ -54,7 +55,7 @@ const AddProjectForm = () => {
         const project = {}
         project.projectName = projectName;
         project.description = description;
-        project.requiresFactor = selectedRequiresFactor;
+        project.requiresFactor = selectedDemandFactor;
         project.operatingFactor = selectedOperatingFactor;
         project.type = selectedType;
         project.status = selectedStatus;
@@ -102,10 +103,10 @@ const AddProjectForm = () => {
 
     const handelSelectRequiresFactor = (value) => {
         if (value == 'אחר') {
-            setHideAddRequiresFactor(true)
+            setHideAddDemandFactor(true)
         }
         else {
-            setSelectedRequiresFactor(value)
+            setSelectedDemandFactor(value)
         }
     }
 
@@ -138,8 +139,8 @@ const AddProjectForm = () => {
                         <Dialog header="הוספת גוף מבצע " visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
                             footer={addOperatingFactorForm}>
                         </Dialog>
-                        <Dialog header="הוספת גוף דורש " visible={hideAddRequiresFactor} onHide={() => { if (!hideAddRequiresFactor) return; setHideAddRequiresFactor(false); }}
-                            footer={<AddRequiresFactorForm setSelectedRequiresFactor={setSelectedRequiresFactor}/>}>
+                        <Dialog header="הוספת גוף דורש " visible={hideAddDemandFactor} onHide={() => { if (!hideAddDemandFactor) return; setHideAddDemandFactor(false); }}
+                            footer={<AddDemandFactorForm setSelectedDemandFactor={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemandFactor} demandFactors={demandFactors} />}>
                         </Dialog>
                     </div>
                     <div className="card field">
@@ -149,7 +150,7 @@ const AddProjectForm = () => {
                         </FloatLabel>
                     </div>
                     <div className="card field">
-                        <Dropdown value={selectedRequiresFactor} onChange={(e) => handelSelectRequiresFactor(e.value)} options={requiresFactors}
+                        <Dropdown value={selectedDemandFactor} onChange={(e) => handelSelectRequiresFactor(e.value)} options={demandFactors}
                             placeholder="בחר גוף דורש" className="w-full md:w-14rem field" />
                     </div>
                     <div className="card field">
