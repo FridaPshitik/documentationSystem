@@ -14,7 +14,7 @@ export const CustomerService = {
                 },
                 demand: {
                     name: "יחידת ציפור",
-                    section: 9900,
+                    section: "פיקוד צפון",
                     branch: "100"
                 },
             },
@@ -30,11 +30,11 @@ export const CustomerService = {
                     image: 'elbit'
                 },
                 demand: {
-                        name: "יחידת נחל",
-                        section: 8250,
-                        branch: "100"
-                    },
+                    name: "יחידת נחל",
+                    section: "פיקוד צפון",
+                    branch: "100"
                 },
+            },
             {
                 id: 3000,
                 name: "מת\"ח",
@@ -48,7 +48,7 @@ export const CustomerService = {
                 },
                 demand: {
                     name: "יחידת מעוף",
-                    section: 9950,
+                    section: "פיקוד דרום",
                     branch: "100"
                 },
             },
@@ -62,11 +62,11 @@ export const CustomerService = {
                 representative: {
                     name: 'צה"ל',
                     image: 'inside',
-                    section: 8250
+                    section: "פיקוד צפון"
                 },
                 demand: {
                     name: "יחידת נשר",
-                    section: 8200,
+                    section: "פיקוד צפון",
                     branch: "100"
                 },
             }
@@ -88,14 +88,4 @@ export const CustomerService = {
     getCustomersXLarge() {
         return Promise.resolve(this.getData());
     },
-
-    getCustomers(params) {
-        const queryParams = params
-            ? Object.keys(params)
-                .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-                .join('&')
-            : '';
-
-        return fetch('https://www.primefaces.org/data/customers?' + queryParams).then((res) => res.json());
-    }
-};
+}

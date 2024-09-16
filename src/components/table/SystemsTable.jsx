@@ -188,7 +188,7 @@ export default function SystemsTable() {
                 
             </div>
                 {representative.section ? (
-                    <p> מדור {representative.section}</p>
+                    <p> {representative.section}</p>
                     ): ''}
               </div>
         );
@@ -198,7 +198,7 @@ export default function SystemsTable() {
         return (
             <div>
                 <p> {demand.name}</p>
-                <p> מדור {demand.section}</p>
+                <p> {demand.section}</p>
             </div>
         )
     }
