@@ -20,6 +20,7 @@ import imageInside from "../assets/inside.png";
 import e from "../assets/e.png";
 import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
+import DialogSystem from '../form/DialogSystem'
 
 export default function SystemsTable() {
     const [customers, setCustomers] = useState(null);
@@ -32,7 +33,8 @@ export default function SystemsTable() {
         date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         type: { value: null, matchMode: FilterMatchMode.EQUALS }
     });
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisibleAddProjectFormDialog] = useState(false);
+    const [visibleSystemDialog, setVisibleSystemDialog] = useState(false);
     const [loading, setLoading] = useState(true);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [representatives] = useState([
@@ -105,8 +107,8 @@ export default function SystemsTable() {
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
-                <Button id='add_project' icon="pi pi-plus" outlined onClick={() => setVisible(true)} />
-                <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisible(false); }}>
+                <Button id='add_project' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
+                <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
             </div>
@@ -224,7 +226,7 @@ export default function SystemsTable() {
     };
 
     const dateBodyTemplate = (rowData) => {
-        return formatDate(rowData.date);
+        return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
     };
 
     const formatDate = (value) => {
@@ -286,11 +288,18 @@ export default function SystemsTable() {
         return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
     }
 
+    const [dataSystem, setDataSystem] = useState({})
+
+    const ShowSystemDialog = (rowData) => {
+        console.log(rowData);
+        setDataSystem(rowData)
+        setVisibleSystemDialog(true)
+    }
 
     return (
         <div className="card">
             <DataTable value={customers} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
-                globalFilterFields={['name', 'goal', 'representative.name', 'status', 'type']} header={header} emptyMessage="No customers found.">
+                globalFilterFields={['name', 'goal', 'representative.name', 'status', 'type']} header={header} emptyMessage="No customers found." onRowClick={(e) => ShowSystemDialog(e.data)}>
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
@@ -300,6 +309,9 @@ export default function SystemsTable() {
                 <Column field="type" class="column" header="סוג" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
                 <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
             </DataTable>
+            <Dialog visible={visibleSystemDialog} style={{ width: '50vw' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
+                <DialogSystem dataSystem={dataSystem}></DialogSystem>
+            </Dialog>
         </div>
     );
 }
