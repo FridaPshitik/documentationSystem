@@ -11,7 +11,7 @@ import 'primeicons/primeicons.css';
 import './AddProjectForm.css';
 import { CustomerService } from "../../services/CustomerService"
 import { FileUpload } from 'primereact/fileupload';
-
+import AddRequiresFactorForm from './AddRequiresFactorForm'
 
 const AddProjectForm = () => {
 
@@ -22,8 +22,9 @@ const AddProjectForm = () => {
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
     const [visible, setVisible] = useState(false);
-    const [hide, setHide] = useState(false);
-    const requiresFactors = ['x', 'y', 'z', 'אחר'];
+    const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
+    const [hideAddRequiresFactor, setHideAddRequiresFactor] = useState(false);
+    const requiresFactors = ['יחידת ציפור','יחידת נחל','יחידת מעוף', 'אחר'];
     const [operatingFactors,setOperatingFactors] =useState(['אחר','סקייבר', 'אלביט', 'צהל' ]) ;
     const statuses = ['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר'];
     const types = ['פנימי', 'חיצוני'];
@@ -45,7 +46,7 @@ const AddProjectForm = () => {
         const factor = {}
         factor.factorName = factorName;
         factor.image = image;
-        setHide(false)
+        setHideAddOperatingFactor(false)
 
     };
 
@@ -92,10 +93,19 @@ const AddProjectForm = () => {
 
     const handelSelectOperatingFactor = (value) => {
         if (value == 'אחר') {
-            setHide(true)
+            setHideAddOperatingFactor(true)
         }
         else {
             setSelectedOperatingFactor(value)
+        }
+    }
+
+    const handelSelectRequiresFactor = (value) => {
+        if (value == 'אחר') {
+            setHideAddRequiresFactor(true)
+        }
+        else {
+            setSelectedRequiresFactor(value)
         }
     }
 
@@ -125,8 +135,11 @@ const AddProjectForm = () => {
                                 }} ></Button>
                             </div>
                         </Dialog>
-                        <Dialog header="הוספת גוף מבצע " visible={hide} onHide={() => { if (!hide) return; setHide(false); }}
+                        <Dialog header="הוספת גוף מבצע " visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
                             footer={addOperatingFactorForm}>
+                        </Dialog>
+                        <Dialog header="הוספת גוף דורש " visible={hideAddRequiresFactor} onHide={() => { if (!hideAddRequiresFactor) return; setHideAddRequiresFactor(false); }}
+                            footer={<AddRequiresFactorForm setSelectedRequiresFactor={setSelectedRequiresFactor}/>}>
                         </Dialog>
                     </div>
                     <div className="card field">
@@ -136,8 +149,12 @@ const AddProjectForm = () => {
                         </FloatLabel>
                     </div>
                     <div className="card field">
-                        <Dropdown value={selectedRequiresFactor} onChange={(e) => setSelectedRequiresFactor(e.value)} options={requiresFactors}
+                        <Dropdown value={selectedRequiresFactor} onChange={(e) => handelSelectRequiresFactor(e.value)} options={requiresFactors}
                             placeholder="בחר גוף דורש" className="w-full md:w-14rem field" />
+                    </div>
+                    <div className="card field">
+                        <Dropdown value={selectedType} onChange={(e) => setSelectedType(e.value)} options={types}
+                            placeholder="בחר סוג" className="w-full md:w-14rem field" />
                     </div>
                     <div className="card field">
                         <Dropdown value={selectedOperatingFactor} onChange={(e) => handelSelectOperatingFactor(e.value)} options={operatingFactors}
@@ -146,10 +163,6 @@ const AddProjectForm = () => {
                     <div className="card field">
                         <Dropdown value={selectedStatus} onChange={(e) => setSelectedStatus(e.value)} options={statuses}
                             placeholder="בחר סטטוס" className="w-full md:w-14rem field" />
-                    </div>
-                    <div className="card field">
-                        <Dropdown value={selectedType} onChange={(e) => setSelectedType(e.value)} options={types}
-                            placeholder="בחר סוג" className="w-full md:w-14rem field" />
                     </div>
                     <div id="button">
                         <Button label="הוסף" type="submit" onClick={addProject} />
