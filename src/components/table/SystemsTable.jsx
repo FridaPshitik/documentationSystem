@@ -136,7 +136,7 @@ export default function SystemsTable() {
                 <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisible(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
-                <Button id='delete_selected' icon="pi pi-trash" severity="danger"  outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
+                <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
                 <Button id='download' icon="pi pi-download" className="p-button-help" outlined onClick={exportCSV} />
             </div>
         );
@@ -268,9 +268,7 @@ export default function SystemsTable() {
     };
 
     const dateBodyTemplate = (rowData) => {
-        if (rowData.date!='Invalid Date') {
-            return formatDate(rowData.date);
-        }
+        return rowData.date!='Invalid Date'? formatDate(rowData.date):''
     };
 
     const formatDate = (value) => {
@@ -369,24 +367,14 @@ export default function SystemsTable() {
         return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => confirmDeleteProject(rowData)} />;
     };
 
-    const deleteProjectDialogFooter = (
-        <React.Fragment>
-            <Button  icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
-            <Button  icon="pi pi-check" outlined text severity="danger" onClick={deleteProject} />
-        </React.Fragment>
-    );
-    const deleteProjectsDialogFooter = (
-        <React.Fragment>
-            <Button  icon="pi pi-times" outlined text onClick={hideDeleteProjectsDialog} />
-            <Button  icon="pi pi-check" outlined text severity="danger" onClick={deleteSelectedProjects} />
-        </React.Fragment>
-    );
 
     return (<div>
         <Toast ref={toast} />
         <div className="card">
-            <DataTable value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+                    selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                     globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found.">
+                <Column selectionMode="multiple" exportable={false}></Column>
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
@@ -402,21 +390,27 @@ export default function SystemsTable() {
         
             </DataTable>
 
-            <Dialog visible={deleteProjectDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal footer={deleteProjectDialogFooter} onHide={hideDeleteProjectDialog}>
+            <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
                 <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem',paddingLeft:'1rem' }} />
-                    {project && (
-                        <span>
-                            האם למחוק  <b>{project.name}</b>?
-                        </span>
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
+                    {project && (<span>האם למחוק <b>{project.name}</b>?</span>
                     )}
+                    <div style={{ direction: "ltr", marginTop: "10px", marginLeft: '5px' }} >
+                        <Button icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
+                        <Button icon="pi pi-check" outlined text severity="danger" onClick={deleteProject} />
+                    </div>
+
                 </div>
             </Dialog>
 
-            <Dialog visible={deleteProjectsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal footer={deleteProjectsDialogFooter} onHide={hideDeleteProjectsDialog}>
+            <Dialog visible={deleteProjectsDialog} style={{ width: '22%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectsDialog}>
                 <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' ,paddingLeft:'1rem'}} />
-                    {project && <span>האם למחוק ?</span>}
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
+                    {project && <span>האם למחוק את הפרויקטים המסומנים?</span>}
+                    <div style={{ direction: "ltr", marginTop: "10px", marginLeft: '5px' }} >
+                        <Button icon="pi pi-times" outlined text onClick={hideDeleteProjectsDialog} />
+                        <Button icon="pi pi-check" outlined text severity="danger" onClick={deleteSelectedProjects} />
+                    </div>
                 </div>
             </Dialog>
         </div>

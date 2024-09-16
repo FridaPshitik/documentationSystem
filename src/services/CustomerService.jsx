@@ -5,7 +5,7 @@ export const CustomerService = {
                 id: 2000,
                 name: 'תיעוד',
                 goal: "פרויקט זה נועד על מנת למנוע כפילות פיתוח קוד של פרוייקט קיים.\nהפרוייקט ייתן אפשרויות חיפוש מתקדמות.",
-                date: '2015-02',
+                date: '',
                 status: 'בפיתוח',
                 type: "חיצוני",
                 representative: {
@@ -22,7 +22,7 @@ export const CustomerService = {
                 id: 1000,
                 name: 'עקוב אחרי',
                 goal: "כאשר המערכת מקבלת זיהוי של מכונית חשודה מופעל באופן אוטומטי מעקב אחר המכונית הכולל ניטור ודיווח על מיקום וקצב הנסיעה עד להגעת כוחות למקום",
-                date: '2015-09',
+                date: '',
                 status: 'באפיון',
                 type: "חיצוני",
                 representative: {
@@ -39,7 +39,7 @@ export const CustomerService = {
                 id: 3000,
                 name: "מת\"ח",
                 goal: "כיום יש להגיע לסניף על מנת לקבל זכאות.\nמטרת הפרוייקט היא לקבוע את התורים באופן מקוון ולבדוק זכאות לפני הגעה פיזית לתור.",
-                date: '2015-07',
+                date: '',
                 status: 'הושלם',
                 type: "חיצוני",
                 representative: {
@@ -88,14 +88,4 @@ export const CustomerService = {
     getCustomersXLarge() {
         return Promise.resolve(this.getData());
     },
-
-    getCustomers(params) {
-        const queryParams = params
-            ? Object.keys(params)
-                  .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-                  .join('&')
-            : '';
-
-        return fetch('https://www.primefaces.org/data/customers?' + queryParams).then((res) => res.json());
-    }
-};
+}
