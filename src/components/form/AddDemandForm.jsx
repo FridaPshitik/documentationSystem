@@ -1,50 +1,43 @@
 import React, { useState } from "react";
 import { InputText } from 'primereact/inputtext';
 import { FloatLabel } from 'primereact/floatlabel';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
-import { Dialog } from "primereact/dialog";
-
-import 'primeicons/primeicons.css';
 import './AddProjectForm.css';
-import { CustomerService } from "../../services/CustomerService"
 
-const AddDemandFactorForm = ({ setSelectedDemandFactor, setDemandFactors, hide, demandFactors }) => {
+
+const AddDemandForm = ({ setSelectedDemandFactor, setDemandFactors, hide, demandFactors }) => {
 
     const [factorName, setFactorName] = useState('');
     const [section, setSection] = useState('')
 
 
-    const addDemandFactor = () => {
-        setDemandFactors(demandFactors => [...demandFactors, factorName])
-        setSelectedDemandFactor(factorName);
-        hide(false);
+    const addDemand = () => {
+        setDemandFactors(demandFactors => [...demandFactors, section])
+        setSelectedDemandFactor(section);
         const factor = {};
         factor.factorName = factorName;
         factor.section = section;
+        hide(false);
     };
 
 
     return (<>
-        <div id="addRequiresFactorForm">
-            {/* <form action=""> */}
+        <div id="addDemandFactorForm">
             <div className="card field">
                 <FloatLabel className="field">
                     <InputText className="w-full md:w-14rem field" id="factorName" value={factorName} onChange={(e) => setFactorName(e.target.value)} />
-                    <label htmlFor="factorName">שם</label>
+                    <label htmlFor="factorName">שם יחידה</label>
                 </FloatLabel>
                 <FloatLabel className="field">
                     <InputText className="w-full md:w-14rem field" id="section" value={section} onChange={(e) => setSection(e.target.value)} />
-                    <label htmlFor="section">אזור</label>
+                    <label htmlFor="section">אזור פיקוד</label>
                 </FloatLabel>
             </div>
             <div id="button">
-                <Button label="הוסף" type="submit" onClick={addDemandFactor} />
+                <Button severity="secondary" label="הוסף" type="submit" onClick={addDemand} />
             </div>
-            {/* </form> */}
         </div>
     </>)
 };
 
-export default AddDemandFactorForm;
+export default AddDemandForm;
