@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import './AddProjectForm.css';
 
 
-const AddDemandForm = ({ setSelectedDemandFactor, setDemandFactors, hide, demandFactors }) => {
+const AddDemandForm = ({ setSelected, setDemandFactors, hide, demandFactors }) => {
 
     const [factorName, setFactorName] = useState('');
     const [section, setSection] = useState('')
@@ -13,7 +13,7 @@ const AddDemandForm = ({ setSelectedDemandFactor, setDemandFactors, hide, demand
 
     const addDemand = () => {
         setDemandFactors(demandFactors => [...demandFactors, section])
-        setSelectedDemandFactor(section);
+        setSelected(section);
         const factor = {};
         factor.factorName = factorName;
         factor.section = section;

@@ -11,6 +11,7 @@ import './AddProjectForm.css';
 import { CustomerService } from "../../services/CustomerService"
 import AddDemandForm from './AddDemandForm';
 import AddOperatingForm from './AddOperatingForm';
+import CheckMultipleName from "./CheckMultipleName";
 import { InputTextarea } from "primereact/inputtextarea";
 
 
@@ -25,7 +26,8 @@ const AddProjectForm = () => {
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
     const [visible, setVisible] = useState(false);
-    const [hideAddOperating, setHideAddOperating] = useState(false);
+    const [hideAddOperatingCompany, setHideAddOperatingCompany] = useState(false);
+    const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
     const [hideAddDemand, setHideAddDemand] = useState(false);
     const [demandFactors, setDemandFactors] = useState(['אחר', 'פיקוד צפון', 'פיקוד דרום', 'פיקוד מרכז',]);
     const [operatingCompany, setOperatingCompany] = useState(['אחר', 'סקייבר', 'אלביט',]);
@@ -53,11 +55,11 @@ const AddProjectForm = () => {
     };
 
     const handelSelectOperatingFactor = (value) => {
-        { value == 'אחר' ? setHideAddDemand(true) : setSelectedOperatingFactor(value) }
+        { value == 'אחר' ? setHideAddOperatingFactor(true) : setSelectedOperatingFactor(value) }
     }
 
     const handelSelectOperatingCompany = (value) => {
-        { value == 'אחר' ? setHideAddOperating(true) : setSelectedOperatingCompany(value) }
+        { value == 'אחר' ? setHideAddOperatingCompany(true) : setSelectedOperatingCompany(value) }
     }
 
     const handelSelectDemandFactor = (value) => {
@@ -120,26 +122,19 @@ const AddProjectForm = () => {
                 </form>
 
                 <Dialog header="אזהרה ⚠️" visible={visible} style={{ width: '20%' }} onHide={() => setVisible(false)}>
-                    <p className="m-0">
-                        כבר קיים פרויקט בשם זה.
-                        <br></br>
-                        האם אתה בטוח שברצונך להמשיך?
-                    </p>
-                    <div style={{ direction: "ltr", marginTop: "10px" }} >
-                        <Button label="כן" onClick={() => setVisible(false)} style={{ margin: "2px" }}></Button>
-                        <Button label="לא" severity="secondary" style={{ margin: "2px" }} onClick={() => {
-                            setVisible(false)
-                            setProjectName('')
-                        }} ></Button>
-                    </div>
+                    <CheckMultipleName setVisible={setVisible} setProjectName={setProjectName}/>
                 </Dialog>
 
                 <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
-                    footer={<AddDemandForm setSelectedDemandFactor={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemand} demandFactors={demandFactors} />}>
+                    footer={<AddDemandForm setSelected={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemand} demandFactors={demandFactors} />}>
                 </Dialog>
 
-                <Dialog header="הוספת גוף מבצע " visible={hideAddOperating} onHide={() => { if (!hideAddOperating) return; setHideAddOperating(false); }}
-                    footer={<AddOperatingForm setSelectedOperatingFactor={setSelectedOperatingCompany} setOperatingFactors={setOperatingCompany} hide={setHideAddOperating} operatingFactor={operatingCompany} />}>
+                <Dialog header="הוספת גוף מבצע פנימי" visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
+                    footer={<AddDemandForm setSelected={setSelectedOperatingFactor} setDemandFactors={setDemandFactors} hide={setHideAddOperatingFactor} demandFactors={demandFactors} />}>
+                </Dialog>
+
+                <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}
+                    footer={<AddOperatingForm setSelected={setSelectedOperatingCompany} setOperatingFactors={setOperatingCompany} hide={setHideAddOperatingCompany} operatingFactor={operatingCompany} />}>
                 </Dialog>
             </div>
         </>
