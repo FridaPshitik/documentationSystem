@@ -60,9 +60,8 @@ export const CustomerService = {
                 status: 'עלה לאויר',
                 type: "פנימי",
                 representative: {
-                    name: 'צה"ל',
+                    name: 'פיקוד צפון',
                     image: 'inside',
-                    section: "פיקוד צפון"
                 },
                 demand: {
                     name: "יחידת נשר",
