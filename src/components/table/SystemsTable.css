@@ -41,3 +41,6 @@ th{
     /* position:absolute; */
     /* left:1px */
 }
+div.p-paginator-bottom.p-paginator.p-component {
+    direction: ltr;
+}
