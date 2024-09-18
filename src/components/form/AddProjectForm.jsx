@@ -1,63 +1,48 @@
-import React, { useState ,useRef } from "react";
+import React, { useState } from "react";
 import { InputText } from 'primereact/inputtext';
 import { FloatLabel } from 'primereact/floatlabel';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Dialog } from "primereact/dialog";
-import { Toast } from 'primereact/toast';
 
 import 'primeicons/primeicons.css';
 import './AddProjectForm.css';
 import { CustomerService } from "../../services/CustomerService"
-import { FileUpload } from 'primereact/fileupload';
-import AddRequiresFactorForm from './AddRequiresFactorForm'
+import AddDemandForm from './AddDemandForm';
+import AddOperatingForm from './AddOperatingForm';
+import CheckMultipleName from "./CheckMultipleName";
+import { InputTextarea } from "primereact/inputtextarea";
+
 
 const AddProjectForm = () => {
 
     const [projectName, setProjectName] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedRequiresFactor, setSelectedRequiresFactor] = useState(null);
+    const [date, setDate] = useState('Invalid Date');
+    const [selectedDemandFactor, setSelectedDemandFactor] = useState(null);
     const [selectedOperatingFactor, setSelectedOperatingFactor] = useState(null);
+    const [selectedOperatingCompany, setSelectedOperatingCompany] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [hideAddOperatingCompany, setHideAddOperatingCompany] = useState(false);
     const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
-    const [hideAddRequiresFactor, setHideAddRequiresFactor] = useState(false);
-    const requiresFactors = ['יחידת ציפור','יחידת נחל','יחידת מעוף', 'אחר'];
-    const [operatingFactors,setOperatingFactors] =useState(['אחר','סקייבר', 'אלביט', 'צהל' ]) ;
+    const [hideAddDemand, setHideAddDemand] = useState(false);
+    const [demandFactors, setDemandFactors] = useState(['אחר', 'פיקוד צפון', 'פיקוד דרום', 'פיקוד מרכז',]);
+    const [operatingCompany, setOperatingCompany] = useState(['אחר', 'סקייבר', 'אלביט',]);
     const statuses = ['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר'];
     const types = ['פנימי', 'חיצוני'];
-    const [factorName, setFactorName] = useState('');
-    const [image, setImage] = useState('');
-    const toast = useRef(null);
-
-    const onUpload = () => {
-        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
-    };
-    
-    const setVariable = (factorName) => {
-        setSelectedOperatingFactor(factorName)
-        setFactorName(factorName)
-    }
-
-    const addOperatingFactor = () => {
-        setOperatingFactors(operatingFactors=>[...operatingFactors,factorName])
-        const factor = {}
-        factor.factorName = factorName;
-        factor.image = image;
-        setHideAddOperatingFactor(false)
-
-    };
 
     const addProject = () => {
         const project = {}
         project.projectName = projectName;
         project.description = description;
-        project.requiresFactor = selectedRequiresFactor;
-        project.operatingFactor = selectedOperatingFactor;
+        project.demandFactor = selectedDemandFactor;
+        project.operatingFactor = selectedOperatingFactor || selectedOperatingCompany;
         project.type = selectedType;
         project.status = selectedStatus;
+        project.date = date;
     };
 
     const handleValidation = (name) => {
@@ -69,105 +54,88 @@ const AddProjectForm = () => {
         })
     };
 
-    const addOperatingFactorForm = () => {
-        return (<>
-            <div id="addOperatingFactorForm">
-                {/* <form action=""> */}
-                <div className="card field">
-                    <FloatLabel className="field">
-                        <InputText className="w-full md:w-14rem field" id="factorName" value={factorName} onChange={(e) => setVariable(e.target.value)} />
-                        <label htmlFor="factorName">שם</label>
-                    </FloatLabel>
-                </div>
-                <div className="card flex justify-content-center">
-                    <Toast ref={toast}></Toast>
-                    <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" maxFileSize={1000000} onUpload={onUpload} />
-                </div>
-                <div id="button">
-                    <Button label="הוסף" onClick={addOperatingFactor} />
-                </div>
-                {/* </form> */}
-            </div>
-        </>)
-    }
-
     const handelSelectOperatingFactor = (value) => {
-        if (value == 'אחר') {
-            setHideAddOperatingFactor(true)
-        }
-        else {
-            setSelectedOperatingFactor(value)
-        }
+        { value == 'אחר' ? setHideAddOperatingFactor(true) : setSelectedOperatingFactor(value) }
     }
 
-    const handelSelectRequiresFactor = (value) => {
-        if (value == 'אחר') {
-            setHideAddRequiresFactor(true)
-        }
-        else {
-            setSelectedRequiresFactor(value)
-        }
+    const handelSelectOperatingCompany = (value) => {
+        { value == 'אחר' ? setHideAddOperatingCompany(true) : setSelectedOperatingCompany(value) }
+    }
+
+    const handelSelectDemandFactor = (value) => {
+        { value == 'אחר' ? setHideAddDemand(true) : setSelectedDemandFactor(value) }
     }
 
     return (
         <>
             <div id="addProjectForm">
                 <form action="">
-                    <div className="card field">
+
+                    <FloatLabel className="field">
+                        <InputText className="w-full md:w-14rem field" id="projectName" value={projectName} onChange={(e) => {
+                            setProjectName(e.target.value)
+                            handleValidation(e.target.value)
+                        }} />
+                        <label htmlFor="projectName">שם הפרויקט</label>
+                    </FloatLabel>
+
+                    <FloatLabel className="field">
+                        <InputTextarea className="w-full md:w-14rem field" id="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={5} cols={30} />
+                        <label htmlFor="description">מטרת הפרויקט</label>
+                    </FloatLabel>
+
+                    <FloatLabel className="field">
+                        <Dropdown inputId="dd-demand" value={selectedDemandFactor} onChange={(e) => handelSelectDemandFactor(e.value)}
+                            options={demandFactors} className="w-full md:w-14rem field" />
+                        <label htmlFor="dd-demand">בחר גוף דורש</label>
+                    </FloatLabel>
+
+                    <FloatLabel className="field">
+                        <Dropdown inputId="dd-type" value={selectedType} onChange={(e) => setSelectedType(e.value)}
+                            options={types} className="w-full md:w-14rem field" />
+                        <label htmlFor="dd-type">בחר סוג</label>
+                    </FloatLabel>
+
+                    <FloatLabel className="field">
+                        <Dropdown inputId="dd-operating" value={selectedType == 'פנימי' ? selectedOperatingFactor : selectedOperatingCompany}
+                            onChange={(e) => { selectedType == 'פנימי' ? handelSelectOperatingFactor(e.value) : handelSelectOperatingCompany(e.value) }}
+                            options={selectedType == 'פנימי' ? demandFactors : operatingCompany} className="w-full md:w-14rem field" />
+                        <label htmlFor="dd-operating">בחר גוף מבצע</label>
+                    </FloatLabel>
+
+                    <FloatLabel className="field">
+                        <Dropdown inputId="dd-status" value={selectedStatus} onChange={(e) => setSelectedStatus(e.value)}
+                            options={statuses} className="w-full md:w-14rem field" />
+                        <label htmlFor="dd-status">בחר סטטוס</label>
+                    </FloatLabel>
+
+                    {selectedStatus == 'עלה לאויר' &&
                         <FloatLabel className="field">
-                            <InputText className="w-full md:w-14rem field" id="projectName" value={projectName} onChange={(e) => {
-                                setProjectName(e.target.value)
-                                handleValidation(e.target.value)
-                            }} />
-                            <label htmlFor="projectName">שם הפרויקט</label>
+                            <Calendar inputId="dd-date" value={date} onChange={(e) => setDate(e.value)} showButtonBar touchUI className="w-full md:w-14rem field" />
+                            <label htmlFor="dd-date">בחר תאריך</label>
                         </FloatLabel>
-                        <Dialog header="אזהרה ⚠️" visible={visible} style={{ width: '20%' }} onHide={() => setVisible(false)}>
-                            <p className="m-0">
-                                כבר קיים פרויקט בשם זה.
-                                <br></br>
-                                האם אתה בטוח שברצונך להמשיך?
-                            </p>
-                            <div style={{ direction: "ltr", marginTop: "10px" }} >
-                                <Button label="כן" onClick={() => setVisible(false)} style={{ margin: "2px" }}></Button>
-                                <Button label="לא" severity="secondary" style={{ margin: "2px" }} onClick={() => {
-                                    setVisible(false)
-                                    setProjectName('')
-                                }} ></Button>
-                            </div>
-                        </Dialog>
-                        <Dialog header="הוספת גוף מבצע " visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
-                            footer={addOperatingFactorForm}>
-                        </Dialog>
-                        <Dialog header="הוספת גוף דורש " visible={hideAddRequiresFactor} onHide={() => { if (!hideAddRequiresFactor) return; setHideAddRequiresFactor(false); }}
-                            footer={<AddRequiresFactorForm setSelectedRequiresFactor={setSelectedRequiresFactor}/>}>
-                        </Dialog>
-                    </div>
-                    <div className="card field">
-                        <FloatLabel className="field">
-                            <InputText className="w-full md:w-14rem field" id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                            <label htmlFor="description">תאור</label>
-                        </FloatLabel>
-                    </div>
-                    <div className="card field">
-                        <Dropdown value={selectedRequiresFactor} onChange={(e) => handelSelectRequiresFactor(e.value)} options={requiresFactors}
-                            placeholder="בחר גוף דורש" className="w-full md:w-14rem field" />
-                    </div>
-                    <div className="card field">
-                        <Dropdown value={selectedType} onChange={(e) => setSelectedType(e.value)} options={types}
-                            placeholder="בחר סוג" className="w-full md:w-14rem field" />
-                    </div>
-                    <div className="card field">
-                        <Dropdown value={selectedOperatingFactor} onChange={(e) => handelSelectOperatingFactor(e.value)} options={operatingFactors}
-                            placeholder="בחר גוף מבצע" className="w-full md:w-14rem field" />
-                    </div>
-                    <div className="card field">
-                        <Dropdown value={selectedStatus} onChange={(e) => setSelectedStatus(e.value)} options={statuses}
-                            placeholder="בחר סטטוס" className="w-full md:w-14rem field" />
-                    </div>
+                    }
+
                     <div id="button">
-                        <Button label="הוסף" type="submit" onClick={addProject} />
+                        <Button severity="secondary" label="הוסף" type="submit" onClick={addProject} />
                     </div>
                 </form>
+
+                <Dialog header="אזהרה ⚠️" visible={visible} style={{ width: '20%' }} onHide={() => setVisible(false)}>
+                    <CheckMultipleName setVisible={setVisible} setProjectName={setProjectName}/>
+                </Dialog>
+
+                <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
+                    footer={<AddDemandForm setSelected={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemand} demandFactors={demandFactors} />}>
+                </Dialog>
+
+                <Dialog header="הוספת גוף מבצע פנימי" visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
+                    footer={<AddDemandForm setSelected={setSelectedOperatingFactor} setDemandFactors={setDemandFactors} hide={setHideAddOperatingFactor} demandFactors={demandFactors} />}>
+                </Dialog>
+
+                <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}
+                    footer={<AddOperatingForm setSelected={setSelectedOperatingCompany} setOperatingFactors={setOperatingCompany} hide={setHideAddOperatingCompany} operatingFactor={operatingCompany} />}>
+                </Dialog>
             </div>
         </>
     );
