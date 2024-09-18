@@ -14,10 +14,6 @@ import { CustomerService } from '../../services/CustomerService';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 
-import imageSkyvar from "../assets/skyvar.png";
-import imageElbit from "../assets/elbit.png";
-import imageInside from "../assets/inside.png";
-import e from "../assets/e.png";
 import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 import DialogSystem from '../form/DialogSystem'
@@ -151,17 +147,7 @@ export default function SystemsTable() {
     const representativesItemTemplate = (option) => {
         return (
             <div className="flex align-items-center gap-2">
-                {
-                    option.name === "סקייבר" ? (
-                        <img alt={option.image} src={imageSkyvar} width="32" />
-                    ) : option.name === "אלביט" ? (
-                        <img alt={option.image} src={imageElbit} width="32" />
-                    ) : option.name === "צהל" ? (
-                        <img alt={option.image} src={imageInside} width="32" />
-                    ) : (
-                        <img alt={option.image} src={e} width="32" />
-                    )
-                }
+                <img alt={option.name} src={window.location.origin + `/images/${option.image}`} width="32" />
                 <span>{option.name}</span>
             </div>
         );
@@ -180,13 +166,7 @@ export default function SystemsTable() {
         const representative = rowData.representative;
         return (
             <div className="flex align-items-center gap-2">
-                {representative.name === "סקייבר" ? (
-                    <img alt={representative.image} src={imageSkyvar} width="32" />
-                ) : representative.name === "אלביט" ? (
-                    <img alt={representative.image} src={imageElbit} width="32" />
-                ) : (
-                    <img alt={representative.image} src={imageInside} width="32" />
-                )}
+                <img alt={representative.name} src={window.location.origin + `/images/${representative.image}`} width="32" />
                 <p>{representative.name}</p>
 
             </div>
@@ -206,8 +186,8 @@ export default function SystemsTable() {
 
     const openCardBodyTemplate = (rowData) => {
         return <div >
-            <IconField> 
-                <InputIcon className="pi pi-bars p-button p-component p-button-icon-only p-button-outlined p-button-text p-button-rounded" onClick={() => ShowSystemDialog(rowData)}/>
+            <IconField>
+                <InputIcon className="pi pi-bars p-button p-component p-button-icon-only p-button-outlined p-button-text p-button-rounded" onClick={() => ShowSystemDialog(rowData)} />
             </IconField>
         </div>
     };
@@ -399,7 +379,7 @@ export default function SystemsTable() {
                 // selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                 globalFilterFields={['name', 'goal', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
                 {/* <Column selectionMode="multiple" exportable={false}></Column> */}
-                <Column style={{minWidth:'5rem'}} body={openCardBodyTemplate} />
+                <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />

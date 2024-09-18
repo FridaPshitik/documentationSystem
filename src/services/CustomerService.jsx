@@ -10,7 +10,7 @@ export const CustomerService = {
                 type: "חיצוני",
                 representative: {
                     name: 'סקייבר',
-                    image: 'skyvar'
+                    image: 'skyvar.png'
                 },
                 demand: {
                     name: "יחידת ציפור",
@@ -27,7 +27,7 @@ export const CustomerService = {
                 type: "חיצוני",
                 representative: {
                     name: 'אלביט',
-                    image: 'elbit'
+                    image: 'elbit.png'
                 },
                 demand: {
                     name: "יחידת נחל",
@@ -44,7 +44,7 @@ export const CustomerService = {
                 type: "חיצוני",
                 representative: {
                     name: 'סקייבר',
-                    image: 'skyvar'
+                    image: 'skyvar.png'
                 },
                 demand: {
                     name: "יחידת מעוף",
@@ -61,7 +61,7 @@ export const CustomerService = {
                 type: "פנימי",
                 representative: {
                     name: 'פיקוד צפון',
-                    image: 'inside',
+                    image: 'inside.png',
                 },
                 demand: {
                     name: "יחידת נשר",
