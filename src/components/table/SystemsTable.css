@@ -69,3 +69,9 @@ table.p-datepicker-calendar {
 div.p-datepicker-header {
     direction: ltr;
 }
+.p-column-filter-row .p-column-filter-element{
+    width: 100%;
+}
+input.p-column-filter.p-inputtext.p-component{
+    padding-right: 5px;
+}

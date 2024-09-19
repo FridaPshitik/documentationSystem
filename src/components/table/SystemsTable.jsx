@@ -194,11 +194,11 @@ export default function SystemsTable() {
     };
 
     const statusBodyTemplate = (rowData) => {
-        return <Tag value={rowData.status} severity={getStatusSeverity(rowData.status)} />;
+        return <Tag value={rowData.status} severity={getStatusSeverity(rowData.status)} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
     };
 
     const typeBodyTemplate = (rowData) => {
-        return <Tag value={rowData.type} severity={getTypeSeverity(rowData.type)} />;
+        return <Tag value={rowData.type} severity={getTypeSeverity(rowData.type)} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
     };
 
     const statusItemTemplate = (option) => {
@@ -229,20 +229,19 @@ export default function SystemsTable() {
                 placeholder="חיפוש גוף מבצע"
                 className="p-column-filter"
                 // maxSelectedLabels={1}
-                style={{ minWidth: '14rem' }}
             />
         );
     };
 
     const statusRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="חיפוש סטטוס" className="p-column-filter" showClear style={{ minWidth: '12rem' }} />
+            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="חיפוש סטטוס" className="p-column-filter" showClear/>
         );
     };
 
     const typeRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" showClear style={{ minWidth: '12rem' }} />
+            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" showClear/>
         );
     };
 
@@ -410,13 +409,13 @@ export default function SystemsTable() {
                 <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
-                <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
+                <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                 <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '12rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
+                <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '8rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
                     filterElement={demandFilterTemplate}
                 />
-                <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
-                <Column field='representative' header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+                <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
+                <Column field='representative' header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }}
                     body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
                 <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
