@@ -5,6 +5,10 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Dialog } from "primereact/dialog";
+import imageSkyvar from "../assets/skyvar.png";
+import imageElbit from "../assets/elbit.png";
+import imageInside from "../assets/inside.png";
+import e from "../assets/e.png";
 
 import 'primeicons/primeicons.css';
 import './AddProjectForm.css';
@@ -33,6 +37,7 @@ const AddProjectForm = () => {
     const [operatingCompany, setOperatingCompany] = useState(['אחר', 'סקייבר', 'אלביט',]);
     const statuses = ['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר'];
     const types = ['פנימי', 'חיצוני'];
+    const [explain, setExplain] = useState(null)
 
     const addProject = () => {
         const project = {}
@@ -68,61 +73,78 @@ const AddProjectForm = () => {
 
     return (
         <>
-            <div id="addProjectForm">
-                <form action="">
+            <div id="addProjectForm" >
+                <form action="" >
+                    <div className="card" class="grid-container">
 
-                    <FloatLabel className="field">
-                        <InputText className="w-full md:w-14rem field" id="projectName" value={projectName} onChange={(e) => {
-                            setProjectName(e.target.value)
-                            handleValidation(e.target.value)
-                        }} />
-                        <label htmlFor="projectName">שם הפרויקט</label>
-                    </FloatLabel>
+                        <div className="card" class="item1">
+                            <FloatLabel className="field">
+                                <InputText style={{ textAlign: 'center' }} className="w-full md:w-14rem field" inputId="projectName" value={projectName} onChange={(e) => {
+                                    setProjectName(e.target.value)
+                                    handleValidation(e.target.value)
+                                }} />
+                                <label htmlFor="projectName">שם הפרויקט</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="card" class="item2">
+                            <FloatLabel className="field">
+                                <InputTextarea className="w-full md:w-30rem field" inputId="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={4} cols={30} />
+                                <label htmlFor="description">מטרת הפרויקט</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="card" class="item3">
+                            <FloatLabel className="field" >
+                                <Dropdown inputId="dd-demand" value={selectedDemandFactor} onChange={(e) => handelSelectDemandFactor(e.value)}
+                                    options={demandFactors} className="w-full md:w-14rem field" />
+                                <label htmlFor="dd-demand">בחר גוף דורש</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="card" class="item4">
+                            <FloatLabel className="field" >
+                                <Dropdown inputId="dd-type" value={selectedType} onChange={(e) => setSelectedType(e.value)}
+                                    options={types} className="w-full md:w-14rem field" />
+                                <label htmlFor="dd-type">בחר סוג</label>
+                            </FloatLabel>
+                        </div>
 
-                    <FloatLabel className="field">
-                        <InputTextarea className="w-full md:w-14rem field" id="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={5} cols={30} />
-                        <label htmlFor="description">מטרת הפרויקט</label>
-                    </FloatLabel>
+                        <div className="card" class="item6">
+                            <FloatLabel className="field">
+                                {selectedType == null && <Dropdown inputId="dd-operating" value={explain}
+                                    onClick={(e) => setExplain("fgh")}
+                                    options={['לאחר בחירת סוג  יאופשר שדה זה']} className="w-full md:w-14rem field" />}
+                                {selectedType == 'פנימי' && <Dropdown inputId="dd-operating" value={selectedOperatingFactor}
+                                    onChange={(e) => handelSelectOperatingFactor(e.value)}
+                                    options={demandFactors} className="w-full md:w-14rem field" />}
+                                {selectedType == 'חיצוני' && <Dropdown inputId="dd-operating" value={selectedOperatingCompany}
+                                    onChange={(e) => handelSelectOperatingCompany(e.value)}
+                                    options={operatingCompany} className="w-full md:w-14rem field" />}
+                                <label htmlFor="dd-operating">בחר גוף מבצע</label>
+                            </FloatLabel>
+                        </div>
 
-                    <FloatLabel className="field">
-                        <Dropdown inputId="dd-demand" value={selectedDemandFactor} onChange={(e) => handelSelectDemandFactor(e.value)}
-                            options={demandFactors} className="w-full md:w-14rem field" />
-                        <label htmlFor="dd-demand">בחר גוף דורש</label>
-                    </FloatLabel>
-
-                    <FloatLabel className="field">
-                        <Dropdown inputId="dd-type" value={selectedType} onChange={(e) => setSelectedType(e.value)}
-                            options={types} className="w-full md:w-14rem field" />
-                        <label htmlFor="dd-type">בחר סוג</label>
-                    </FloatLabel>
-
-                    <FloatLabel className="field">
-                        <Dropdown inputId="dd-operating" value={selectedType == 'פנימי' ? selectedOperatingFactor : selectedOperatingCompany}
-                            onChange={(e) => { selectedType == 'פנימי' ? handelSelectOperatingFactor(e.value) : handelSelectOperatingCompany(e.value) }}
-                            options={selectedType == 'פנימי' ? demandFactors : operatingCompany} className="w-full md:w-14rem field" />
-                        <label htmlFor="dd-operating">בחר גוף מבצע</label>
-                    </FloatLabel>
-
-                    <FloatLabel className="field">
-                        <Dropdown inputId="dd-status" value={selectedStatus} onChange={(e) => setSelectedStatus(e.value)}
-                            options={statuses} className="w-full md:w-14rem field" />
-                        <label htmlFor="dd-status">בחר סטטוס</label>
-                    </FloatLabel>
-
-                    {selectedStatus == 'עלה לאויר' &&
-                        <FloatLabel className="field">
-                            <Calendar inputId="dd-date" value={date} onChange={(e) => setDate(e.value)} showButtonBar touchUI className="w-full md:w-14rem field" />
-                            <label htmlFor="dd-date">בחר תאריך</label>
-                        </FloatLabel>
-                    }
-
+                        <div className="card" class="item5">
+                            <FloatLabel className="field" >
+                                <Dropdown inputId="dd-status" value={selectedStatus} onChange={(e) => setSelectedStatus(e.value)}
+                                    options={statuses} className="w-full md:w-14rem field" />
+                                <label htmlFor="dd-status">בחר סטטוס</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="card" class="item7">
+                            {selectedStatus == 'עלה לאויר' &&
+                                <FloatLabel className="field" >
+                                    <Calendar inputId="dd-date" value={date} onChange={(e) => setDate(e.value)} showButtonBar className="w-full md:w-14rem field" />
+                                    <label htmlFor="dd-date">בחר תאריך</label>
+                                </FloatLabel>
+                            }
+                        </div>
+                    </div>
                     <div id="button">
                         <Button severity="secondary" label="הוסף" type="submit" onClick={addProject} />
                     </div>
                 </form>
 
                 <Dialog header="אזהרה ⚠️" visible={visible} style={{ width: '20%' }} onHide={() => setVisible(false)}>
-                    <CheckMultipleName setVisible={setVisible} setProjectName={setProjectName}/>
+                    <CheckMultipleName setVisible={setVisible} setProjectName={setProjectName} />
                 </Dialog>
 
                 <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}

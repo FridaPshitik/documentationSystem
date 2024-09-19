@@ -7,7 +7,7 @@ import { FileUpload } from 'primereact/fileupload';
 import './AddProjectForm.css';
 
 
-const AddOperatingForm = ({  setSelected, setOperatingFactors, hide, operatingFactor }) => {
+const AddOperatingForm = ({ setSelected, setOperatingFactors, hide, operatingFactor }) => {
 
     const toast = useRef(null);
     const [factorName, setFactorName] = useState('');
