@@ -1,17 +1,66 @@
-.card{
+.card {
     padding: 0;
 }
-.card #calendar{
+
+.card #calendar {
     direction: ltr;
     width: 100%;
 }
-.p-float-label > label{
-    right: 10px;
+
+.p-float-label>label {
+    right: 20%;
     text-align: right;
 }
-#button{
+
+#button {
     text-align: center;
 }
-.card{
+
+.card {
     margin-top: 15px;
+}
+
+.item1 {
+    grid-area: name;
+}
+
+.item2 {
+    grid-area: description;
+}
+
+.item3 {
+    grid-area: demand;
+}
+
+.item4 {
+    grid-area: type;
+}
+
+.item5 {
+    grid-area: status;
+}
+
+.item6 {
+    grid-area: operating;
+}
+
+.item7 {
+    grid-area: date;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        'name  demand'
+        'description description '
+        'type  operating'
+        'status  date';
+    gap: 5px;
+    padding: 15px;
+}
+
+.grid-container>div {
+    text-align: center;
+    padding: 5px;
+    font-size: 17px;
 }

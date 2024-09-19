@@ -134,10 +134,10 @@ export default function SystemsTable() {
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
                 <Button id='add_project' label="הוספת פרויקט" icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
-                <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
+                <Dialog header="הוספת פרוייקט חדש" style={{width:'33vw', textAlign: 'center'}} visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
-                {/* <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} /> */}
+                <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
                 <Button id='download' icon="pi pi-download" className="p-button-help" outlined onClick={exportCSV} />
             </div>
         );
@@ -339,7 +339,6 @@ export default function SystemsTable() {
         setDeleteProjectsDialog(false);
     };
 
-
     const confirmDeleteProject = (customer) => {
         setProject(customer);
         setDeleteProjectDialog(true);
@@ -378,9 +377,9 @@ export default function SystemsTable() {
         <Toast ref={toast} />
         <div className="card">
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading} 
-                    // selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+                    selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                     globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found." onRowClick={(e) => ShowSystemDialog(e.data)}>
-                {/* <Column selectionMode="multiple" exportable={false}></Column> */}
+                <Column selectionMode="multiple " exportable={false}></Column>
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
