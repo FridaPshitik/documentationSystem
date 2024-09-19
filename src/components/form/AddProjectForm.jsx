@@ -5,10 +5,6 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Dialog } from "primereact/dialog";
-import imageSkyvar from "../assets/skyvar.png";
-import imageElbit from "../assets/elbit.png";
-import imageInside from "../assets/inside.png";
-import e from "../assets/e.png";
 
 import 'primeicons/primeicons.css';
 import './AddProjectForm.css';
