@@ -403,7 +403,7 @@ export default function SystemsTable() {
     return (<div>
         <Toast ref={toast} />
         <div className="card">
-            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading} scrollable
                 // selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                 globalFilterFields={['name', 'goal', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
                 {/* <Column selectionMode="multiple" exportable={false}></Column> */}
@@ -413,7 +413,7 @@ export default function SystemsTable() {
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                 <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '12rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
-                  filterElement={demandFilterTemplate} 
+                    filterElement={demandFilterTemplate}
                 />
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
                 <Column field='representative' header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
