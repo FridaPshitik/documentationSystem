@@ -14,6 +14,11 @@ import { CustomerService } from '../../services/CustomerService';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 
+
+import imageSkyvar from "../assets/skyvar.png";
+import imageElbit from "../assets/elbit.png";
+import imageInside from "../assets/inside.png";
+import e from "../assets/e.png";
 import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 import DialogSystem from '../form/DialogSystem'
@@ -134,12 +139,12 @@ export default function SystemsTable() {
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
-                <Dialog header="הוספת פרוייקט חדש" visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
+                <Dialog header="הוספת פרוייקט חדש" style={{ width: '33vw', textAlign: 'center' }} visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
-                {/* <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} /> */}
+                <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
                 <Button id='download' style={{ width: '5%' }} icon="pi pi-download" outlined onClick={exportCSV} />
-                <Button style={{ width: '20%' }} label='הוספת פרוייקט חדש' id='add_project' icon="pi pi-plus" onClick={() => setVisibleAddProjectFormDialog(true)} />
+                <Button style={{ width: '20%' }} label='הוספת פרוייקט חדש' id='add_project' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
             </div>
         );
     };
@@ -165,13 +170,10 @@ export default function SystemsTable() {
 
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
-        return (
-            <div className="flex align-items-center gap-2">
+        return (  <div className="flex align-items-center gap-2">
                 <img alt={representative.name} src={window.location.origin + `/images/${representative.image}`} width="32" />
                 <p>{representative.name}</p>
-
-            </div>
-        );
+            </div> );
     };
 
     // const representativeBodyTemplate = (rowData) => {
@@ -363,7 +365,6 @@ export default function SystemsTable() {
         setDeleteProjectsDialog(false);
     };
 
-
     const confirmDeleteProject = (customer) => {
         setProject(customer);
         setDeleteProjectDialog(true);
@@ -402,11 +403,11 @@ export default function SystemsTable() {
     return (<div>
         <Toast ref={toast} />
         <div className="card">
-            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading} scrollable
-                // selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+                selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                 globalFilterFields={['name', 'goal', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
-                {/* <Column selectionMode="multiple" exportable={false}></Column> */}
                 <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
+                <Column selectionMode="multiple" exportable={false}></Column>
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
