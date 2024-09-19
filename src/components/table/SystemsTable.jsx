@@ -14,6 +14,7 @@ import { CustomerService } from '../../services/CustomerService';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 
+
 import imageSkyvar from "../assets/skyvar.png";
 import imageElbit from "../assets/elbit.png";
 import imageInside from "../assets/inside.png";
@@ -41,7 +42,7 @@ export default function SystemsTable() {
         goal: { value: null, matchMode: FilterMatchMode.CONTAINS },
         status: { value: null, matchMode: FilterMatchMode.EQUALS },
         date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-        'demand.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
+        'demand.section': { value: null, matchMode: FilterMatchMode.IN },
         type: { value: null, matchMode: FilterMatchMode.EQUALS },
         representative: { value: null, matchMode: FilterMatchMode.IN }
     });
@@ -54,12 +55,17 @@ export default function SystemsTable() {
         { name: "אלביט", image: "elbit.png" },
         { name: "צהל", image: "inside.png" }
     ]);
+    const [demands] = useState([
+        'פיקוד צפון',
+        'פיקוד דרום'
+    ])
     const [statuses] = useState(['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר']);
     const [types] = useState(['חיצוני', 'פנימי']);
     const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
     const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
     const [project, setProject] = useState(emptyProject);
     const [selectedProjects, setSelectedProjects] = useState(null);
+    const [selectedReresentative, setSelectedRepresentative] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -133,12 +139,12 @@ export default function SystemsTable() {
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
-                <Button id='add_project' label="הוספת פרויקט" icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
                 <Dialog header="הוספת פרוייקט חדש" style={{ width: '33vw', textAlign: 'center' }} visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
                 <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
-                <Button id='download' icon="pi pi-download" className="p-button-help" outlined onClick={exportCSV} />
+                <Button id='download' style={{ width: '5%' }} icon="pi pi-download" outlined onClick={exportCSV} />
+                <Button style={{ width: '20%' }} label='הוספת פרוייקט חדש' id='add_project' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
             </div>
         );
     };
@@ -147,17 +153,7 @@ export default function SystemsTable() {
     const representativesItemTemplate = (option) => {
         return (
             <div className="flex align-items-center gap-2">
-                {
-                    option.name === "סקייבר" ? (
-                        <img alt={option.image} src={imageSkyvar} width="32" />
-                    ) : option.name === "אלביט" ? (
-                        <img alt={option.image} src={imageElbit} width="32" />
-                    ) : option.name === "צהל" ? (
-                        <img alt={option.image} src={imageInside} width="32" />
-                    ) : (
-                        <img alt={option.image} src={e} width="32" />
-                    )
-                }
+                <img alt={option.name} src={window.location.origin + `/images/${option.image}`} width="32" />
                 <span>{option.name}</span>
             </div>
         );
@@ -172,37 +168,14 @@ export default function SystemsTable() {
     //     );
     // };
 
-
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
-        return (
-            <div>
-                <div className="flex align-items-center gap-2">
-                    {representative.name === "סקייבר" ? (
-                        <img alt={representative.image} src={imageSkyvar} width="32" />
-                    ) : representative.name === "אלביט" ? (
-                        <img alt={representative.image} src={imageElbit} width="32" />
-                    ) : (
-                        <img alt={representative.image} src={imageInside} width="32" />
-                    )}
-                    <p>{representative.name}</p>
-
-                </div>
-                {representative.section ? (
-                    <p> {representative.section}</p>
-                ) : ''}
-            </div>
-        );
+        return (  <div className="flex align-items-center gap-2">
+                <img alt={representative.name} src={window.location.origin + `/images/${representative.image}`} width="32" />
+                <p>{representative.name}</p>
+            </div> );
     };
-    const demandBodyTemplate = (rowData) => {
-        const demand = rowData.demand;
-        return (
-            <div>
-                <p> {demand.name}</p>
-                <p> {demand.section}</p>
-            </div>
-        )
-    }
+
     // const representativeBodyTemplate = (rowData) => {
     //     const representative = rowData.representative;
 
@@ -213,6 +186,14 @@ export default function SystemsTable() {
     //         </div>
     //     );
     // };
+
+    const openCardBodyTemplate = (rowData) => {
+        return <div >
+            <IconField>
+                <InputIcon className="pi pi-bars p-button p-component p-button-icon-only p-button-outlined p-button-text p-button-rounded" onClick={() => ShowSystemDialog(rowData)} />
+            </IconField>
+        </div>
+    };
 
     const statusBodyTemplate = (rowData) => {
         return <Tag value={rowData.status} severity={getStatusSeverity(rowData.status)} />;
@@ -230,6 +211,11 @@ export default function SystemsTable() {
         return <Tag value={option} severity={getTypeSeverity(option)} />;
     };
 
+    const demandItemTemplate = (option) => {
+        return (
+            <p>{option}</p>
+        )
+    }
     // const verifiedBodyTemplate = (rowData) => {
     //     return <i className={classNames('pi', { 'true-icon pi-check-circle': rowData.verified, 'false-icon pi-times-circle': !rowData.verified })}></i>;
     // };
@@ -241,10 +227,10 @@ export default function SystemsTable() {
                 options={representatives}
                 itemTemplate={representativesItemTemplate}
                 onChange={(e) => options.filterApplyCallback(e.value)}
-                optionLabel="value"
+                optionLabel="name"
                 placeholder="חיפוש גוף מבצע"
                 className="p-column-filter"
-                maxSelectedLabels={1}
+                // maxSelectedLabels={1}
                 style={{ minWidth: '14rem' }}
             />
         );
@@ -265,9 +251,21 @@ export default function SystemsTable() {
     const header = renderHeader();
 
     const dateFilterTemplate = (options) => {
-        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
+        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999" />;
     };
 
+    const demandFilterTemplate = (options) => {
+        return (
+            <MultiSelect
+                value={options.value}
+                options={demands}
+                itemTemplate={demandItemTemplate}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder='חיפוש גוף דורש'
+                className="p-column-filter"
+            />
+        )
+    }
     const dateBodyTemplate = (rowData) => {
         return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
     };
@@ -312,6 +310,33 @@ export default function SystemsTable() {
         );
     };
 
+    const demandEditor = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={demands}
+                itemTemplate={demandItemTemplate}
+                onChange={(e) => options.editorCallback(e.value)}
+                placeholder='בחר גוף דורש'
+                className="p-column-filter"
+            />
+        );
+    }
+
+    const representativeEditor = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={representatives}
+                itemTemplate={representativesItemTemplate}
+                onChange={(e) => options.editorCallback(e.value)}
+                optionLabel='name'
+                placeholder={options.value.name}
+                className="p-column-filter"
+            />
+        );
+    }
+
     const typeEditor = (options) => {
         return (
             <Dropdown
@@ -328,7 +353,9 @@ export default function SystemsTable() {
 
     const dateEditor = (options) => {
         // return <InputNumber value={options.value} onValueChange={(e) => options.editorCallback(e.value)} mode="currency" currency="USD" locale="en-US" />;
-        return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
+        if (options.rowData.status == 'עלה לאויר') {
+            return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999" />;
+        }
     }
 
     const hideDeleteProjectDialog = () => {
@@ -369,6 +396,7 @@ export default function SystemsTable() {
     const [dataSystem, setDataSystem] = useState({})
 
     const ShowSystemDialog = (rowData) => {
+        console.log(rowData);
         setDataSystem(rowData)
         setVisibleSystemDialog(true)
     }
@@ -378,20 +406,20 @@ export default function SystemsTable() {
         <div className="card">
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
                 selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found." onRowClick={(e) => ShowSystemDialog(e.data)}>
+                globalFilterFields={['name', 'goal', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
+                <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                 <Column selectionMode="multiple" exportable={false}></Column>
-                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
-                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
+                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
+                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                <Column field='demand' header="גוף דורש" style={{ minWidth: '12rem' }} filter filterField='demand.name' filterPlaceholder="חיפוש גוף דורש"
-                    body={demandBodyTemplate}
-                />
+                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '12rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
+                  filterElement={demandFilterTemplate} />
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
-                <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+                <Column field='representative' header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
                     body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
-                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'left' }}></Column>
-                <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
+                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
             </DataTable>
 
             <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
