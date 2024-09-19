@@ -64,6 +64,7 @@ export default function SystemsTable() {
     const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
     const [project, setProject] = useState(emptyProject);
     const [selectedProjects, setSelectedProjects] = useState(null);
+    const [selectedReresentative, setSelectedRepresentative] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -319,6 +320,33 @@ export default function SystemsTable() {
         );
     };
 
+    const demandEditor = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={demands}
+                itemTemplate={demandItemTemplate}
+                onChange={(e) => options.editorCallback(e.value)}
+                placeholder='בחר גוף דורש'
+                className="p-column-filter"
+            />
+        );
+    }
+
+    const representativeEditor = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={representatives}
+                itemTemplate={representativesItemTemplate}
+                onChange={(e) => options.editorCallback(e.value)}
+                optionLabel='name'
+                placeholder={options.value.name}
+                className="p-column-filter"
+            />
+        );
+    }
+
     const typeEditor = (options) => {
         return (
             <Dropdown
@@ -394,11 +422,11 @@ export default function SystemsTable() {
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                 <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                <Column field='demand.section' header="גוף דורש" style={{ minWidth: '12rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
+                <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '12rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
                   filterElement={demandFilterTemplate} 
                 />
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
-                <Column field='representative' header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+                <Column field='representative' header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
                     body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
                 <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
