@@ -6,7 +6,7 @@
     width: 100vw;
 } */
 td{
-    text-align:right;
+    text-align:center;
 }
 
 th{
@@ -40,4 +40,19 @@ th{
     color:white;
     /* position:absolute; */
     /* left:1px */
+}
+div.p-paginator-bottom.p-paginator.p-component {
+    direction: ltr;
+}
+div.p-datepicker-group{
+    direction: ltr;
+}
+#pr_id_14_panel .p-datepicker.p-component.p-ripple-disabled.p-connected-overlay-enter-done{
+    direction: ltr;
+}
+table.p-datepicker-calendar{
+    direction: ltr;
+}
+div.p-datepicker-header{
+    direction: ltr;
 }
