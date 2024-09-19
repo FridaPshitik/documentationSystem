@@ -18,7 +18,7 @@ import imageSkyvar from "../assets/skyvar.png";
 import imageElbit from "../assets/elbit.png";
 import imageInside from "../assets/inside.png";
 import e from "../assets/e.png";
-import './SystemsTable.css' ;
+import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 import DialogSystem from '../form/DialogSystem'
 
@@ -134,7 +134,7 @@ export default function SystemsTable() {
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
                 <Button id='add_project' label="הוספת פרויקט" icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
-                <Dialog header="הוספת פרוייקט חדש" style={{width:'33vw', textAlign: 'center'}} visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
+                <Dialog header="הוספת פרוייקט חדש" style={{ width: '33vw', textAlign: 'center' }} visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
                 <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
@@ -181,17 +181,17 @@ export default function SystemsTable() {
                     {representative.name === "סקייבר" ? (
                         <img alt={representative.image} src={imageSkyvar} width="32" />
                     ) : representative.name === "אלביט" ? (
-                          <img alt={representative.image} src={imageElbit} width="32" />
+                        <img alt={representative.image} src={imageElbit} width="32" />
                     ) : (
-                          <img alt={representative.image} src={imageInside} width="32" />
+                        <img alt={representative.image} src={imageInside} width="32" />
                     )}
                     <p>{representative.name}</p>
-                
-            </div>
+
+                </div>
                 {representative.section ? (
                     <p> {representative.section}</p>
-                    ): ''}
-              </div>
+                ) : ''}
+            </div>
         );
     };
     const demandBodyTemplate = (rowData) => {
@@ -269,7 +269,7 @@ export default function SystemsTable() {
     };
 
     const dateBodyTemplate = (rowData) => {
-        return rowData.date!='Invalid Date'? formatDate(rowData.date):''
+        return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
     };
 
     const formatDate = (value) => {
@@ -376,10 +376,10 @@ export default function SystemsTable() {
     return (<div>
         <Toast ref={toast} />
         <div className="card">
-            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading} 
-                    selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                    globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found." onRowClick={(e) => ShowSystemDialog(e.data)}>
-                <Column selectionMode="multiple " exportable={false}></Column>
+            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+                selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+                globalFilterFields={['name', 'goal', 'status', 'date', 'demand.name', 'type', 'representative.name']} header={header} emptyMessage="No customers found." onRowClick={(e) => ShowSystemDialog(e.data)}>
+                <Column selectionMode="multiple" exportable={false}></Column>
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
@@ -390,7 +390,7 @@ export default function SystemsTable() {
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
                 <Column header="גוף מבצע" filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
                     body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
-                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'left' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
 
