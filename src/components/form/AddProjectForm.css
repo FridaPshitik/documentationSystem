@@ -48,10 +48,15 @@
     grid-area: date;
 }
 
+.item8 {
+    grid-area: goal;
+}
+
 .grid-container {
     display: grid;
     grid-template-areas:
         'name  demand'
+        'goal goal'
         'description description '
         'type  operating'
         'status  date';

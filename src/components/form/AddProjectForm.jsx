@@ -19,6 +19,7 @@ const AddProjectForm = () => {
 
     const [projectName, setProjectName] = useState('');
     const [description, setDescription] = useState('');
+    const [goal, setGoal] = useState('');
     const [date, setDate] = useState('Invalid Date');
     const [selectedDemandFactor, setSelectedDemandFactor] = useState(null);
     const [selectedOperatingFactor, setSelectedOperatingFactor] = useState(null);
@@ -36,8 +37,10 @@ const AddProjectForm = () => {
     const [explain, setExplain] = useState(null)
 
     const addProject = () => {
+        // פונקציה להוספת פרויקט לטבלה
         const project = {}
         project.projectName = projectName;
+        project.goal = goal;
         project.description = description;
         project.demandFactor = selectedDemandFactor;
         project.operatingFactor = selectedOperatingFactor || selectedOperatingCompany;
@@ -47,7 +50,7 @@ const AddProjectForm = () => {
     };
 
     const handleValidation = (name) => {
-        const data = CustomerService.getData();
+        const data = CustomerService.getData(); // פונקציה לקבלת כל שמות הפרויקטים מהטבלה
         data.forEach(obj => {
             if (obj.name === name) {
                 setVisible(true)
@@ -69,13 +72,12 @@ const AddProjectForm = () => {
 
     return (
         <>
-            <div id="addProjectForm" >
-                <form action="" >
+            <div id="addProjectForm">
+                <form action="">
                     <div className="card" class="grid-container">
-
                         <div className="card" class="item1">
                             <FloatLabel className="field">
-                                <InputText style={{ textAlign: 'center' }} className="w-full md:w-14rem field" inputId="projectName" value={projectName} onChange={(e) => {
+                                <InputText className="w-full md:w-14rem field" inputId="projectName" value={projectName} onChange={(e) => {
                                     setProjectName(e.target.value)
                                     handleValidation(e.target.value)
                                 }} />
@@ -85,7 +87,13 @@ const AddProjectForm = () => {
                         <div className="card" class="item2">
                             <FloatLabel className="field">
                                 <InputTextarea className="w-full md:w-30rem field" inputId="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={4} cols={30} />
-                                <label htmlFor="description">מטרת הפרויקט</label>
+                                <label htmlFor="description">תאור הפרויקט</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="card" class="item8">
+                            <FloatLabel className="field">
+                                <InputTextarea className="w-full md:w-30rem field" inputId="goal" value={goal} onChange={(e) => setGoal(e.target.value)} />
+                                <label htmlFor="goal">מטרת הפרויקט</label>
                             </FloatLabel>
                         </div>
                         <div className="card" class="item3">
@@ -139,7 +147,7 @@ const AddProjectForm = () => {
                     </div>
                 </form>
 
-                <Dialog header="אזהרה ⚠️" visible={visible} style={{ width: '20%' }} onHide={() => setVisible(false)}>
+                <Dialog header="אזהרה ⚠️" visible={visible} onHide={() => setVisible(false)}>
                     <CheckMultipleName setVisible={setVisible} setProjectName={setProjectName} />
                 </Dialog>
 

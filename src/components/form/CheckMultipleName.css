@@ -1,0 +1,7 @@
+#buttons{
+    direction: ltr;
+    margin-top: 10px;
+}
+#buttons button{
+    margin: 2px;
+}
