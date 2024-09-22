@@ -1,7 +1,4 @@
 import { Card } from 'primereact/card';
-import imageSkyvar from "../assets/skyvar.png";
-import imageElbit from "../assets/elbit.png";
-import imageInside from "../assets/inside.png";
 import { Tag } from 'primereact/tag';
 
 import './DialogSystem.css'
@@ -55,7 +52,7 @@ export default function DialogSystem(data) {
 
     return (
         <div className="card flex justify-content-center">
-            <Card title={data.dataSystem.name} subTitle={data.dataSystem.goal} header={header} >
+            <Card title={data.dataSystem.name} subTitle={data.dataSystem.description} header={header} >
                 <h3>גוף דורש:</h3>
                 <div className="flex align-items-center gap-2">
                     <p>{data.dataSystem.demand.name}</p>
@@ -64,13 +61,7 @@ export default function DialogSystem(data) {
                 <h3>גוף מבצע: &nbsp;<Tag value={data.dataSystem.type} severity={getTypeSeverity(data.dataSystem.type)} />
                 </h3>
                 <div className="flex align-items-center gap-2">
-                    {representative.name === "סקייבר" ? (
-                        <img alt={representative.image} src={imageSkyvar} width="32" />
-                    ) : representative.name === "אלביט" ? (
-                        <img alt={representative.image} src={imageElbit} width="32" />
-                    ) : (
-                        <img alt={representative.image} src={imageInside} width="32" />
-                    )}
+                    <img alt={representative.name} src={window.location.origin + `/images/${representative.image}`} width="32" />
                     <span>{representative.name}</span>
                 </div>
                 <h3>סטאטוס: &nbsp;<Tag value={data.dataSystem.status} severity={getStatusSeverity(data.dataSystem.status)}></Tag></h3>
