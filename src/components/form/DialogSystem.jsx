@@ -52,7 +52,7 @@ export default function DialogSystem(data) {
 
     return (
         <div className="card flex justify-content-center">
-            <Card title={data.dataSystem.name} subTitle={data.dataSystem.goal} header={header} >
+            <Card title={data.dataSystem.name} subTitle={data.dataSystem.description} header={header} >
                 <h3>גוף דורש:</h3>
                 <div className="flex align-items-center gap-2">
                     <p>{data.dataSystem.demand.name}</p>
