@@ -14,7 +14,6 @@ import { CustomerService } from '../../services/CustomerService';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 
-
 import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 import DialogSystem from '../form/DialogSystem'
@@ -45,6 +44,8 @@ export default function SystemsTable() {
         representative: { value: null, matchMode: FilterMatchMode.IN }
     });
     const [visible, setVisibleAddProjectFormDialog] = useState(false);
+    // const [isDateEditable, setIsDateEditable] = useState(false);
+    const [editableRows, setEditableRows] = useState({});
     const [visibleSystemDialog, setVisibleSystemDialog] = useState(false);
     const [loading, setLoading] = useState(true);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -134,6 +135,7 @@ export default function SystemsTable() {
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
                 <Button id='add_project' label='הוספת פרוייקט חדש' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
+
                 <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
                 <Button id='download' icon="pi pi-download" outlined onClick={exportCSV} />
             </div>
@@ -242,20 +244,48 @@ export default function SystemsTable() {
             month: '2-digit',
             year: 'numeric'
         });
-
     };
 
     const textEditor = (options) => {
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
     };
 
+    const onRowEditInit = (event) => {
+        const { status, id } = event.data;
+
+        setEditableRows((prevEditableRows) => ({
+            ...prevEditableRows,
+            [id]: status === "עלה לאויר",
+        }));
+    };
+
+
+    const onRowEditComplete = (e) => {
+        let _projects = [...projects];
+        let { newData, index } = e;
+        if (newData.status == "עלה לאויר" && newData.date == 'Invalid Date') {
+            newData.date = new Date();
+        }
+        _projects[index] = newData;
+        setProjects(_projects);
+    };
 
     const statusEditor = (options) => {
         return (
             <Dropdown
                 value={options.value}
                 options={statuses}
-                onChange={(e) => options.editorCallback(e.value)}
+                onChange={(e) => {
+                    options.editorCallback(e.value)
+                    if (options.rowData.status === 'עלה לאויר') {
+                        setEditableRows((prevEditableRows) => ({
+                            ...prevEditableRows,
+                            [options.rowData.id]: true,
+                        }));
+                    }
+
+                }
+                }
                 placeholder="בחר סטטוס"
                 itemTemplate={(option) => {
                     return <Tag value={option} severity={getStatusSeverity(option)}></Tag>;
@@ -306,18 +336,8 @@ export default function SystemsTable() {
     };
 
     const dateEditor = (options) => {
-        if (options.rowData.status == 'עלה לאויר') {
-            return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999" />;
-        }
+        return <Calendar value={options.value} onChange={(e) => options.editorCallback(e.value)}  dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999" />;
     }
-
-    const onRowEditComplete = (e) => {
-        let _projects = [...projects];
-        let { newData, index } = e;
-        newData.date = newData.status == 'עלה לאויר' ? new Date() : 'Invalid Date'
-        _projects[index] = newData;
-        setProjects(_projects);
-    };
 
     const hideDeleteProjectDialog = () => {
         setDeleteProjectDialog(false);
@@ -370,6 +390,7 @@ export default function SystemsTable() {
     return (<div>
         <Toast ref={toast} />
         <div className="card">
+
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading} scrollable
                 selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                 globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
@@ -378,7 +399,7 @@ export default function SystemsTable() {
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? dateEditor(options) : null} filterField="date" dataType="date" style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '8rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
                     filterElement={demandFilterTemplate}
                 />
