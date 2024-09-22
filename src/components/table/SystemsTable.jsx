@@ -18,7 +18,7 @@ import imageSkyvar from "../assets/skyvar.png";
 import imageElbit from "../assets/elbit.png";
 import imageInside from "../assets/inside.png";
 import e from "../assets/e.png";
-import './SystemsTable.css' ;
+import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 import DialogSystem from '../form/DialogSystem'
 
@@ -42,10 +42,12 @@ export default function SystemsTable() {
         status: { value: null, matchMode: FilterMatchMode.EQUALS },
         date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         'demand.section': { value: null, matchMode: FilterMatchMode.IN },
-        type: { value: null, matchMode: FilterMatchMode.EQUALS},
+        type: { value: null, matchMode: FilterMatchMode.EQUALS },
         representative: { value: null, matchMode: FilterMatchMode.IN }
     });
     const [visible, setVisibleAddProjectFormDialog] = useState(false);
+    // const [isDateEditable, setIsDateEditable] = useState(false);
+    const [editableRows, setEditableRows] = useState({});
     const [visibleSystemDialog, setVisibleSystemDialog] = useState(false);
     const [loading, setLoading] = useState(true);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -104,6 +106,7 @@ export default function SystemsTable() {
             setProjects(getProjects(data));
             setLoading(false);
         });
+
     }, []);
 
     const getProjects = (data) => {
@@ -142,8 +145,8 @@ export default function SystemsTable() {
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
                 {/* <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} /> */}
-                <Button id='download' style={{width: '5%'}} icon="pi pi-download"  outlined onClick={exportCSV} />
-                <Button style={{width: '20%'}} label='הוספת פרוייקט חדש' id='add_project' icon="pi pi-plus" onClick={() => setVisibleAddProjectFormDialog(true)} />
+                <Button id='download' style={{ width: '5%' }} icon="pi pi-download" outlined onClick={exportCSV} />
+                <Button style={{ width: '20%' }} label='הוספת פרוייקט חדש' id='add_project' icon="pi pi-plus" onClick={() => setVisibleAddProjectFormDialog(true)} />
             </div>
         );
     };
@@ -180,20 +183,20 @@ export default function SystemsTable() {
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
         return (
-                <div className="flex align-items-center gap-2">
-                    {representative.name === "סקייבר" ? (
-                        <img alt={representative.image} src={imageSkyvar} width="32" />
-                    ) : representative.name === "אלביט" ? (
-                          <img alt={representative.image} src={imageElbit} width="32" />
-                    ) : (
-                          <img alt={representative.image} src={imageInside} width="32" />
-                    )}
-                    <p>{representative.name}</p>
-           
-              </div>
+            <div className="flex align-items-center gap-2">
+                {representative.name === "סקייבר" ? (
+                    <img alt={representative.image} src={imageSkyvar} width="32" />
+                ) : representative.name === "אלביט" ? (
+                    <img alt={representative.image} src={imageElbit} width="32" />
+                ) : (
+                    <img alt={representative.image} src={imageInside} width="32" />
+                )}
+                <p>{representative.name}</p>
+
+            </div>
         );
     };
-   
+
     // const representativeBodyTemplate = (rowData) => {
     //     const representative = rowData.representative;
 
@@ -221,7 +224,7 @@ export default function SystemsTable() {
         return <Tag value={option} severity={getTypeSeverity(option)} />;
     };
 
-    const demandItemTemplate = (option) =>{
+    const demandItemTemplate = (option) => {
         return (
             <p>{option}</p>
         )
@@ -261,11 +264,11 @@ export default function SystemsTable() {
     const header = renderHeader();
 
     const dateFilterTemplate = (options) => {
-        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
+        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999" />;
     };
 
-    const demandFilterTemplate = (options) =>{
-        return(
+    const demandFilterTemplate = (options) => {
+        return (
             <MultiSelect
                 value={options.value}
                 options={demands}
@@ -277,7 +280,7 @@ export default function SystemsTable() {
         )
     }
     const dateBodyTemplate = (rowData) => {
-        return rowData.date!='Invalid Date'? formatDate(rowData.date):''
+        return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
     };
 
     const formatDate = (value) => {
@@ -286,17 +289,28 @@ export default function SystemsTable() {
             month: '2-digit',
             year: 'numeric'
         });
-
     };
 
     const textEditor = (options) => {
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
     };
 
+    const onRowEditInit = (event) => {
+        const { status, id } = event.data;
+
+        setEditableRows((prevEditableRows) => ({
+            ...prevEditableRows,
+            [id]: status === "עלה לאויר",
+        }));
+    };
+
+
     const onRowEditComplete = (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        newData.date = newData.status == 'עלה לאויר' ? new Date() : 'Invalid Date'
+        if (newData.status == "עלה לאויר" && newData.date == 'Invalid Date') {
+            newData.date = new Date();
+        }
         _projects[index] = newData;
         setProjects(_projects);
     };
@@ -311,7 +325,17 @@ export default function SystemsTable() {
             <Dropdown
                 value={options.value}
                 options={statuses}
-                onChange={(e) => options.editorCallback(e.value)}
+                onChange={(e) => {
+                    options.editorCallback(e.value)
+                    if (options.rowData.status === 'עלה לאויר') {
+                        setEditableRows((prevEditableRows) => ({
+                            ...prevEditableRows,
+                            [options.rowData.id]: true,
+                        }));
+                    }
+
+                }
+                }
                 placeholder="בחר סטטוס"
                 itemTemplate={(option) => {
                     return <Tag value={option} severity={getStatusSeverity(option)}></Tag>;
@@ -362,10 +386,7 @@ export default function SystemsTable() {
     };
 
     const dateEditor = (options) => {
-        // return <InputNumber value={options.value} onValueChange={(e) => options.editorCallback(e.value)} mode="currency" currency="USD" locale="en-US" />;
-        if (options.rowData.status == 'עלה לאויר' ){
-            return <Calendar value={options.value} onValueChange={(e) => options.options.editorCallback(e.value)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
-        }
+        return <Calendar value={options.value} onChange={(e) => options.editorCallback(e.value)}  dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999" />;
     }
 
     const hideDeleteProjectDialog = () => {
@@ -414,16 +435,16 @@ export default function SystemsTable() {
     return (<div>
         <Toast ref={toast} />
         <div className="card">
-            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading} 
-                    // selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                    globalFilterFields={['name', 'goal', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." onRowDoubleClick={(e) => ShowSystemDialog(e.data)}>
+            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading}
+                onRowEditInit={onRowEditInit}// selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+                globalFilterFields={['name', 'goal', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." onRowDoubleClick={(e) => ShowSystemDialog(e.data)}>
                 {/* <Column selectionMode="multiple" exportable={false}></Column> */}
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '12rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => dateEditor(options)} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field='date' header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? dateEditor(options) : null} filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '12rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
-                  filterElement={demandFilterTemplate} 
+                    filterElement={demandFilterTemplate}
                 />
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
                 <Column field='representative' header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
