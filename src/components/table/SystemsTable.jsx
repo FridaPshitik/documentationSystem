@@ -30,6 +30,7 @@ export default function SystemsTable() {
         date: null,
         type: null,
         classification: null,
+        devEnvironment: null,
         population: []
     };
 
@@ -44,7 +45,9 @@ export default function SystemsTable() {
         'demand.section': { value: null, matchMode: FilterMatchMode.IN },
         type: { value: null, matchMode: FilterMatchMode.EQUALS },
         classification: { value: null, matchMode: FilterMatchMode.EQUALS },
-        representative: { value: null, matchMode: FilterMatchMode.IN }
+        devEnvironment: { value: null, matchMode: FilterMatchMode.EQUALS },
+        representative: { value: null, matchMode: FilterMatchMode.IN },
+        population: { value: null, matchMode: FilterMatchMode.CONTAINS }
     });
     const [visible, setVisibleAddProjectFormDialog] = useState(false);
     // const [isDateEditable, setIsDateEditable] = useState(false);
