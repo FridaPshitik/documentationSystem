@@ -1,5 +1,6 @@
 import { Button } from "primereact/button";
 
+import './CheckMultipleName.css'
 
 const CheckMultipleName = ({setVisible,setProjectName}) => {
 
@@ -9,9 +10,9 @@ const CheckMultipleName = ({setVisible,setProjectName}) => {
             <br></br>
             האם אתה בטוח שברצונך להמשיך?
         </p>
-        <div style={{ direction: "ltr", marginTop: "10px" }} >
-            <Button label="כן" onClick={() => setVisible(false)} style={{ margin: "2px" }}></Button>
-            <Button label="לא" severity="secondary" style={{ margin: "2px" }} onClick={() => {
+        <div id="buttons" >
+            <Button label="כן" onClick={() => setVisible(false)}></Button>
+            <Button label="לא" severity="secondary" onClick={() => {
                 setVisible(false)
                 setProjectName('')
             }} ></Button>

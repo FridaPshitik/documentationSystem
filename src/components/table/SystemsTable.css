@@ -72,6 +72,21 @@ div.p-datepicker-header {
 .p-column-filter-row .p-column-filter-element{
     width: 100%;
 }
+
 input.p-column-filter.p-inputtext.p-component{
     padding-right: 5px;
+}
+#delete_selected ,#download{
+    width: 5%;
+}
+#addNewProjectDialog{
+    width: '33vw';
+    text-align: 'center';
+}
+#add_project{
+    width: 15%;
+}
+
+div.p-column-header-content{
+    text-align: center;
 }
