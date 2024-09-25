@@ -16,8 +16,13 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת ציפור",
                     section: "פיקוד צפון",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"יפעת",
+                    contactPhone:"0556412421"
                 },
+                classification : 'בלמ"ס',
+                devEnvironment: "שחורה",
+                population: ["קבע","חובה"]
             },
             {
                 id: 1000,
@@ -34,8 +39,13 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת נחל",
                     section: "פיקוד צפון",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"טל",
+                    contactPhone:"0523456985"
                 },
+                classification : 'סודי',
+                devEnvironment: "שחורה",
+                population: ["מילואים"]
             },
             {
                 id: 3000,
@@ -52,8 +62,13 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת מעוף",
                     section: "פיקוד דרום",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"גל",
+                    contactPhone:"0534126985"
                 },
+                classification : 'סודי',
+                devEnvironment: "שחורה",
+                population: ["מילואים","חובה","קבע"]
             },
             {
                 id: 4000,
@@ -70,8 +85,13 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת נשר",
                     section: "פיקוד צפון",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"אבי",
+                    contactPhone:"0523985624"
                 },
+                classification : 'סודי ביותר',
+                devEnvironment: "אדומה",
+                population: ["קבע"]
             }
         ];
     },

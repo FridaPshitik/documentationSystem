@@ -13,6 +13,7 @@ import AddDemandForm from './AddDemandForm';
 import AddOperatingForm from './AddOperatingForm';
 import CheckMultipleName from "./CheckMultipleName";
 import { InputTextarea } from "primereact/inputtextarea";
+import { MultiSelect } from "primereact/multiselect";
 
 
 const AddProjectForm = () => {
@@ -26,6 +27,9 @@ const AddProjectForm = () => {
     const [selectedOperatingCompany, setSelectedOperatingCompany] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
+    const [selectedClassification, setSelectedClassification] = useState(null);
+    const [selectedDevEnvironment, setSelectedDevEnvironment] = useState(null);
+    const [selectedPopulation, setSelectedPopulation] = useState(null);
     const [visible, setVisible] = useState(false);
     const [hideAddOperatingCompany, setHideAddOperatingCompany] = useState(false);
     const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
@@ -34,6 +38,10 @@ const AddProjectForm = () => {
     const [operatingCompany, setOperatingCompany] = useState(['אחר', 'סקייבר', 'אלביט',]);
     const statuses = ['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר'];
     const types = ['פנימי', 'חיצוני'];
+    const [classification] = useState(['סודי ביותר', 'סודי', 'בלמ"ס']);
+    const [devEnvironment] = useState(['שחורה', 'אדומה']);
+    const [population] = useState(['פטור', 'אע"צים', 'מילואים', 'קבע', 'חובה'])
+
     const [explain, setExplain] = useState(null)
 
     const addProject = () => {
@@ -47,6 +55,10 @@ const AddProjectForm = () => {
         project.type = selectedType;
         project.status = selectedStatus;
         project.date = date;
+        project.classification = selectedClassification;
+        project.devEnvironment = selectedDevEnvironment;
+        project.population = selectedPopulation;
+        console.log(project);
     };
 
     const handleValidation = (name) => {
@@ -77,10 +89,10 @@ const AddProjectForm = () => {
                     <div className="card" class="grid-container">
                         <div className="card" class="item1">
                             <FloatLabel className="field">
-                                <InputText className="w-full md:w-14rem field" inputId="projectName" value={projectName} onChange={(e) => {
+                                <InputText className="w-full md:w-30rem field" inputId="projectName" value={projectName} onChange={(e) => {
                                     setProjectName(e.target.value)
                                     handleValidation(e.target.value)
-                                }} />
+                                }} rows={4} cols={30}/>
                                 <label htmlFor="projectName">שם הפרויקט</label>
                             </FloatLabel>
                         </div>
@@ -140,6 +152,27 @@ const AddProjectForm = () => {
                                     <label htmlFor="dd-date">בחר תאריך</label>
                                 </FloatLabel>
                             }
+                        </div>
+                        <div className="card" class="item9">
+                            <FloatLabel className="field" >
+                                <Dropdown inputId="classification" value={selectedClassification} onChange={(e) => setSelectedClassification(e.value)}
+                                    options={classification} className="w-full md:w-14rem field" />
+                                <label htmlFor="classification">בחר סיווג</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="card" class="item10">
+                            <FloatLabel className="field" >
+                                <Dropdown inputId="devEnvironment" value={selectedDevEnvironment} onChange={(e) => setSelectedDevEnvironment(e.value)}
+                                    options={devEnvironment} className="w-full md:w-14rem field" />
+                                <label htmlFor="devEnvironment">בחר סביבת פיתוח</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="card" class="item11">
+                            <FloatLabel className="field" >
+                                <MultiSelect inputId="population" value={selectedPopulation} onChange={(e) => setSelectedPopulation(e.value)}
+                                    options={population} className="w-full md:w-14rem field" />
+                                <label htmlFor="population">בחר אוכלוסיה</label>
+                            </FloatLabel>
                         </div>
                     </div>
                     <div id="button">

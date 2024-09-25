@@ -51,14 +51,25 @@
 .item8 {
     grid-area: goal;
 }
+.item9 {
+    grid-area: classification;
+}
+.item10 {
+    grid-area: devEnvironment;
+}
+.item11 {
+    grid-area: population;
+}
 
 .grid-container {
     display: grid;
     grid-template-areas:
-        'name  demand'
+        'name name'
         'goal goal'
-        'description description '
+        'description description'
         'type  operating'
+        'demand classification'
+        'devEnvironment population'
         'status  date';
     gap: 5px;
     padding: 15px;

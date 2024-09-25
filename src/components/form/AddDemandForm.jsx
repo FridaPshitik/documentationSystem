@@ -9,14 +9,17 @@ const AddDemandForm = ({ setSelected, setDemandFactors, hide, demandFactors }) =
 
     const [factorName, setFactorName] = useState('');
     const [section, setSection] = useState('')
-
+    const [contactName, setContactName] = useState('');
+    const [contactPhone, setContactPhone] = useState('');
 
     const addDemand = () => {
-        setDemandFactors(demandFactors => [...demandFactors, section])
+        setDemandFactors(demandFactors => [...demandFactors, section, contactName, contactPhone]);
         setSelected(section);
         const factor = {};
         factor.factorName = factorName;
         factor.section = section;
+        factor.contactName = contactName;
+        factor.contactPhone = contactPhone;
         hide(false);
     };
 
@@ -31,6 +34,14 @@ const AddDemandForm = ({ setSelected, setDemandFactors, hide, demandFactors }) =
                 <FloatLabel className="field">
                     <InputText className="w-full md:w-14rem field" id="section" value={section} onChange={(e) => setSection(e.target.value)} />
                     <label htmlFor="section">אזור פיקוד</label>
+                </FloatLabel>
+                <FloatLabel className="field">
+                    <InputText className="w-full md:w-14rem field" inputId="contactName" value={contactName} onChange={(e) => setContactName(e.target.value)} />
+                    <label htmlFor="contactName">שם איש קשר</label>
+                </FloatLabel>
+                <FloatLabel className="field">
+                    <InputText className="w-full md:w-14rem field" inputId="contactPhone" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
+                    <label htmlFor="contactPhone">טלפון איש קשר</label>
                 </FloatLabel>
             </div>
             <div id="button">
