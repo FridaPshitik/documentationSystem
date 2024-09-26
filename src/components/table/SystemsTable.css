@@ -90,7 +90,3 @@ input.p-column-filter.p-inputtext.p-component{
 div.p-column-header-content{
     text-align: center;
 }
-.p-icon-field > .p-input-icon {
-    position: relative;
-    margin-top: 0.5rem;
-}
