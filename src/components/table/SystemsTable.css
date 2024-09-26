@@ -23,7 +23,12 @@ th {
 .headerss{
     margin-left: 15px;
     margin-right: 15px;
-    background-color: white;
+    /* background-color: white;
+    border: 1px solid white; */
+}
+
+.p-datatable .p-datatable-header {
+     background-color: white;
     border: 1px solid white;
 }
 
