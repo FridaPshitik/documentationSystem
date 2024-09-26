@@ -92,7 +92,6 @@ export default function DialogSystem(data) {
                 <p>{data.dataSystem.description}</p>
                 <div className="flex align-items-center gap-2">
                     <h3>גוף דורש:</h3>
-                    <p>{data.dataSystem.demand.name}</p>
                     <p>{data.dataSystem.demand.section}</p>
                     <h4>איש קשר:</h4>
                     <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone}</p>
