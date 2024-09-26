@@ -120,13 +120,13 @@ export default function SystemsTable() {
         }
     };
 
-    const getDevEnvironmentSeverity = (devEnvironment) => {
+    const getDevEnvironmentColor = (devEnvironment) => {
         switch (devEnvironment) {
             case 'אדומה':
-                return 'danger';
+                return 'red';
 
             case 'שחורה':
-                return 'info';
+                return 'black';
         }
     };
 
@@ -227,7 +227,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentBodyTemplate = (rowData) => {
-        return <Tag value={rowData.devEnvironment} severity={getDevEnvironmentSeverity(rowData.devEnvironment)} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
+        return <Tag value={rowData.devEnvironment}  style={{background : getDevEnvironmentColor(rowData.devEnvironment), width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
     };
 
     const populationBodyTemplate = (rowData) => {
@@ -251,7 +251,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentItemTemplate = (option) => {
-        return <Tag value={option} severity={getDevEnvironmentSeverity(option)} />;
+        return <Tag value={option} style={{background:getDevEnvironmentColor(option)}} />;
     };
 
     const populationItemTemplate = (option) => {
@@ -450,7 +450,7 @@ export default function SystemsTable() {
                 onChange={(e) => options.editorCallback(e.value)}
                 placeholder="בחר סביבת פיתוח"
                 itemTemplate={(option) => {
-                    return <Tag value={option} severity={getDevEnvironmentSeverity(option)}></Tag>;
+                    return <Tag value={option} style={{background:getDevEnvironmentColor(option)}}></Tag>;
                 }}
             />
         );
