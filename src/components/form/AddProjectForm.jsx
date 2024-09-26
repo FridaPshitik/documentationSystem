@@ -119,7 +119,7 @@ const AddProjectForm = () => {
                             <FloatLabel className="field" >
                                 <Dropdown inputId="dd-type" value={selectedType} onChange={(e) => setSelectedType(e.value)}
                                     options={types} className="w-full md:w-14rem field" />
-                                <label htmlFor="dd-type">בחר סוג</label>
+                                <label htmlFor="dd-type">בחר סוג פיתוח</label>
                             </FloatLabel>
                         </div>
 

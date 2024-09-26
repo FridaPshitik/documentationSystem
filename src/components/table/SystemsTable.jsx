@@ -272,7 +272,7 @@ export default function SystemsTable() {
                 itemTemplate={representativesItemTemplate}
                 onChange={(e) => options.filterApplyCallback(e.value)}
                 optionLabel="name"
-                placeholder="חיפוש גוף מבצע"
+                placeholder="סנן"
                 className="p-column-filter"
             />
         );
@@ -280,31 +280,31 @@ export default function SystemsTable() {
 
     const statusRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="חיפוש סטטוס" className="p-column-filter" />
+            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
     const typeRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" />
+            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
     const classificationRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={classification} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={classificationItemTemplate} placeholder="חיפוש סוג סיווג" className="p-column-filter" />
+            <Dropdown value={options.value} options={classification} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={classificationItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
     const devEnvironmentRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={devEnvironment} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={devEnvironmentItemTemplate} placeholder="חיפוש סביבת פיתוח" className="p-column-filter" />
+            <Dropdown value={options.value} options={devEnvironment} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={devEnvironmentItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
     const populationRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={population} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={populationItemTemplate} placeholder="חיפוש סוג אוכלוסיה" className="p-column-filter" />
+            <Dropdown value={options.value} options={population} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={populationItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
@@ -321,7 +321,7 @@ export default function SystemsTable() {
                 options={demands}
                 itemTemplate={demandItemTemplate}
                 onChange={(e) => options.filterApplyCallback(e.value)}
-                placeholder='חיפוש גוף דורש'
+                placeholder='סנן'
                 className="p-column-filter"
             />
         )
@@ -517,8 +517,8 @@ export default function SystemsTable() {
                 globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
                 <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                 {/* <Column selectionMode="multiple" exportable={false}></Column> */}
-                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
-                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
+                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
+                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                 <Column field='date' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? dateEditor(options) : null} filterField="date" showFilterMenu={false} style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '8rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
@@ -530,8 +530,8 @@ export default function SystemsTable() {
                 <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
                 <Column field='devEnvironment' header="סביבת פיתוח" editor={(options) => devEnvironmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={devEnvironmentBodyTemplate} filter filterElement={devEnvironmentRowFilterTemplate} />
                 <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
-                <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
-                <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
+                <Column rowEditor={true} style={{ minWidth: '1rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                <Column body={deleteBodyTemplate} style={{ minWidth: '1rem' }}></Column>
             </DataTable>
 
             <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
