@@ -75,7 +75,7 @@ export const CustomerService = {
                 name: "פיתוח תרשימים",
                 goal:"חידוש ועידכון שאילתות",
                 description: "מטרת הפרויקט - חידוש ועדכון שאילתות מורכבות עבור התרשימים המוצגים אחת לחודש.",
-                date: '2020-09',
+                date: 'Thu Sep 05 2024 00:00:00 GMT+0300',
                 status: 'עלה לאויר',
                 type: "פנימי",
                 representative: {
