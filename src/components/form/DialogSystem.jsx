@@ -23,6 +23,9 @@ export default function DialogSystem(data) {
             case 'עלה לאויר':
                 return 'warning';
 
+            default:
+                return '';
+
         }
     };
 
@@ -34,7 +37,7 @@ export default function DialogSystem(data) {
             case 'חיצוני':
                 return 'warning';
 
-            case '':
+            default:
                 return 'dark';
 
         }
@@ -49,6 +52,9 @@ export default function DialogSystem(data) {
 
             case 'סודי ביותר':
                 return 'danger';
+
+            default:
+                return '';
         }
     };
 
@@ -59,6 +65,9 @@ export default function DialogSystem(data) {
 
             case 'שחורה':
                 return 'black';
+
+            default:
+                return '';
         }
     };
     const getPopulationSeverity = (population) => {
@@ -73,6 +82,8 @@ export default function DialogSystem(data) {
                 return 'danger';
             case 'פטור':
                 return 'warning';
+            default:
+                return '';
         }
     };
 
@@ -113,7 +124,7 @@ export default function DialogSystem(data) {
                 ))}</h3>
 
                 <div>
-                    {data.dataSystem.date != 'Invalid Date' ? <div>
+                    {data.dataSystem.date !== 'Invalid Date' ? <div>
                         < h3 > תאריך עליה לאוויר:</h3 >
                         <p className="m-0">
                             {formatDate(data.dataSystem.date)}

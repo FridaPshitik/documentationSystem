@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { FilterMatchMode } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
@@ -13,7 +13,6 @@ import { Button } from 'primereact/button';
 import { CustomerService } from '../../services/CustomerService';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
-import { Card } from 'primereact/card';
 import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 import DialogSystem from '../form/DialogSystem'
@@ -75,7 +74,6 @@ export default function SystemsTable() {
     const [project, setProject] = useState(emptyProject);
     const [selectedProjects, setSelectedProjects] = useState(null);
     const [demandConcats, setDemandConcats] = useState(null);
-    const [selectedReresentative, setSelectedRepresentative] = useState(null);
     const [dataSystem, setDataSystem] = useState({})
     const toast = useRef(null);
     const dt = useRef(null);
@@ -93,6 +91,9 @@ export default function SystemsTable() {
 
             case 'עלה לאויר':
                 return 'success';
+            
+            default:
+                return '';
         }
     };
 
@@ -104,7 +105,7 @@ export default function SystemsTable() {
             case 'חיצוני':
                 return 'warning';
 
-            case '':
+            default:
                 return 'dark';
         }
     };
@@ -119,6 +120,9 @@ export default function SystemsTable() {
 
             case 'סודי ביותר':
                 return 'danger';
+            
+            default:
+                return '';
         }
     };
 
@@ -130,6 +134,8 @@ export default function SystemsTable() {
 
             case 'שחורה':
                 return 'black';
+            default:
+                return '';
         }
     };
 
@@ -145,6 +151,8 @@ export default function SystemsTable() {
                 return 'danger';
             case 'פטור':
                 return 'warning';
+            default:
+                return '';
         }
     };
 
@@ -356,7 +364,7 @@ export default function SystemsTable() {
     }
 
     const dateBodyTemplate = (rowData) => {
-        return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
+        return rowData.date !== 'Invalid Date' ? formatDate(rowData.date) : ''
     };
 
     const formatDate = (value) => {
@@ -384,7 +392,7 @@ export default function SystemsTable() {
     const onRowEditComplete = (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        if (newData.status == "עלה לאויר" && newData.date == 'Invalid Date') {
+        if (newData.status === "עלה לאויר" && newData.date === 'Invalid Date') {
             newData.date = new Date();
         }
         _projects[index] = newData;
