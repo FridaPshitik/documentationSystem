@@ -303,10 +303,21 @@ export default function SystemsTable() {
     };
 
     const populationRowFilterTemplate = (options) => {
+        // return (
+        //     <Dropdown value={options.value} options={population} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={populationItemTemplate} placeholder="חיפוש סוג אוכלוסיה" className="p-column-filter" />
+        // );
         return (
-            <Dropdown value={options.value} options={population} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={populationItemTemplate} placeholder="חיפוש סוג אוכלוסיה" className="p-column-filter" />
+            <MultiSelect
+                value={options.value}
+                options={population}
+                itemTemplate={populationItemTemplate}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                optionLabel="name"
+                placeholder="חיפוש סוג אוכלוסיה"
+                className="p-column-filter"
+            />
         );
-    };
+    }
 
     const header = renderHeader();
 
