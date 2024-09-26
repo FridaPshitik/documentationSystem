@@ -123,10 +123,10 @@ export default function SystemsTable() {
     const getDevEnvironmentSeverity = (devEnvironment) => {
         switch (devEnvironment) {
             case 'אדומה':
-                return 'danger';
+                return 'red';
 
             case 'שחורה':
-                return 'info';
+                return 'black';
         }
     };
 
@@ -227,7 +227,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentBodyTemplate = (rowData) => {
-        return <Tag value={rowData.devEnvironment} severity={getDevEnvironmentSeverity(rowData.devEnvironment)} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
+        return <Tag value={rowData.devEnvironment} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem",backgroundColor:getDevEnvironmentSeverity(rowData.devEnvironment) }} />;
     };
 
     const populationBodyTemplate = (rowData) => {
@@ -251,7 +251,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentItemTemplate = (option) => {
-        return <Tag value={option} severity={getDevEnvironmentSeverity(option)} />;
+        return <Tag value={option} style={{backgroundColor:getDevEnvironmentSeverity(option)}}  />;
     };
 
     const populationItemTemplate = (option) => {
