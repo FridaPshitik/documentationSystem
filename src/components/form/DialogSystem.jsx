@@ -94,6 +94,8 @@ export default function DialogSystem(data) {
                     <h3>גוף דורש:</h3>
                     <p>{data.dataSystem.demand.name}</p>
                     <p>{data.dataSystem.demand.section}</p>
+                    <h4>איש קשר:</h4>
+                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone}</p>
                 </div>
                 <h3>גוף מבצע: &nbsp;<Tag value={data.dataSystem.type} severity={getTypeSeverity(data.dataSystem.type)} />
                 </h3>
@@ -105,7 +107,7 @@ export default function DialogSystem(data) {
                 <h3>סיווג:  <Tag value={data.dataSystem.classification} severity={getClassificationSeverity(data.dataSystem.classification)} /></h3>
                 <h3>סביבת פיתוח:  <Tag value={data.dataSystem.devEnvironment} style={{ backgroundColor: getDevEnvironmentSeverity(data.dataSystem.devEnvironment) }} /></h3>
                 <h3>סוג אוכלוסיה: {data.dataSystem.population.map((population, index) => (
-                    <Tag key={index} value={population} severity={getPopulationSeverity(population)} style={{margin:"2px"}}/>
+                    <Tag key={index} value={population} severity={getPopulationSeverity(population)} style={{ margin: "2px" }} />
                 ))}</h3>
 
                 <div>
