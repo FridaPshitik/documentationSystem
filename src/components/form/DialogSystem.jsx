@@ -124,7 +124,7 @@ export default function DialogSystem(data) {
                 ))}</h3>
 
                 <div>
-                    {data.dataSystem.date !== 'Invalid Date' ? <div>
+                    {data.dataSystem.date != 'Invalid Date' ? <div>
                         < h3 > תאריך עליה לאוויר:</h3 >
                         <p className="m-0">
                             {formatDate(data.dataSystem.date)}
