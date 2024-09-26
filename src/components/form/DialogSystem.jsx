@@ -89,9 +89,9 @@ export default function DialogSystem(data) {
     return (
         <div className="card flex justify-content-center">
             <Card title={data.dataSystem.name} subTitle={data.dataSystem.goal} header={header} >
-                <h3>{data.dataSystem.description}</h3>
-                <h3>גוף דורש:</h3>
+                <p>{data.dataSystem.description}</p>
                 <div className="flex align-items-center gap-2">
+                    <h3>גוף דורש:</h3>
                     <p>{data.dataSystem.demand.name}</p>
                     <p>{data.dataSystem.demand.section}</p>
                 </div>
@@ -102,11 +102,10 @@ export default function DialogSystem(data) {
                     <span>{representative.name}</span>
                 </div>
                 <h3>סטטוס: &nbsp;<Tag value={data.dataSystem.status} severity={getStatusSeverity(data.dataSystem.status)}></Tag></h3>
-                <h3>סייוג:  <Tag value={data.dataSystem.classification} severity={getClassificationSeverity(data.dataSystem.classification)} /></h3>
-                <h3>סביבת פיתוח:  <Tag value={data.dataSystem.devEnvironment} style={{backgroundColor: getDevEnvironmentSeverity(data.dataSystem.devEnvironment)}} /></h3>
-                <h3>סייוג:  <Tag value={data.dataSystem.classification} severity={getClassificationSeverity(data.dataSystem.classification)} /></h3>
+                <h3>סיווג:  <Tag value={data.dataSystem.classification} severity={getClassificationSeverity(data.dataSystem.classification)} /></h3>
+                <h3>סביבת פיתוח:  <Tag value={data.dataSystem.devEnvironment} style={{ backgroundColor: getDevEnvironmentSeverity(data.dataSystem.devEnvironment) }} /></h3>
                 <h3>סוג אוכלוסיה: {data.dataSystem.population.map((population, index) => (
-                    <Tag key={index} value={population} severity={getPopulationSeverity(population)} />
+                    <Tag key={index} value={population} severity={getPopulationSeverity(population)} style={{margin:"2px"}}/>
                 ))}</h3>
 
                 <div>
