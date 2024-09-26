@@ -364,7 +364,7 @@ export default function SystemsTable() {
     }
 
     const dateBodyTemplate = (rowData) => {
-        return rowData.date !== 'Invalid Date' ? formatDate(rowData.date) : ''
+        return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
     };
 
     const formatDate = (value) => {
