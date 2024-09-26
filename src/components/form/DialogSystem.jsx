@@ -94,7 +94,7 @@ export default function DialogSystem(data) {
                     <h3>גוף דורש:</h3>
                     <p>{data.dataSystem.demand.section}</p>
                     <h4>איש קשר:</h4>
-                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone}</p>
+                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone} | {data.dataSystem.demand.contactEmail}</p>
                 </div>
                 <h3>גוף מבצע: &nbsp;<Tag value={data.dataSystem.type} severity={getTypeSeverity(data.dataSystem.type)} />
                 </h3>

@@ -18,7 +18,9 @@ export const CustomerService = {
                     section: "פיקוד צפון",
                     branch: "100",
                     contactName:"יפעת",
-                    contactPhone:"0556412421"
+                    contactPhone:"0529466379",
+                    contactEmail:"funesifat@gmail.com"
+
                 },
                 classification : 'בלמ"ס',
                 devEnvironment: "שחורה",
@@ -41,7 +43,9 @@ export const CustomerService = {
                     section: "פיקוד צפון",
                     branch: "100",
                     contactName:"טל",
-                    contactPhone:"0523456985"
+                    contactPhone:"0523456985",
+                    contactEmail:"tal@gmail.com"
+
                 },
                 classification : 'סודי',
                 devEnvironment: "שחורה",
@@ -64,7 +68,8 @@ export const CustomerService = {
                     section: "פיקוד דרום",
                     branch: "100",
                     contactName:"גל",
-                    contactPhone:"0534126985"
+                    contactPhone:"0534126985",
+                    contactEmail:"gal@gmail.com"
                 },
                 classification : 'סודי',
                 devEnvironment: "שחורה",
@@ -87,7 +92,9 @@ export const CustomerService = {
                     section: "פיקוד צפון",
                     branch: "100",
                     contactName:"אבי",
-                    contactPhone:"0523985624"
+                    contactPhone:"0523985624",
+                    contactEmail:"avi@gmail.com"
+
                 },
                 classification : 'סודי ביותר',
                 devEnvironment: "אדומה",
