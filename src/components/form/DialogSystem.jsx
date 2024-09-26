@@ -93,8 +93,11 @@ export default function DialogSystem(data) {
                 <div className="flex align-items-center gap-2">
                     <h3>גוף דורש:</h3>
                     <p>{data.dataSystem.demand.section}</p>
+                    </div>
+                <div className="flex align-items-center gap-2">
                     <h4>איש קשר:</h4>
-                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone} | {data.dataSystem.demand.contactEmail}</p>
+                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone} |
+                    <a href={'mailto:'+data.dataSystem.demand.contactEmail}>{data.dataSystem.demand.contactEmail}</a></p>
                 </div>
                 <h3>גוף מבצע: &nbsp;<Tag value={data.dataSystem.type} severity={getTypeSeverity(data.dataSystem.type)} />
                 </h3>
