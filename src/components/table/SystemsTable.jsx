@@ -269,13 +269,13 @@ export default function SystemsTable() {
 
     const demandTemplate = (option) => {
         return (
-            <div >
+            <div className={'flex'}>
                 <Button icon='pi pi-phone' rounded text style={{ color: 'grey' }} onClick={() => {
                     setVisibleDemandDialog(true)
                     setDemandConcats(option.demand)
                 }
                 } />
-                <span> {option.demand.section} </span>
+                <span style={{padding: '10px'}}> {option.demand.section} </span>
             </div>
         )
     }
