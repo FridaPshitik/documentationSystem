@@ -183,7 +183,7 @@ export default function SystemsTable() {
 
     const renderHeader = () => {
         return (
-            <div className="flex justify-content-end">
+            <div className="flex justify-content-end headerss" >
                 <IconField iconPosition="left">
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
