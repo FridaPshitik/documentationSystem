@@ -68,7 +68,7 @@ export const CustomerService = {
                 },
                 classification : 'סודי',
                 devEnvironment: "שחורה",
-                population: ["מילואים","חובה","קבע"]
+                population: ["מילואים","קבע"]
             },
             {
                 id: 4000,
