@@ -392,7 +392,7 @@ export default function SystemsTable() {
     const onRowEditComplete = (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        if (newData.status === "עלה לאויר" && newData.date === 'Invalid Date') {
+        if (newData.status == "עלה לאויר" && newData.date == 'Invalid Date') {
             newData.date = new Date();
         }
         _projects[index] = newData;
