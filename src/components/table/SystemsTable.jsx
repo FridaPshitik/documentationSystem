@@ -525,7 +525,7 @@ export default function SystemsTable() {
 
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} filters={filters} filterDisplay="row" loading={loading} scrollable
                 selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
+                globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative','population','classification','devEnvironment']} header={header} emptyMessage="No customers found." >
                 <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                 {/* <Column selectionMode="multiple" exportable={false}></Column> */}
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
