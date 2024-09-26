@@ -211,7 +211,7 @@ export default function SystemsTable() {
 
     const openCardBodyTemplate = (rowData) => {
         return <div >
-            <IconField style={{display:"flex",justifyContent:"center"}}>
+            <IconField style={{ display: "flex", justifyContent: "center" }}>
                 <InputIcon className="pi pi-bars p-button p-component p-button-icon-only p-button-outlined p-button-text p-button-rounded" onClick={() => ShowSystemDialog(rowData)} />
             </IconField>
         </div>
@@ -230,7 +230,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentBodyTemplate = (rowData) => {
-        return <Tag value={rowData.devEnvironment}  style={{background : getDevEnvironmentColor(rowData.devEnvironment), width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
+        return <Tag value={rowData.devEnvironment} style={{ background: getDevEnvironmentColor(rowData.devEnvironment), width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
     };
 
     const populationBodyTemplate = (rowData) => {
@@ -254,7 +254,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentItemTemplate = (option) => {
-        return <Tag value={option} style={{background:getDevEnvironmentColor(option)}} />;
+        return <Tag value={option} style={{ background: getDevEnvironmentColor(option) }} />;
     };
 
     const populationItemTemplate = (option) => {
@@ -275,7 +275,7 @@ export default function SystemsTable() {
                     setDemandConcats(option.demand)
                 }
                 } />
-                <span style={{padding: '10px'}}> {option.demand.section} </span>
+                <span style={{ padding: '10px' }}> {option.demand.section} </span>
             </div>
         )
     }
@@ -478,7 +478,7 @@ export default function SystemsTable() {
                 onChange={(e) => options.editorCallback(e.value)}
                 placeholder="בחר סביבת פיתוח"
                 itemTemplate={(option) => {
-                    return <Tag value={option} style={{background:getDevEnvironmentColor(option)}}></Tag>;
+                    return <Tag value={option} style={{ background: getDevEnvironmentColor(option) }}></Tag>;
                 }}
             />
         );
@@ -545,10 +545,14 @@ export default function SystemsTable() {
     return (<div>
         <Toast ref={toast} />
         <div className="card">
-
+            <div style={{ textAlign: 'center' }}>
+                <img alt="סקייבר" src={window.location.origin + '/images/skyvar.png'} width="32" style={{ position: 'relative', marginBottom: '-1em' }} />
+                <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעו"ד </span>
+                <h3 id='titleH3'>תצוגת מערכות מידע</h3>
+            </div>
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                 selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative.name','population','classification','devEnvironment']} header={header} emptyMessage="No customers found." >
+                globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative.name', 'population', 'classification', 'devEnvironment']} header={header} emptyMessage="No customers found." >
                 <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                 {/* <Column selectionMode="multiple" exportable={false}></Column> */}
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
