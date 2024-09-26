@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { FilterMatchMode } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
@@ -13,7 +13,6 @@ import { Button } from 'primereact/button';
 import { CustomerService } from '../../services/CustomerService';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
-import { Card } from 'primereact/card';
 import './SystemsTable.css';
 import AddProjectForm from '../form/AddProjectForm';
 import DialogSystem from '../form/DialogSystem'
@@ -75,7 +74,6 @@ export default function SystemsTable() {
     const [project, setProject] = useState(emptyProject);
     const [selectedProjects, setSelectedProjects] = useState(null);
     const [demandConcats, setDemandConcats] = useState(null);
-    const [selectedReresentative, setSelectedRepresentative] = useState(null);
     const [dataSystem, setDataSystem] = useState({})
     const toast = useRef(null);
     const dt = useRef(null);
@@ -93,6 +91,9 @@ export default function SystemsTable() {
 
             case 'עלה לאויר':
                 return 'success';
+            
+            default:
+                return '';
         }
     };
 
@@ -104,7 +105,7 @@ export default function SystemsTable() {
             case 'חיצוני':
                 return 'warning';
 
-            case '':
+            default:
                 return 'dark';
         }
     };
@@ -119,6 +120,9 @@ export default function SystemsTable() {
 
             case 'סודי ביותר':
                 return 'danger';
+            
+            default:
+                return '';
         }
     };
 
@@ -130,6 +134,8 @@ export default function SystemsTable() {
 
             case 'שחורה':
                 return 'black';
+            default:
+                return '';
         }
     };
 
@@ -145,6 +151,8 @@ export default function SystemsTable() {
                 return 'danger';
             case 'פטור':
                 return 'warning';
+            default:
+                return '';
         }
     };
 
@@ -175,7 +183,7 @@ export default function SystemsTable() {
 
     const renderHeader = () => {
         return (
-            <div className="flex justify-content-end">
+            <div className="flex justify-content-end headerss" >
                 <IconField iconPosition="left">
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
@@ -211,7 +219,7 @@ export default function SystemsTable() {
 
     const openCardBodyTemplate = (rowData) => {
         return <div >
-            <IconField style={{display:"flex",justifyContent:"center"}}>
+            <IconField style={{ display: "flex", justifyContent: "center" }}>
                 <InputIcon className="pi pi-bars p-button p-component p-button-icon-only p-button-outlined p-button-text p-button-rounded" onClick={() => ShowSystemDialog(rowData)} />
             </IconField>
         </div>
@@ -230,7 +238,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentBodyTemplate = (rowData) => {
-        return <Tag value={rowData.devEnvironment}  style={{background : getDevEnvironmentColor(rowData.devEnvironment), width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
+        return <Tag value={rowData.devEnvironment} style={{ background: getDevEnvironmentColor(rowData.devEnvironment), width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
     };
 
     const populationBodyTemplate = (rowData) => {
@@ -254,7 +262,7 @@ export default function SystemsTable() {
     };
 
     const devEnvironmentItemTemplate = (option) => {
-        return <Tag value={option} style={{background:getDevEnvironmentColor(option)}} />;
+        return <Tag value={option} style={{ background: getDevEnvironmentColor(option) }} />;
     };
 
     const populationItemTemplate = (option) => {
@@ -288,7 +296,7 @@ export default function SystemsTable() {
                 itemTemplate={representativesItemTemplate}
                 onChange={(e) => options.filterApplyCallback(e.value)}
                 optionLabel="name"
-                placeholder="חיפוש גוף מבצע"
+                placeholder="סנן"
                 className="p-column-filter"
             />
         );
@@ -296,25 +304,25 @@ export default function SystemsTable() {
 
     const statusRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="חיפוש סטטוס" className="p-column-filter" />
+            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
     const typeRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" />
+            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
     const classificationRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={classification} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={classificationItemTemplate} placeholder="חיפוש סוג סיווג" className="p-column-filter" />
+            <Dropdown value={options.value} options={classification} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={classificationItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
     const devEnvironmentRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={devEnvironment} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={devEnvironmentItemTemplate} placeholder="חיפוש סביבת פיתוח" className="p-column-filter" />
+            <Dropdown value={options.value} options={devEnvironment} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={devEnvironmentItemTemplate} placeholder="סנן" className="p-column-filter" />
         );
     };
 
@@ -329,7 +337,7 @@ export default function SystemsTable() {
                 itemTemplate={populationItemTemplate}
                 onChange={(e) => options.filterApplyCallback(e.value)}
                 optionLabel="name"
-                placeholder="חיפוש סוג אוכלוסיה"
+                placeholder="סנן"
                 className="p-column-filter"
             />
         );
@@ -349,14 +357,14 @@ export default function SystemsTable() {
                 options={demands}
                 itemTemplate={demandItemTemplate}
                 onChange={(e) => options.filterApplyCallback(e.value)}
-                placeholder='חיפוש גוף דורש'
+                placeholder='סנן'
                 className="p-column-filter"
             />
         )
     }
 
     const dateBodyTemplate = (rowData) => {
-        return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
+        return rowData.date !== 'Invalid Date' ? formatDate(rowData.date) : ''
     };
 
     const formatDate = (value) => {
@@ -384,7 +392,7 @@ export default function SystemsTable() {
     const onRowEditComplete = (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        if (newData.status == "עלה לאויר" && newData.date == 'Invalid Date') {
+        if (newData.status === "עלה לאויר" && newData.date === 'Invalid Date') {
             newData.date = new Date();
         }
         _projects[index] = newData;
@@ -478,7 +486,7 @@ export default function SystemsTable() {
                 onChange={(e) => options.editorCallback(e.value)}
                 placeholder="בחר סביבת פיתוח"
                 itemTemplate={(option) => {
-                    return <Tag value={option} style={{background:getDevEnvironmentColor(option)}}></Tag>;
+                    return <Tag value={option} style={{ background: getDevEnvironmentColor(option) }}></Tag>;
                 }}
             />
         );
@@ -545,25 +553,29 @@ export default function SystemsTable() {
     return (<div>
         <Toast ref={toast} />
         <div className="card">
-
+            <div style={{ textAlign: 'center' }}>
+                <img alt="סקייבר" src={window.location.origin + '/images/skyvar.png'} width="32" style={{ position: 'relative', marginBottom: '-1em' }} />
+                <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעו"ד </span>
+                <h3 id='titleH3'>תצוגת מערכות מידע</h3>
+            </div>
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                 selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative.name','population','classification','devEnvironment']} header={header} emptyMessage="No customers found." >
+                globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative.name', 'population', 'classification', 'devEnvironment']} header={header} emptyMessage="No customers found." >
                 <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                 {/* <Column selectionMode="multiple" exportable={false}></Column> */}
-                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
-                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
-                <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field='date' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? dateEditor(options) : null} filterField="date" showFilterMenu={false} style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
+                <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                 <Column field='demand.section' header="גוף דורש" editor={(options) => demandEditor(options)} style={{ minWidth: '8rem' }} filter filterField='demand.section' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש"
                     body={demandTemplate} filterElement={demandFilterTemplate}
                 />
+                <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
+                <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
+                <Column field='devEnvironment' header="סביבת פיתוח" editor={(options) => devEnvironmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={devEnvironmentBodyTemplate} filter filterElement={devEnvironmentRowFilterTemplate} />
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
                 <Column field="representative" header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }}
                     body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
-                <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
-                <Column field='devEnvironment' header="סביבת פיתוח" editor={(options) => devEnvironmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={devEnvironmentBodyTemplate} filter filterElement={devEnvironmentRowFilterTemplate} />
-                <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
+                <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
+                <Column field='date' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? dateEditor(options) : null} filterField="date" showFilterMenu={false} style={{ minWidth: '15rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
             </DataTable>

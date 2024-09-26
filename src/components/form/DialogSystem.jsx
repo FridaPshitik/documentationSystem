@@ -23,6 +23,9 @@ export default function DialogSystem(data) {
             case 'עלה לאויר':
                 return 'warning';
 
+            default:
+                return '';
+
         }
     };
 
@@ -34,7 +37,7 @@ export default function DialogSystem(data) {
             case 'חיצוני':
                 return 'warning';
 
-            case '':
+            default:
                 return 'dark';
 
         }
@@ -49,6 +52,9 @@ export default function DialogSystem(data) {
 
             case 'סודי ביותר':
                 return 'danger';
+
+            default:
+                return '';
         }
     };
 
@@ -59,6 +65,9 @@ export default function DialogSystem(data) {
 
             case 'שחורה':
                 return 'black';
+
+            default:
+                return '';
         }
     };
     const getPopulationSeverity = (population) => {
@@ -73,6 +82,8 @@ export default function DialogSystem(data) {
                 return 'danger';
             case 'פטור':
                 return 'warning';
+            default:
+                return '';
         }
     };
 
@@ -93,8 +104,11 @@ export default function DialogSystem(data) {
                 <div className="flex align-items-center gap-2">
                     <h3>גוף דורש:</h3>
                     <p>{data.dataSystem.demand.section}</p>
+                    </div>
+                <div className="flex align-items-center gap-2">
                     <h4>איש קשר:</h4>
-                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone}</p>
+                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone} |
+                    <a href={'mailto:'+data.dataSystem.demand.contactEmail}>{data.dataSystem.demand.contactEmail}</a></p>
                 </div>
                 <h3>גוף מבצע: &nbsp;<Tag value={data.dataSystem.type} severity={getTypeSeverity(data.dataSystem.type)} />
                 </h3>
@@ -110,7 +124,7 @@ export default function DialogSystem(data) {
                 ))}</h3>
 
                 <div>
-                    {data.dataSystem.date != 'Invalid Date' ? <div>
+                    {data.dataSystem.date !== 'Invalid Date' ? <div>
                         < h3 > תאריך עליה לאוויר:</h3 >
                         <p className="m-0">
                             {formatDate(data.dataSystem.date)}

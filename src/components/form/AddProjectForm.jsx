@@ -71,15 +71,15 @@ const AddProjectForm = () => {
     };
 
     const handelSelectOperatingFactor = (value) => {
-        { value == 'אחר' ? setHideAddOperatingFactor(true) : setSelectedOperatingFactor(value) }
+         value === 'אחר' ? setHideAddOperatingFactor(true) : setSelectedOperatingFactor(value) 
     }
 
     const handelSelectOperatingCompany = (value) => {
-        { value == 'אחר' ? setHideAddOperatingCompany(true) : setSelectedOperatingCompany(value) }
+         value === 'אחר' ? setHideAddOperatingCompany(true) : setSelectedOperatingCompany(value) 
     }
 
     const handelSelectDemandFactor = (value) => {
-        { value == 'אחר' ? setHideAddDemand(true) : setSelectedDemandFactor(value) }
+        value === 'אחר' ? setHideAddDemand(true) : setSelectedDemandFactor(value) 
     }
 
     return (
@@ -119,7 +119,7 @@ const AddProjectForm = () => {
                             <FloatLabel className="field" >
                                 <Dropdown inputId="dd-type" value={selectedType} onChange={(e) => setSelectedType(e.value)}
                                     options={types} className="w-full md:w-14rem field" />
-                                <label htmlFor="dd-type">בחר סוג</label>
+                                <label htmlFor="dd-type">בחר סוג פיתוח</label>
                             </FloatLabel>
                         </div>
 
@@ -128,10 +128,10 @@ const AddProjectForm = () => {
                                 {selectedType == null && <Dropdown inputId="dd-operating" value={explain}
                                     onClick={(e) => setExplain("fgh")}
                                     options={['לאחר בחירת סוג  יאופשר שדה זה']} className="w-full md:w-14rem field" />}
-                                {selectedType == 'פנימי' && <Dropdown inputId="dd-operating" value={selectedOperatingFactor}
+                                {selectedType === 'פנימי' && <Dropdown inputId="dd-operating" value={selectedOperatingFactor}
                                     onChange={(e) => handelSelectOperatingFactor(e.value)}
                                     options={demandFactors} className="w-full md:w-14rem field" />}
-                                {selectedType == 'חיצוני' && <Dropdown inputId="dd-operating" value={selectedOperatingCompany}
+                                {selectedType === 'חיצוני' && <Dropdown inputId="dd-operating" value={selectedOperatingCompany}
                                     onChange={(e) => handelSelectOperatingCompany(e.value)}
                                     options={operatingCompany} className="w-full md:w-14rem field" />}
                                 <label htmlFor="dd-operating">בחר גוף מבצע</label>
@@ -146,7 +146,7 @@ const AddProjectForm = () => {
                             </FloatLabel>
                         </div>
                         <div className="card" class="item7">
-                            {selectedStatus == 'עלה לאויר' &&
+                            {selectedStatus === 'עלה לאויר' &&
                                 <FloatLabel className="field" >
                                     <Calendar inputId="dd-date" value={date} onChange={(e) => setDate(e.value)} showButtonBar className="w-full md:w-14rem field" />
                                     <label htmlFor="dd-date">בחר תאריך</label>
