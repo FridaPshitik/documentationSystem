@@ -208,7 +208,7 @@ export default function SystemsTable() {
 
     const openCardBodyTemplate = (rowData) => {
         return <div >
-            <IconField>
+            <IconField style={{display:"flex",justifyContent:"center"}}>
                 <InputIcon className="pi pi-bars p-button p-component p-button-icon-only p-button-outlined p-button-text p-button-rounded" onClick={() => ShowSystemDialog(rowData)} />
             </IconField>
         </div>
