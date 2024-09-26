@@ -24,11 +24,15 @@ export default function SystemsTable() {
     let emptyProject = {
         id: null,
         name: '',
+        description: '',
         goal: null,
         representative: null,
         status: null,
         date: null,
         type: null,
+        classification: null,
+        devEnvironment: null,
+        population: []
     };
 
     const [projects, setProjects] = useState(null);
@@ -36,11 +40,15 @@ export default function SystemsTable() {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.CONTAINS },
         goal: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        description: { value: null, matchMode: FilterMatchMode.CONTAINS },
         status: { value: null, matchMode: FilterMatchMode.EQUALS },
         date: { value: null, matchMode: FilterMatchMode.DATE_IS },
         'demand.section': { value: null, matchMode: FilterMatchMode.IN },
         type: { value: null, matchMode: FilterMatchMode.EQUALS },
-        representative: { value: null, matchMode: FilterMatchMode.IN }
+        classification: { value: null, matchMode: FilterMatchMode.EQUALS },
+        devEnvironment: { value: null, matchMode: FilterMatchMode.EQUALS },
+        representative: { value: null, matchMode: FilterMatchMode.IN },
+        population: { value: null, matchMode: FilterMatchMode.CONTAINS }
     });
     const [visible, setVisibleAddProjectFormDialog] = useState(false);
     const [editableRows, setEditableRows] = useState({});
@@ -52,18 +60,23 @@ export default function SystemsTable() {
         { name: "סקייבר", image: "skyvar.png" },
         { name: "אלביט", image: "elbit.png" },
         { name: "צהל", image: "inside.png" }
-    ]);
+    ]); // פונקציה לשליפת הגופים המבצעים מהטבלה
     const [demands] = useState([
         'פיקוד צפון',
         'פיקוד דרום'
-    ])
-    const [statuses] = useState(['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר']);
-    const [types] = useState(['חיצוני', 'פנימי']);
+    ]) // פונקציה לשליפת הגופים הדורשים מהטבלה
+    const [statuses] = useState(['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר']); // פונקציה לשליפת הסטטוסים מהטבלה
+    const [types] = useState(['חיצוני', 'פנימי']); // פונקציה לשליפת הסוגים מהטבלה
+    const [classification] = useState(['סודי ביותר', 'סודי', 'בלמ"ס']);
+    const [devEnvironment] = useState(['שחורה', 'אדומה']);
+    const [population] = useState(['פטור', 'אע"צים', 'מילואים', 'קבע', 'חובה'])
     const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
-    const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
+    // const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
     const [project, setProject] = useState(emptyProject);
     const [selectedProjects, setSelectedProjects] = useState(null);
     const [demandConcats, setDemandConcats] = useState(null);
+    const [selectedReresentative, setSelectedRepresentative] = useState(null);
+    const [dataSystem, setDataSystem] = useState({})
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -73,19 +86,18 @@ export default function SystemsTable() {
                 return 'danger';
 
             case 'בפיתוח':
-                return 'success';
+                return 'warning';
 
             case 'בתהליך':
                 return 'info';
 
             case 'עלה לאויר':
-                return 'warning';
-
+                return 'success';
         }
     };
 
-    const getTypeSeverity = (status) => {
-        switch (status) {
+    const getTypeSeverity = (type) => {
+        switch (type) {
             case 'פנימי':
                 return 'primary';
 
@@ -94,19 +106,47 @@ export default function SystemsTable() {
 
             case '':
                 return 'dark';
-
         }
     };
 
-    useEffect(() => {
-        CustomerService.getCustomersMedium().then((data) => {
-            setProjects(getProjects(data));
-            setLoading(false);
-        });
-        // fetch('/api/get_data')
-        //     .then((response) => response.json())
-        //     .then((data) => setProjects(data));
-    }, []);
+    const getClassificationSeverity = (classification) => {
+        switch (classification) {
+            case 'בלמ"ס':
+                return 'success';
+
+            case 'סודי':
+                return 'warning';
+
+            case 'סודי ביותר':
+                return 'danger';
+        }
+    };
+
+
+    const getDevEnvironmentColor = (devEnvironment) => {
+        switch (devEnvironment) {
+            case 'אדומה':
+                return 'red';
+
+            case 'שחורה':
+                return 'black';
+        }
+    };
+
+    const getPopulationSeverity = (population) => {
+        switch (population) {
+            case 'חובה':
+                return 'danger';
+            case 'קבע':
+                return 'info';
+            case 'מילואים':
+                return 'primary';
+            case 'אע"צים':
+                return 'danger';
+            case 'פטור':
+                return 'warning';
+        }
+    };
 
     const getProjects = (data) => {
         return [...(data || [])].map((d) => {
@@ -125,9 +165,9 @@ export default function SystemsTable() {
         setGlobalFilterValue(value);
     };
 
-    const confirmDeleteSelected = () => {
-        setDeleteProjectsDialog(true);
-    };
+    // const confirmDeleteSelected = () => {
+    //     setDeleteProjectsDialog(true);
+    // };
 
     const exportCSV = () => {
         dt.current.exportCSV();
@@ -140,13 +180,13 @@ export default function SystemsTable() {
                     <InputIcon className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
-                <Dialog header="הוספת פרוייקט חדש" style={{ width: '33vw', textAlign: 'center' }} visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
+                <Dialog header="הוספת פרוייקט חדש" id='addNewProjectDialog' visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProjectForm></AddProjectForm>
                 </Dialog>
+                <Button id='add_project' label='הוספת פרוייקט חדש' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
 
-                <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} />
-                <Button id='download' style={{ width: '5%' }} icon="pi pi-download" outlined onClick={exportCSV} />
-                <Button style={{ width: '20%' }} label='הוספת פרוייקט חדש' id='add_project' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
+                {/* <Button id='delete_selected' icon="pi pi-trash" severity="danger" outlined onClick={confirmDeleteSelected} disabled={!selectedProjects || !selectedProjects.length} /> */}
+                <Button id='download' icon="pi pi-download" outlined onClick={exportCSV} />
             </div>
         );
     };
@@ -161,15 +201,6 @@ export default function SystemsTable() {
         );
     };
 
-    // const representativesItemTemplate = (option) => {
-    //     return (
-    //         <div className="flex align-items-center gap-2">
-    //             <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32" />
-    //             <span>{option.name}</span>
-    //         </div>
-    //     );
-    // };
-
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
         return (<div className="flex align-items-center gap-2">
@@ -178,20 +209,9 @@ export default function SystemsTable() {
         </div>);
     };
 
-    // const representativeBodyTemplate = (rowData) => {
-    //     const representative = rowData.representative;
-
-    //     return (
-    //         <div className="flex align-items-center gap-2">
-    //             <img alt={representative.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${representative.image}`} width="32" />
-    //             <span>{representative.name}</span>
-    //         </div>
-    //     );
-    // };
-
     const openCardBodyTemplate = (rowData) => {
         return <div >
-            <IconField>
+            <IconField style={{display:"flex",justifyContent:"center"}}>
                 <InputIcon className="pi pi-bars p-button p-component p-button-icon-only p-button-outlined p-button-text p-button-rounded" onClick={() => ShowSystemDialog(rowData)} />
             </IconField>
         </div>
@@ -205,12 +225,40 @@ export default function SystemsTable() {
         return <Tag value={rowData.type} severity={getTypeSeverity(rowData.type)} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
     };
 
+    const classificationBodyTemplate = (rowData) => {
+        return <Tag value={rowData.classification} severity={getClassificationSeverity(rowData.classification)} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
+    };
+
+    const devEnvironmentBodyTemplate = (rowData) => {
+        return <Tag value={rowData.devEnvironment}  style={{background : getDevEnvironmentColor(rowData.devEnvironment), width: "5rem", height: "3rem", fontSize: "0.8rem" }} />;
+    };
+
+    const populationBodyTemplate = (rowData) => {
+        return <div>
+            {rowData.population.map((population, index) => (
+                <Tag key={index} value={population} severity={getPopulationSeverity(population)} style={{ width: "5rem", height: "3rem", fontSize: "0.8rem" }} />
+            ))}
+        </div>
+    };
+
     const statusItemTemplate = (option) => {
         return <Tag value={option} severity={getStatusSeverity(option)} />;
     };
 
     const typesItemTemplate = (option) => {
         return <Tag value={option} severity={getTypeSeverity(option)} />;
+    };
+
+    const classificationItemTemplate = (option) => {
+        return <Tag value={option} severity={getClassificationSeverity(option)} />;
+    };
+
+    const devEnvironmentItemTemplate = (option) => {
+        return <Tag value={option} style={{background:getDevEnvironmentColor(option)}} />;
+    };
+
+    const populationItemTemplate = (option) => {
+        return <Tag value={option} severity={getPopulationSeverity(option)} />;
     };
 
     const demandItemTemplate = (option) => {
@@ -231,20 +279,6 @@ export default function SystemsTable() {
             </div>
         )
     }
-    const showContactDialog = (rowData) => {
-        return (
-            <Dialog visible={true}>
-                <DialogSystem dataSystem={'zxcz'}></DialogSystem>
-
-                <p>{rowData.demand.name}</p>
-            </Dialog>
-        )
-    }
-
-
-    // const verifiedBodyTemplate = (rowData) => {
-    //     return <i className={classNames('pi', { 'true-icon pi-check-circle': rowData.verified, 'false-icon pi-times-circle': !rowData.verified })}></i>;
-    // };
 
     const representativeRowFilterTemplate = (options) => {
         return (
@@ -256,32 +290,55 @@ export default function SystemsTable() {
                 optionLabel="name"
                 placeholder="חיפוש גוף מבצע"
                 className="p-column-filter"
-            // maxSelectedLabels={1}
             />
         );
     };
 
     const statusRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="חיפוש סטטוס" className="p-column-filter" showClear />
+            <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={statusItemTemplate} placeholder="חיפוש סטטוס" className="p-column-filter" />
         );
     };
 
     const typeRowFilterTemplate = (options) => {
         return (
-            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" showClear />
+            <Dropdown value={options.value} options={types} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={typesItemTemplate} placeholder="חיפוש סוג פיתוח" className="p-column-filter" />
         );
     };
+
+    const classificationRowFilterTemplate = (options) => {
+        return (
+            <Dropdown value={options.value} options={classification} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={classificationItemTemplate} placeholder="חיפוש סוג סיווג" className="p-column-filter" />
+        );
+    };
+
+    const devEnvironmentRowFilterTemplate = (options) => {
+        return (
+            <Dropdown value={options.value} options={devEnvironment} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={devEnvironmentItemTemplate} placeholder="חיפוש סביבת פיתוח" className="p-column-filter" />
+        );
+    };
+
+    const populationRowFilterTemplate = (options) => {
+        // return (
+        //     <Dropdown value={options.value} options={population} onChange={(e) => options.filterApplyCallback(e.value)} itemTemplate={populationItemTemplate} placeholder="חיפוש סוג אוכלוסיה" className="p-column-filter" />
+        // );
+        return (
+            <MultiSelect
+                value={options.value}
+                options={population}
+                itemTemplate={populationItemTemplate}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                optionLabel="name"
+                placeholder="חיפוש סוג אוכלוסיה"
+                className="p-column-filter"
+            />
+        );
+    }
 
     const header = renderHeader();
 
     const dateFilterTemplate = (options) => {
-        return (
-            <Calendar
-                value={options.value} onChange={(e) => {
-                    options.filterCallback(e.value, options.index)
-                }
-                } dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" />);
+        return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" />;
     };
 
 
@@ -297,6 +354,7 @@ export default function SystemsTable() {
             />
         )
     }
+
     const dateBodyTemplate = (rowData) => {
         return rowData.date != 'Invalid Date' ? formatDate(rowData.date) : ''
     };
@@ -331,11 +389,6 @@ export default function SystemsTable() {
         }
         _projects[index] = newData;
         setProjects(_projects);
-    };
-
-    const allowEdit = (rowData) => {
-        // return rowData.name !== 'Blue Band';
-        return true;
     };
 
     const statusEditor = (options) => {
@@ -403,6 +456,34 @@ export default function SystemsTable() {
         );
     };
 
+    const classificationEditor = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={classification}
+                onChange={(e) => options.editorCallback(e.value)}
+                placeholder="בחר סוג סיווג"
+                itemTemplate={(option) => {
+                    return <Tag value={option} severity={getClassificationSeverity(option)}></Tag>;
+                }}
+            />
+        );
+    };
+
+    const devEnvironmentEditor = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={devEnvironment}
+                onChange={(e) => options.editorCallback(e.value)}
+                placeholder="בחר סביבת פיתוח"
+                itemTemplate={(option) => {
+                    return <Tag value={option} style={{background:getDevEnvironmentColor(option)}}></Tag>;
+                }}
+            />
+        );
+    };
+
     const dateEditor = (options) => {
         let date;
         if (options.value)
@@ -418,9 +499,9 @@ export default function SystemsTable() {
         setDeleteProjectDialog(false);
     };
 
-    const hideDeleteProjectsDialog = () => {
-        setDeleteProjectsDialog(false);
-    };
+    // const hideDeleteProjectsDialog = () => {
+    //     setDeleteProjectsDialog(false);
+    // };
 
     const confirmDeleteProject = (customer) => {
         setProject(customer);
@@ -436,25 +517,30 @@ export default function SystemsTable() {
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הפרויקט נמחק בהצלחה', life: 3000 });
     };
 
-    const deleteSelectedProjects = () => {
-        let _projects = projects.filter((val) => !selectedProjects.includes(val));
+    // const deleteSelectedProjects = () => {
+    //     let _projects = projects.filter((val) => !selectedProjects.includes(val));
 
-        setProjects(_projects);
-        setDeleteProjectsDialog(false);
-        setSelectedProjects(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: ' הפרויקטים המסומנים נמחקו בהצלחה', life: 3000 });
-    };
+    //     setProjects(_projects);
+    //     setDeleteProjectsDialog(false);
+    //     setSelectedProjects(null);
+    //     toast.current.show({ severity: 'success', summary: 'Successful', detail: ' הפרויקטים המסומנים נמחקו בהצלחה', life: 3000 });
+    // };
 
     const deleteBodyTemplate = (rowData) => {
         return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => confirmDeleteProject(rowData)} />;
     };
 
-    const [dataSystem, setDataSystem] = useState({})
-
     const ShowSystemDialog = (rowData) => {
         setDataSystem(rowData)
         setVisibleSystemDialog(true)
     }
+
+    useEffect(() => {
+        CustomerService.getCustomersMedium().then((data) => {
+            setProjects(getProjects(data));
+            setLoading(false);
+        });
+    }, []);
 
     return (<div>
         <Toast ref={toast} />
@@ -462,9 +548,9 @@ export default function SystemsTable() {
 
             <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                 selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                globalFilterFields={['name', 'goal', 'status', 'date', 'demand.section', 'type', 'representative']} header={header} emptyMessage="No customers found." >
+                globalFilterFields={['name', 'goal', 'description', 'status', 'date', 'demand.section', 'type', 'representative','population','classification','devEnvironment']} header={header} emptyMessage="No customers found." >
                 <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
-                <Column selectionMode="multiple" exportable={false}></Column>
+                {/* <Column selectionMode="multiple" exportable={false}></Column> */}
                 <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש שם מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="goal" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חיפוש מטרת מערכת" style={{ minWidth: '15rem' }} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
@@ -473,9 +559,12 @@ export default function SystemsTable() {
                     body={demandTemplate} filterElement={demandFilterTemplate}
                 />
                 <Column field="type" class="column" header="פיתוח" editor={(options) => typeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={typeBodyTemplate} filter filterElement={typeRowFilterTemplate} />
-                <Column field='representative' header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }}
+                <Column field="representative" header="גוף מבצע" editor={(options) => representativeEditor(options)} filterField="representative" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }}
                     body={representativeBodyTemplate} filter filterElement={representativeRowFilterTemplate} />
-                <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
+                <Column field='devEnvironment' header="סביבת פיתוח" editor={(options) => devEnvironmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={devEnvironmentBodyTemplate} filter filterElement={devEnvironmentRowFilterTemplate} />
+                <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
+                <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
             </DataTable>
 
@@ -492,7 +581,7 @@ export default function SystemsTable() {
                 </div>
             </Dialog>
 
-            <Dialog visible={deleteProjectsDialog} style={{ width: '22%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectsDialog}>
+            {/* <Dialog visible={deleteProjectsDialog} style={{ width: '22%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectsDialog}>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
                     {project && <span>האם למחוק את הפרויקטים המסומנים?</span>}
@@ -501,7 +590,7 @@ export default function SystemsTable() {
                         <Button icon="pi pi-check" outlined text severity="danger" onClick={deleteSelectedProjects} />
                     </div>
                 </div>
-            </Dialog>
+            </Dialog> */}
             <Dialog visible={visibleSystemDialog} style={{ width: '50vw' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
                 <DialogSystem dataSystem={dataSystem}></DialogSystem>
             </Dialog>

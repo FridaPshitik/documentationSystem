@@ -39,6 +39,42 @@ export default function DialogSystem(data) {
 
         }
     };
+    const getClassificationSeverity = (classification) => {
+        switch (classification) {
+            case 'בלמ"ס':
+                return 'success';
+
+            case 'סודי':
+                return 'warning';
+
+            case 'סודי ביותר':
+                return 'danger';
+        }
+    };
+
+    const getDevEnvironmentSeverity = (devEnvironment) => {
+        switch (devEnvironment) {
+            case 'אדומה':
+                return 'red';
+
+            case 'שחורה':
+                return 'black';
+        }
+    };
+    const getPopulationSeverity = (population) => {
+        switch (population) {
+            case 'חובה':
+                return 'danger';
+            case 'קבע':
+                return 'info';
+            case 'מילואים':
+                return 'primary';
+            case 'אע"צים':
+                return 'danger';
+            case 'פטור':
+                return 'warning';
+        }
+    };
 
     const formatDate = (value) => {
         return value.toLocaleDateString('en-US', {
@@ -52,11 +88,13 @@ export default function DialogSystem(data) {
 
     return (
         <div className="card flex justify-content-center">
-            <Card title={data.dataSystem.name} subTitle={data.dataSystem.description} header={header} >
-                <h3>גוף דורש:</h3>
+            <Card title={data.dataSystem.name} subTitle={data.dataSystem.goal} header={header} >
+                <p>{data.dataSystem.description}</p>
                 <div className="flex align-items-center gap-2">
-                    <p>{data.dataSystem.demand.name}</p>
+                    <h3>גוף דורש:</h3>
                     <p>{data.dataSystem.demand.section}</p>
+                    <h4>איש קשר:</h4>
+                    <p>{data.dataSystem.demand.contactName} | {data.dataSystem.demand.contactPhone}</p>
                 </div>
                 <h3>גוף מבצע: &nbsp;<Tag value={data.dataSystem.type} severity={getTypeSeverity(data.dataSystem.type)} />
                 </h3>
@@ -64,7 +102,12 @@ export default function DialogSystem(data) {
                     <img alt={representative.name} src={window.location.origin + `/images/${representative.image}`} width="32" />
                     <span>{representative.name}</span>
                 </div>
-                <h3>סטאטוס: &nbsp;<Tag value={data.dataSystem.status} severity={getStatusSeverity(data.dataSystem.status)}></Tag></h3>
+                <h3>סטטוס: &nbsp;<Tag value={data.dataSystem.status} severity={getStatusSeverity(data.dataSystem.status)}></Tag></h3>
+                <h3>סיווג:  <Tag value={data.dataSystem.classification} severity={getClassificationSeverity(data.dataSystem.classification)} /></h3>
+                <h3>סביבת פיתוח:  <Tag value={data.dataSystem.devEnvironment} style={{ backgroundColor: getDevEnvironmentSeverity(data.dataSystem.devEnvironment) }} /></h3>
+                <h3>סוג אוכלוסיה: {data.dataSystem.population.map((population, index) => (
+                    <Tag key={index} value={population} severity={getPopulationSeverity(population)} style={{ margin: "2px" }} />
+                ))}</h3>
 
                 <div>
                     {data.dataSystem.date != 'Invalid Date' ? <div>

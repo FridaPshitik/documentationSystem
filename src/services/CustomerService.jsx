@@ -3,9 +3,9 @@ export const CustomerService = {
         return [
             {
                 id: 2000,
-                name: 'תיעוד',
-                goal:"תיעוד פרויקטים",
-                description: "פרויקט זה נועד על מנת למנוע כפילות פיתוח קוד של פרוייקט קיים.\nהפרוייקט ייתן אפשרויות חיפוש מתקדמות.",
+                name: 'תיעו"ד',
+                goal:"תצוגת מערכות מידע",
+                description: 'מערכת זו נועדה לספק מידע בצורה מרוכזת נגישה ונוחה על כל המערכות הקיימות בשלבי הפיתוח השונים, \nעל מנת למנוע כפילויות ולאפשר מציאה קלה ונוחה של המערכת הרצויה.  \nהמערכת מרכזת את הנתונים עבור כל מערכת ומאפשרת חיפושים וסינונים שונים.\n עבור כל מערכת יוצגו גם פרטי איש קשר כדי לאפשר יצירת קשר ובדיקת האפשרות להשתמש במערכת הקיימת.',
                 date: '',
                 status: 'בפיתוח',
                 type: "חיצוני",
@@ -20,6 +20,9 @@ export const CustomerService = {
                     contactName:"יפעת",
                     contactPhone:"0556412421"
                 },
+                classification : 'בלמ"ס',
+                devEnvironment: "שחורה",
+                population: ["קבע","חובה"]
             },
             {
                 id: 1000,
@@ -40,6 +43,9 @@ export const CustomerService = {
                     contactName:"טל",
                     contactPhone:"0523456985"
                 },
+                classification : 'סודי',
+                devEnvironment: "שחורה",
+                population: ["מילואים"]
             },
             {
                 id: 3000,
@@ -47,7 +53,7 @@ export const CustomerService = {
                 goal:"קביעת תורים ובדיקת זכאות",
                 description: "כיום יש להגיע לסניף על מנת לקבל זכאות.\nמטרת הפרוייקט היא לקבוע את התורים באופן מקוון ולבדוק זכאות לפני הגעה פיזית לתור.",
                 date: '',
-                status: 'הושלם',
+                status: 'בתהליך',
                 type: "חיצוני",
                 representative: {
                     name: 'סקייבר',
@@ -60,6 +66,9 @@ export const CustomerService = {
                     contactName:"גל",
                     contactPhone:"0534126985"
                 },
+                classification : 'סודי',
+                devEnvironment: "שחורה",
+                population: ["מילואים","חובה","קבע"]
             },
             {
                 id: 4000,
@@ -80,6 +89,9 @@ export const CustomerService = {
                     contactName:"אבי",
                     contactPhone:"0523985624"
                 },
+                classification : 'סודי ביותר',
+                devEnvironment: "אדומה",
+                population: ["קבע"]
             }
         ];
     },
