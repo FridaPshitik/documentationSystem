@@ -16,7 +16,9 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת ציפור",
                     section: "פיקוד צפון",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"יפעת",
+                    contactPhone:"0556412421"
                 },
             },
             {
@@ -34,7 +36,9 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת נחל",
                     section: "פיקוד צפון",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"טל",
+                    contactPhone:"0523456985"
                 },
             },
             {
@@ -52,7 +56,9 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת מעוף",
                     section: "פיקוד דרום",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"גל",
+                    contactPhone:"0534126985"
                 },
             },
             {
@@ -60,7 +66,7 @@ export const CustomerService = {
                 name: "פיתוח תרשימים",
                 goal:"חידוש ועידכון שאילתות",
                 description: "מטרת הפרויקט - חידוש ועדכון שאילתות מורכבות עבור התרשימים המוצגים אחת לחודש.",
-                date: '2020-09',
+                date: 'Thu Sep 05 2024 00:00:00 GMT+0300',
                 status: 'עלה לאויר',
                 type: "פנימי",
                 representative: {
@@ -70,7 +76,9 @@ export const CustomerService = {
                 demand: {
                     name: "יחידת נשר",
                     section: "פיקוד צפון",
-                    branch: "100"
+                    branch: "100",
+                    contactName:"אבי",
+                    contactPhone:"0523985624"
                 },
             }
         ];
