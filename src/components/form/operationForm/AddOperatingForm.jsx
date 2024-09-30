@@ -4,7 +4,7 @@ import { FloatLabel } from 'primereact/floatlabel';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { FileUpload } from 'primereact/fileupload';
-import './AddProjectForm.css';
+import '../projectForm/AddProjectForm.css';
 
 
 const AddOperatingForm = ({ setSelected, setOperatingFactors, hide, operatingFactor }) => {

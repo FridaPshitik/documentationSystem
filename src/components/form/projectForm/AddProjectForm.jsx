@@ -1,27 +1,28 @@
 import React, { useState } from "react";
-import { InputText } from 'primereact/inputtext';
-import { FloatLabel } from 'primereact/floatlabel';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
 import { Dialog } from "primereact/dialog";
-
-import 'primeicons/primeicons.css';
-import './AddProjectForm.css';
-import { CustomerService } from "../../services/CustomerService"
-import AddDemandForm from './AddDemandForm';
-import AddOperatingForm from './AddOperatingForm';
-import CheckMultipleName from "./CheckMultipleName";
+import { Dropdown } from 'primereact/dropdown';
+import { FloatLabel } from 'primereact/floatlabel';
+import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from "primereact/inputtextarea";
 import { MultiSelect } from "primereact/multiselect";
+import 'primeicons/primeicons.css';
+
+import { classifications, environments, factorableTypes, populations, statuses } from "../../../services/consts";
+import { ProjectService } from "../../../services/ProjectService";
+import { AddDemand } from '../demandForm/AddDemand';
+import AddOperatingForm from '../operationForm/AddOperatingForm';
+import CheckMultipleName from "../CheckMultipleName";
+import './AddProjectForm.css';
 
 
 const AddProjectForm = () => {
 
-    const [projectName, setProjectName] = useState('');
+    const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [goal, setGoal] = useState('');
-    const [date, setDate] = useState('Invalid Date');
+    const [purpose, setPurpose] = useState('');
+    const [productionTime, setProductionTime] = useState('Invalid Date');
     const [selectedDemandFactor, setSelectedDemandFactor] = useState(null);
     const [selectedOperatingFactor, setSelectedOperatingFactor] = useState(null);
     const [selectedOperatingCompany, setSelectedOperatingCompany] = useState(null);
@@ -36,33 +37,26 @@ const AddProjectForm = () => {
     const [hideAddDemand, setHideAddDemand] = useState(false);
     const [demandFactors, setDemandFactors] = useState(['אחר', 'פיקוד צפון', 'פיקוד דרום', 'פיקוד מרכז',]);
     const [operatingCompany, setOperatingCompany] = useState(['אחר', 'סקייבר', 'אלביט',]);
-    const statuses = ['באפיון', 'בפיתוח', 'בתהליך', 'עלה לאויר'];
-    const types = ['פנימי', 'חיצוני'];
-    const [classification] = useState(['סודי ביותר', 'סודי', 'בלמ"ס']);
-    const [devEnvironment] = useState(['שחורה', 'אדומה']);
-    const [population] = useState(['פטור', 'אע"צים', 'מילואים', 'קבע', 'חובה'])
 
     const [explain, setExplain] = useState(null)
 
     const addProject = () => {
-        // פונקציה להוספת פרויקט לטבלה
         const project = {}
-        project.projectName = projectName;
-        project.goal = goal;
+        project.name = name;
+        project.purpose = purpose;
         project.description = description;
         project.demandFactor = selectedDemandFactor;
         project.operatingFactor = selectedOperatingFactor || selectedOperatingCompany;
         project.type = selectedType;
         project.status = selectedStatus;
-        project.date = date;
+        project.productionTime = productionTime;
         project.classification = selectedClassification;
         project.devEnvironment = selectedDevEnvironment;
         project.population = selectedPopulation;
-        console.log(project);
     };
 
     const handleValidation = (name) => {
-        const data = CustomerService.getData(); // פונקציה לקבלת כל שמות הפרויקטים מהטבלה
+        const data = ProjectService.getData();
         data.forEach(obj => {
             if (obj.name === name) {
                 setVisible(true)
@@ -89,11 +83,11 @@ const AddProjectForm = () => {
                     <div className="card" class="grid-container">
                         <div className="card" class="item1">
                             <FloatLabel className="field">
-                                <InputText className="w-full md:w-30rem field" inputId="projectName" value={projectName} onChange={(e) => {
-                                    setProjectName(e.target.value)
+                                <InputText className="w-full md:w-30rem field" inputId="name" value={name} onChange={(e) => {
+                                    setName(e.target.value)
                                     handleValidation(e.target.value)
                                 }} rows={4} cols={30}/>
-                                <label htmlFor="projectName">שם הפרויקט</label>
+                                <label htmlFor="name">שם הפרויקט</label>
                             </FloatLabel>
                         </div>
                         <div className="card" class="item2">
@@ -104,8 +98,8 @@ const AddProjectForm = () => {
                         </div>
                         <div className="card" class="item8">
                             <FloatLabel className="field">
-                                <InputTextarea className="w-full md:w-30rem field" inputId="goal" value={goal} onChange={(e) => setGoal(e.target.value)} />
-                                <label htmlFor="goal">מטרת הפרויקט</label>
+                                <InputTextarea className="w-full md:w-30rem field" inputId="purpose" value={purpose} onChange={(e) => setPurpose(e.target.value)} />
+                                <label htmlFor="purpose">מטרת הפרויקט</label>
                             </FloatLabel>
                         </div>
                         <div className="card" class="item3">
@@ -118,7 +112,7 @@ const AddProjectForm = () => {
                         <div className="card" class="item4">
                             <FloatLabel className="field" >
                                 <Dropdown inputId="dd-type" value={selectedType} onChange={(e) => setSelectedType(e.value)}
-                                    options={types} className="w-full md:w-14rem field" />
+                                    options={factorableTypes} className="w-full md:w-14rem field" />
                                 <label htmlFor="dd-type">בחר סוג פיתוח</label>
                             </FloatLabel>
                         </div>
@@ -148,7 +142,7 @@ const AddProjectForm = () => {
                         <div className="card" class="item7">
                             {selectedStatus === 'עלה לאויר' &&
                                 <FloatLabel className="field" >
-                                    <Calendar inputId="dd-date" value={date} onChange={(e) => setDate(e.value)} showButtonBar className="w-full md:w-14rem field" />
+                                    <Calendar inputId="dd-date" value={productionTime} onChange={(e) => setProductionTime(e.value)} showButtonBar className="w-full md:w-14rem field" />
                                     <label htmlFor="dd-date">בחר תאריך</label>
                                 </FloatLabel>
                             }
@@ -156,21 +150,21 @@ const AddProjectForm = () => {
                         <div className="card" class="item9">
                             <FloatLabel className="field" >
                                 <Dropdown inputId="classification" value={selectedClassification} onChange={(e) => setSelectedClassification(e.value)}
-                                    options={classification} className="w-full md:w-14rem field" />
+                                    options={classifications} className="w-full md:w-14rem field" />
                                 <label htmlFor="classification">בחר סיווג</label>
                             </FloatLabel>
                         </div>
                         <div className="card" class="item10">
                             <FloatLabel className="field" >
                                 <Dropdown inputId="devEnvironment" value={selectedDevEnvironment} onChange={(e) => setSelectedDevEnvironment(e.value)}
-                                    options={devEnvironment} className="w-full md:w-14rem field" />
+                                    options={environments} className="w-full md:w-14rem field" />
                                 <label htmlFor="devEnvironment">בחר סביבת פיתוח</label>
                             </FloatLabel>
                         </div>
                         <div className="card" class="item11">
                             <FloatLabel className="field" >
                                 <MultiSelect inputId="population" value={selectedPopulation} onChange={(e) => setSelectedPopulation(e.value)}
-                                    options={population} className="w-full md:w-14rem field" />
+                                    options={populations} className="w-full md:w-14rem field" />
                                 <label htmlFor="population">בחר אוכלוסיה</label>
                             </FloatLabel>
                         </div>
@@ -181,15 +175,15 @@ const AddProjectForm = () => {
                 </form>
 
                 <Dialog header="אזהרה ⚠️" visible={visible} onHide={() => setVisible(false)}>
-                    <CheckMultipleName setVisible={setVisible} setProjectName={setProjectName} />
+                    <CheckMultipleName setVisible={setVisible} setName={setName} />
                 </Dialog>
 
                 <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
-                    footer={<AddDemandForm setSelected={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemand} demandFactors={demandFactors} />}>
+                    footer={<AddDemand setSelected={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemand} demandFactors={demandFactors} />}>
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע פנימי" visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
-                    footer={<AddDemandForm setSelected={setSelectedOperatingFactor} setDemandFactors={setDemandFactors} hide={setHideAddOperatingFactor} demandFactors={demandFactors} />}>
+                    footer={<AddDemand setSelected={setSelectedOperatingFactor} setDemandFactors={setDemandFactors} hide={setHideAddOperatingFactor} demandFactors={demandFactors} />}>
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}

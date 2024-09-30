@@ -2,7 +2,7 @@ import { Button } from "primereact/button";
 
 import './CheckMultipleName.css'
 
-const CheckMultipleName = ({setVisible,setProjectName}) => {
+const CheckMultipleName = ({setVisible,setProject}) => {
 
     return (<>
         <p className="m-0">
@@ -14,7 +14,7 @@ const CheckMultipleName = ({setVisible,setProjectName}) => {
             <Button label="כן" onClick={() => setVisible(false)}></Button>
             <Button label="לא" severity="secondary" onClick={() => {
                 setVisible(false)
-                setProjectName('')
+                setProject({name:''})
             }} ></Button>
         </div>
     </>)

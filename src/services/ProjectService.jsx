@@ -1,21 +1,21 @@
-export const CustomerService = {
+export const ProjectService = {
     getData() {
         return [
             {
                 id: 2000,
                 name: 'תיעו"ד',
-                goal:"תצוגת מערכות מידע",
+                purpose:"תצוגת מערכות מידע",
                 description: 'מערכת זו נועדה לספק מידע בצורה מרוכזת נגישה ונוחה על כל המערכות הקיימות בשלבי הפיתוח השונים, \nעל מנת למנוע כפילויות ולאפשר מציאה קלה ונוחה של המערכת הרצויה.  \nהמערכת מרכזת את הנתונים עבור כל מערכת ומאפשרת חיפושים וסינונים שונים.\n עבור כל מערכת יוצגו גם פרטי איש קשר כדי לאפשר יצירת קשר ובדיקת האפשרות להשתמש במערכת הקיימת.',
-                date: '',
+                productionTime: '',
                 status: 'בפיתוח',
-                type: "חיצוני",
-                representative: {
+                factorableType: "חיצוני",
+                external: {
                     name: 'סקייבר',
                     image: 'skyvar.png'
                 },
-                demand: {
+                requires: {
                     name: "יחידת ציפור",
-                    section: "פיקוד צפון",
+                    command: "פיקוד צפון",
                     branch: "100",
                     contactName:"יפעת",
                     contactPhone:"0529466379",
@@ -23,24 +23,24 @@ export const CustomerService = {
 
                 },
                 classification : 'בלמ"ס',
-                devEnvironment: "שחורה",
+                environment: "שחורה",
                 population: ["קבע","חובה"]
             },
             {
                 id: 1000,
                 name: 'עקוב אחרי',
-                goal:"זיהוי מכוניות חשודות",
+                purpose:"זיהוי מכוניות חשודות",
                 description: "כאשר המערכת מקבלת זיהוי של מכונית חשודה מופעל באופן אוטומטי מעקב אחר המכונית הכולל ניטור ודיווח על מיקום וקצב הנסיעה עד להגעת כוחות למקום",
-                date: '',
+                productionTime: '',
                 status: 'באפיון',
-                type: "חיצוני",
-                representative: {
+                factorableType: "חיצוני",
+                external: {
                     name: 'אלביט',
                     image: 'elbit.png'
                 },
-                demand: {
+                requires: {
                     name: "יחידת נחל",
-                    section: "פיקוד צפון",
+                    command: "פיקוד צפון",
                     branch: "100",
                     contactName:"טל",
                     contactPhone:"0523456985",
@@ -48,48 +48,48 @@ export const CustomerService = {
 
                 },
                 classification : 'סודי',
-                devEnvironment: "שחורה",
+                environment: "שחורה",
                 population: ["מילואים"]
             },
             {
                 id: 3000,
                 name: "מת\"ח",
-                goal:"קביעת תורים ובדיקת זכאות",
+                purpose:"קביעת תורים ובדיקת זכאות",
                 description: "כיום יש להגיע לסניף על מנת לקבל זכאות.\nמטרת הפרוייקט היא לקבוע את התורים באופן מקוון ולבדוק זכאות לפני הגעה פיזית לתור.",
-                date: '',
+                productionTime: '',
                 status: 'בתהליך',
-                type: "חיצוני",
-                representative: {
+                factorableType: "חיצוני",
+                external: {
                     name: 'סקייבר',
                     image: 'skyvar.png'
                 },
-                demand: {
+                requires: {
                     name: "יחידת מעוף",
-                    section: "פיקוד דרום",
+                    command: "פיקוד דרום",
                     branch: "100",
                     contactName:"גל",
                     contactPhone:"0534126985",
                     contactEmail:"gal@gmail.com"
                 },
                 classification : 'סודי',
-                devEnvironment: "שחורה",
+                environment: "שחורה",
                 population: ["מילואים","קבע"]
             },
             {
                 id: 4000,
                 name: "פיתוח תרשימים",
-                goal:"חידוש ועידכון שאילתות",
+                purpose:"חידוש ועידכון שאילתות",
                 description: "מטרת הפרויקט - חידוש ועדכון שאילתות מורכבות עבור התרשימים המוצגים אחת לחודש.",
-                date: 'Thu Sep 05 2024 00:00:00 GMT+0300',
+                productionTime: 'Thu Sep 05 2024 00:00:00 GMT+0300',
                 status: 'עלה לאויר',
-                type: "פנימי",
-                representative: {
+                factorableType: "פנימי",
+                external: {
                     name: 'פיקוד צפון',
                     image: 'inside.png',
                 },
-                demand: {
+                requires: {
                     name: "יחידת נשר",
-                    section: "פיקוד צפון",
+                    command: "פיקוד צפון",
                     branch: "100",
                     contactName:"אבי",
                     contactPhone:"0523985624",
@@ -97,25 +97,25 @@ export const CustomerService = {
 
                 },
                 classification : 'סודי ביותר',
-                devEnvironment: "אדומה",
+                environment: "אדומה",
                 population: ["קבע"]
             }
         ];
     },
 
-    getCustomersSmall() {
+    getProjectsSmall() {
         return Promise.resolve(this.getData().slice(0, 10));
     },
 
-    getCustomersMedium() {
+    getProjectsMedium() {
         return Promise.resolve(this.getData().slice(0, 50));
     },
 
-    getCustomersLarge() {
+    getProjectsLarge() {
         return Promise.resolve(this.getData().slice(0, 200));
     },
 
-    getCustomersXLarge() {
+    getProjectsXLarge() {
         return Promise.resolve(this.getData());
     },
 }
