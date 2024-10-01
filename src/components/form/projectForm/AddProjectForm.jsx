@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import 'primeicons/primeicons.css';
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dialog } from "primereact/dialog";
@@ -7,13 +7,12 @@ import { FloatLabel } from 'primereact/floatlabel';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from "primereact/inputtextarea";
 import { MultiSelect } from "primereact/multiselect";
-import 'primeicons/primeicons.css';
-
+import React, { useState } from "react";
 import { classifications, environments, factorableTypes, populations, statuses } from "../../../services/consts";
 import { ProjectService } from "../../../services/ProjectService";
-import { AddDemand } from '../demandForm/AddDemand';
-import AddOperatingForm from '../operationForm/AddOperatingForm';
 import CheckMultipleName from "../CheckMultipleName";
+import AddOperatingForm from '../operationForm/AddOperatingForm';
+import { AddRequire } from '../requireForm/AddRequire';
 import './AddProjectForm.css';
 
 
@@ -80,8 +79,8 @@ const AddProjectForm = () => {
         <>
             <div id="addProjectForm">
                 <form action="">
-                    <div className="card" class="grid-container">
-                        <div className="card" class="item1">
+                    <div className="card grid-container">
+                        <div className="card item1">
                             <FloatLabel className="field">
                                 <InputText className="w-full md:w-30rem field" inputId="name" value={name} onChange={(e) => {
                                     setName(e.target.value)
@@ -90,26 +89,26 @@ const AddProjectForm = () => {
                                 <label htmlFor="name">שם הפרויקט</label>
                             </FloatLabel>
                         </div>
-                        <div className="card" class="item2">
+                        <div className="card item2">
                             <FloatLabel className="field">
                                 <InputTextarea className="w-full md:w-30rem field" inputId="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={4} cols={30} />
                                 <label htmlFor="description">תאור הפרויקט</label>
                             </FloatLabel>
                         </div>
-                        <div className="card" class="item8">
+                        <div className="card item8">
                             <FloatLabel className="field">
                                 <InputTextarea className="w-full md:w-30rem field" inputId="purpose" value={purpose} onChange={(e) => setPurpose(e.target.value)} />
                                 <label htmlFor="purpose">מטרת הפרויקט</label>
                             </FloatLabel>
                         </div>
-                        <div className="card" class="item3">
+                        <div className="card item3">
                             <FloatLabel className="field" >
                                 <Dropdown inputId="dd-demand" value={selectedDemandFactor} onChange={(e) => handelSelectDemandFactor(e.value)}
                                     options={demandFactors} className="w-full md:w-14rem field" />
                                 <label htmlFor="dd-demand">בחר גוף דורש</label>
                             </FloatLabel>
                         </div>
-                        <div className="card" class="item4">
+                        <div className="card item4">
                             <FloatLabel className="field" >
                                 <Dropdown inputId="dd-type" value={selectedType} onChange={(e) => setSelectedType(e.value)}
                                     options={factorableTypes} className="w-full md:w-14rem field" />
@@ -117,7 +116,7 @@ const AddProjectForm = () => {
                             </FloatLabel>
                         </div>
 
-                        <div className="card" class="item6">
+                        <div className="card item6">
                             <FloatLabel className="field">
                                 {selectedType == null && <Dropdown inputId="dd-operating" value={explain}
                                     onClick={(e) => setExplain("fgh")}
@@ -132,14 +131,14 @@ const AddProjectForm = () => {
                             </FloatLabel>
                         </div>
 
-                        <div className="card" class="item5">
+                        <div className="card item5">
                             <FloatLabel className="field" >
                                 <Dropdown inputId="dd-status" value={selectedStatus} onChange={(e) => setSelectedStatus(e.value)}
                                     options={statuses} className="w-full md:w-14rem field" />
                                 <label htmlFor="dd-status">בחר סטטוס</label>
                             </FloatLabel>
                         </div>
-                        <div className="card" class="item7">
+                        <div className="card item7">
                             {selectedStatus === 'עלה לאויר' &&
                                 <FloatLabel className="field" >
                                     <Calendar inputId="dd-date" value={productionTime} onChange={(e) => setProductionTime(e.value)} showButtonBar className="w-full md:w-14rem field" />
@@ -147,21 +146,21 @@ const AddProjectForm = () => {
                                 </FloatLabel>
                             }
                         </div>
-                        <div className="card" class="item9">
+                        <div className="card item9">
                             <FloatLabel className="field" >
                                 <Dropdown inputId="classification" value={selectedClassification} onChange={(e) => setSelectedClassification(e.value)}
                                     options={classifications} className="w-full md:w-14rem field" />
                                 <label htmlFor="classification">בחר סיווג</label>
                             </FloatLabel>
                         </div>
-                        <div className="card" class="item10">
+                        <div className="card item10" >
                             <FloatLabel className="field" >
                                 <Dropdown inputId="devEnvironment" value={selectedDevEnvironment} onChange={(e) => setSelectedDevEnvironment(e.value)}
                                     options={environments} className="w-full md:w-14rem field" />
                                 <label htmlFor="devEnvironment">בחר סביבת פיתוח</label>
                             </FloatLabel>
                         </div>
-                        <div className="card" class="item11">
+                        <div className="card item11">
                             <FloatLabel className="field" >
                                 <MultiSelect inputId="population" value={selectedPopulation} onChange={(e) => setSelectedPopulation(e.value)}
                                     options={populations} className="w-full md:w-14rem field" />
@@ -179,11 +178,11 @@ const AddProjectForm = () => {
                 </Dialog>
 
                 <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
-                    footer={<AddDemand setSelected={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemand} demandFactors={demandFactors} />}>
+                    footer={<AddRequire setSelected={setSelectedDemandFactor} setDemandFactors={setDemandFactors} hide={setHideAddDemand} demandFactors={demandFactors} />}>
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע פנימי" visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
-                    footer={<AddDemand setSelected={setSelectedOperatingFactor} setDemandFactors={setDemandFactors} hide={setHideAddOperatingFactor} demandFactors={demandFactors} />}>
+                    footer={<AddRequire setSelected={setSelectedOperatingFactor} setDemandFactors={setDemandFactors} hide={setHideAddOperatingFactor} demandFactors={demandFactors} />}>
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}

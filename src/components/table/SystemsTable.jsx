@@ -89,7 +89,6 @@ export default function SystemsTable() {
                 </IconField>
                 <Dialog header="הוספת מערכת חדשה" id='addNewProjectDialog' visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
                     <AddProject></AddProject>
-                    {/* <AddProjectForm></AddProjectForm> */}
                 </Dialog>
                 <Button id='add_project' label='הוספת מערכת חדשה' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
 

@@ -14,7 +14,10 @@ const CheckMultipleName = ({setVisible,setProject}) => {
             <Button label="כן" onClick={() => setVisible(false)}></Button>
             <Button label="לא" severity="secondary" onClick={() => {
                 setVisible(false)
-                setProject({name:''})
+                setProject((prevProject) => ({
+                    ...prevProject,
+                    name: ''
+            }))
             }} ></Button>
         </div>
     </>)
