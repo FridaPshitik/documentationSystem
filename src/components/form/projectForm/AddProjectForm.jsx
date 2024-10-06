@@ -7,9 +7,9 @@ import { FloatLabel } from 'primereact/floatlabel';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from "primereact/inputtextarea";
 import { MultiSelect } from "primereact/multiselect";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { classifications, environments, factorableTypes, populations, statuses } from "../../../services/consts";
-import { ProjectService } from "../../../services/ProjectService";
+import { ProjectContext } from '../../../services/ProjectContext';
 import CheckMultipleName from "../CheckMultipleName";
 import AddOperatingForm from '../operationForm/AddOperatingForm';
 import { AddRequire } from '../requireForm/AddRequire';
@@ -17,7 +17,7 @@ import './AddProjectForm.css';
 
 
 const AddProjectForm = () => {
-
+    const {projects,getProjects}=useContext(ProjectContext)
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [purpose, setPurpose] = useState('');
@@ -55,8 +55,7 @@ const AddProjectForm = () => {
     };
 
     const handleValidation = (name) => {
-        const data = ProjectService.getData();
-        data.forEach(obj => {
+        projects.forEach(obj => {
             if (obj.name === name) {
                 setVisible(true)
             }

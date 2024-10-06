@@ -7,7 +7,7 @@ import { FileUpload } from 'primereact/fileupload';
 import '../projectForm/AddProjectForm.css';
 
 
-const AddOperatingForm = ({ setSelected, setOperatingFactors, hide, operatingFactor }) => {
+export const AddExternal = ({ setSelected, setOperatingFactors, hide, operatingFactor }) => {
 
     const toast = useRef(null);
     const [factorName, setFactorName] = useState('');
@@ -45,4 +45,3 @@ const AddOperatingForm = ({ setSelected, setOperatingFactors, hide, operatingFac
         </div>
     </>)
 }
-export default AddOperatingForm;

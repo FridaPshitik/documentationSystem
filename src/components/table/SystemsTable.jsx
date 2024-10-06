@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { FilterMatchMode } from 'primereact/api';
 import { Button } from 'primereact/button';
@@ -12,8 +12,7 @@ import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
 
-import { ProjectService } from '../../services/ProjectService';
-import AddProjectForm from '../form/projectForm/AddProjectForm';
+import { getProjects } from '../../services/ProjectService';
 import DemandDialog from '../form/dialogs/DemandDialog';
 import DialogSystem from '../form/dialogs/DialogSystem';
 import './SystemsTable.css';
@@ -29,13 +28,13 @@ import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/statu
 import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterTemplate } from '../../helpers/productionTime';
 import { textEditor } from '../../helpers/text';
 import { getStatusColor, statuses } from '../../services/consts';
-import { ProjectContext } from '../../services/ProjectContext';
+import { ProjectContext, ProjectContext2 } from '../../services/ProjectContext';
 import { AddProject } from '../form/projectForm/AddProject';
+import { del } from '../../services/axiosInstance';
 
 export default function SystemsTable() {
 
-    const [projects, setProjects] = useState([]);//???????????????????
-
+    const {projects , setProjects}=useContext(ProjectContext)
 
     let emptyProject = {
         id: null,
@@ -201,21 +200,22 @@ export default function SystemsTable() {
     const deleteProject = () => {
         // TODO Deleting the project from the DB
         let _projects = projects.filter((val) => val.id !== project.id);
-
+        del('project', project.id);
         setProjects(_projects);
-        setDeleteProjectDialog(false);
-        setProject(emptyProject);
+        setDeleteProjectDialog(false);//
+        setProject(emptyProject);//
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הפרויקט נמחק בהצלחה', life: 3000 });
     };
 
     useEffect(() => {
-        ProjectService.getProjectsMedium().then((data) => {
-            setProjects(getProjects(data));
+        getProjects().then((data) => {
+            setProjects(convertDate(data));
             setLoading(false);
         });
     }, []);
+    console.log(projects);
 
-    const getProjects = (data) => {
+    const convertDate = (data) => {
         return [...(data || [])].map((d) => {
             d.productionTime = new Date(d.productionTime);
             return d;
@@ -223,8 +223,6 @@ export default function SystemsTable() {
     };
 
     return <>
-    <ProjectContext.Provider value={projects}>
-        
     <div>
         <Toast ref={toast} />
         <div className="card">
@@ -273,7 +271,6 @@ export default function SystemsTable() {
             </Dialog>
         </div>
     </div>
-    </ProjectContext.Provider>
 
     </>;
 }

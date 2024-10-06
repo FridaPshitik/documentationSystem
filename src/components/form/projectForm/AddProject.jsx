@@ -1,56 +1,96 @@
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import React, { useState } from "react";
+import { Calendar } from 'primereact/calendar';
+import { MultiSelect } from 'primereact/multiselect';
 
-import { factorableTypes, requires } from "../../../services/consts";
-import { ProjectService } from "../../../services/ProjectService";
+import { classifications, environments, factorableTypes, populations, statuses } from "../../../services/consts";
+import { ProjectContext } from "../../../services/ProjectContext";
 import CheckMultipleName from "../CheckMultipleName";
-import { AddDemand, AddRequire } from "../requireForm/AddRequire";
+import {  AddInternal } from "../factorsForm/AddInternal";
+import  { AddExternal } from "../factorsForm/AddExternal";
 import './AddProjectForm.css';
+import { createProject } from "../../../services/ProjectService";
 
 
 export const AddProject = () => {
-
+    const {projects , setProjects}=useContext(ProjectContext)
     const [project, setProject] = useState({  
         name :'',
         purpose : '',
         description : '',
         require : '',
-        perform : '',
+        requiresId : '',
         factorableType : '',
         status : '',
-        productionTime : '',
+        productionTime : null,
         classification : '',
-        enviroment : '',
-        population : ''
+        environment : '',
+        population : '',
+        external:null,
+        externalId:null,
+        internal:null,
+        internalId:null,
+        population:''
+
     });
     const [visible, setVisible] = useState(false);
     const [hideAddDemand, setHideAddDemand] = useState(false);
-    const [selectedDemandFactor, setSelectedDemandFactor] = useState(null);
-
+    // const [selectedDemandFactor, setSelectedDemandFactor] = useState(null);
 
 
     const handleValidation = (name) => {
-        const data = ProjectService.getData();
-        data.forEach(obj => {
+        projects.forEach(obj => {
             if (obj.name === name) {
                 setVisible(true)
             }
         })
     };
 
-    const handelSelectDemandFactor = (value) => {
-        value === 'אחר' ? setHideAddDemand(true) : setProject({require:value}) 
+    const handelSelectRequire = (value) => {
+        let updates = {require: value, requiresId: value.id}
+        value.name === 'אחר' ? setHideAddDemand(true) :setProject((prevProject) => ({
+            ...prevProject,
+            ...updates
+        })) 
     }
+    const handelSelectInternal = (value) => {
+        let updates = {internal : value , internalId : value.id}
+        value.name === 'אחר' ? setHideAddOperatingFactor(true) : setProject((prevProject) => ({
+            ...prevProject,
+            ...updates            
+        }))
+   }
+
+   const handelSelectExternal = async (value) => {
+        let updates = {external : value , externalId: value.id}
+        value === 'אחר' ? setHideAddOperatingCompany(true) : setProject((prevProject) => ({
+            ...prevProject,
+            ...updates
+        }))
+   }
 
     const submit=()=>{
+        console.log(project);
         console.log('Add project');
+        let { external, internal, require, ...data } = project;
+        let ans = createProject(data)
+        console.log(ans);
         //TODO add project to DB.
     }
+
+    const [hideAddOperatingCompany, setHideAddOperatingCompany] = useState(false);
+    const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
+
+
+   const {externals, setExternals} = useContext(ProjectContext);
+   const {internals, setInternals} = useContext(ProjectContext);
+
+
   return (
     <>
       <div id="addProjectForm">
@@ -89,8 +129,8 @@ export const AddProject = () => {
                         <div className="card item3">
                             <FloatLabel className="field" >
                                 <Dropdown id="require" value={project.require}
-                                onChange={(e) => handelSelectDemandFactor(e.value)}
-                                    options={requires} className="w-full md:w-14rem field" />
+                                onChange={(e) => handelSelectRequire(e.value)}
+                                    options={internals} optionLabel="name" className="w-full md:w-14rem field" />
                                 <label htmlFor="require">בחר גוף דורש</label>
                             </FloatLabel>
                         </div>
@@ -106,56 +146,71 @@ export const AddProject = () => {
                         </div>
 
                         <div className="card item6">
-                            {/* <FloatLabel className="field">
-                                {selectedType == null && <Dropdown inputid="dd-operating" value={explain}
-                                    onClick={(e) => setExplain("fgh")}
+                            <FloatLabel className="field">
+                                {project.factorableType == '' && <Dropdown inputid="dd-operating"
                                     options={['לאחר בחירת סוג  יאופשר שדה זה']} className="w-full md:w-14rem field" />}
-                                {selectedType === 'פנימי' && <Dropdown inputid="dd-operating" value={selectedOperatingFactor}
-                                    onChange={(e) => handelSelectOperatingFactor(e.value)}
-                                    options={demandFactors} className="w-full md:w-14rem field" />}
-                                {selectedType === 'חיצוני' && <Dropdown inputid="dd-operating" value={selectedOperatingCompany}
-                                    onChange={(e) => handelSelectOperatingCompany(e.value)}
-                                    options={operatingCompany} className="w-full md:w-14rem field" />}
+                                {project.factorableType === factorableTypes.INTERNAL && <Dropdown inputid="dd-operating" value={project.internal}
+                                    onChange={(e) => handelSelectInternal(e.value)}
+                                    options={internals} optionLabel="name" className="w-full md:w-14rem field" />}
+                                {project.factorableType === factorableTypes.EXTERNAL && <Dropdown inputid="dd-operating" value={project.external}
+                                    onChange={(e) => handelSelectExternal(e.value)}
+                                    options={externals} optionLabel="name" className="w-full md:w-14rem field" />}
                                 <label htmlFor="dd-operating">בחר גוף מבצע</label>
-                            </FloatLabel> */}
+                            </FloatLabel>
                         </div>
 
-                        {/* <div className="card item5">
+                        <div className="card item5">
                             <FloatLabel className="field" >
-                                <Dropdown inputid="dd-status" value={selectedStatus} onChange={(e) => setSelectedStatus(e.value)}
-                                    options={statuses} className="w-full md:w-14rem field" />
+                                <Dropdown inputid="dd-status" value={project.status} onChange={(e) => setProject((prevProject) => ({
+                                        ...prevProject,
+                                        status: e.target.value
+                                }))}
+                                    options={Object.values(statuses)} className="w-full md:w-14rem field" />
                                 <label htmlFor="dd-status">בחר סטטוס</label>
                             </FloatLabel>
                         </div>
+                        {console.log(project)}
                         <div className="card item7">
-                            {selectedStatus === statuses.DONE &&
+                            {project.status === statuses.DONE &&
                                 <FloatLabel className="field" >
-                                    <Calendar inputid="dd-date" value={productionTime} onChange={(e) => setProductionTime(e.value)} showButtonBar className="w-full md:w-14rem field" />
+                                    <Calendar inputid="dd-date" value={project.productionTime} onChange={(e) => setProject((prevProject) => ({
+                                        ...prevProject,
+                                        productionTime: e.target.value
+                                }))} showButtonBar className="w-full md:w-14rem field" />
                                     <label htmlFor="dd-date">בחר תאריך</label>
                                 </FloatLabel>
                             }
-                        </div>
+                        </div> 
                         <div className="card item9">
                             <FloatLabel className="field" >
-                                <Dropdown inputid="classification" value={selectedClassification} onChange={(e) => setSelectedClassification(e.value)}
-                                    options={classifications} className="w-full md:w-14rem field" />
+                                <Dropdown inputid="classification" value={project.classification} onChange={(e) => setProject((prevProject) => ({
+                                        ...prevProject,
+                                        classification: e.target.value
+                                }))}
+                                    options={Object.values(classifications)} className="w-full md:w-14rem field" />
                                 <label htmlFor="classification">בחר סיווג</label>
                             </FloatLabel>
                         </div>
                         <div className="card item10">
                             <FloatLabel className="field" >
-                                <Dropdown inputid="devEnvironment" value={selectedDevEnvironment} onChange={(e) => setSelectedDevEnvironment(e.value)}
-                                    options={environments} className="w-full md:w-14rem field" />
+                                <Dropdown inputid="devEnvironment" value={project.environment} onChange={(e) => setProject((prevProject) => ({
+                                        ...prevProject,
+                                        environment : e.target.value
+                                }))}
+                                    options={Object.values(environments)} className="w-full md:w-14rem field" />
                                 <label htmlFor="devEnvironment">בחר סביבת פיתוח</label>
                             </FloatLabel>
                         </div>
                         <div className="card item11">
                             <FloatLabel className="field" >
-                                <MultiSelect inputid="population" value={selectedPopulation} onChange={(e) => setSelectedPopulation(e.value)}
-                                    options={populations} className="w-full md:w-14rem field" />
+                                <MultiSelect inputid="population" value={project.population} onChange={(e) => setProject((prevProject) => ({
+                                        ...prevProject,
+                                        population : e.target.value
+                                }))}
+                                    options={Object.values(populations)} className="w-full md:w-14rem field" />
                                 <label htmlFor="population">בחר אוכלוסיה</label>
                             </FloatLabel>
-                        </div> */}
+                        </div> 
                     </div>
                     <div id="button">
                         <Button severity="secondary" label="הוסף" type="submit" onClick={submit} />
@@ -165,19 +220,20 @@ export const AddProject = () => {
                  <Dialog header="אזהרה ⚠️" visible={visible} onHide={() => setVisible(false)}>
                     <CheckMultipleName setVisible={setVisible} setProject={setProject} />
                 </Dialog>
-                <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
-                    footer={<AddRequire setProject={setProject} hide={setHideAddDemand} />}>
-                </Dialog>
 
-                {/*
+                <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
+                    footer={<AddInternal setProject={setProject} hide={setHideAddDemand} />}>
+                </Dialog>
+                
                 <Dialog header="הוספת גוף מבצע פנימי" visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
-                    footer={<AddDemand setSelected={setSelectedOperatingFactor} setDemandFactors={setDemandFactors} hide={setHideAddOperatingFactor} demandFactors={demandFactors} />}>
+                    footer={<AddInternal setProject={setProject} hide={hideAddOperatingFactor} />}>
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}
-                    footer={<AddOperatingForm setSelected={setSelectedOperatingCompany} setOperatingFactors={setOperatingCompany} hide={setHideAddOperatingCompany} operatingFactor={operatingCompany} />}>
-                </Dialog> */}
+                    footer={<AddExternal/>}>
+                </Dialog>
             </div>
+
     </>
   );
 };

@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import '../projectForm/AddProjectForm.css';
 
 
-export const AddRequire = ({ setProject, hide }) => {
+export const AddInternal = ({ setProject, hide }) => {
 
     const [require, setRequire]=useState({name:'',command:'',contact:'',communication:''})
 
