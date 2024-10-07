@@ -1,7 +1,7 @@
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { externals } from "../services/consts";
-
+import { factorableTypes } from "../services/consts";
 
 export const externalRowFilterTemplate = (options) => {
   return (
@@ -18,6 +18,7 @@ export const externalRowFilterTemplate = (options) => {
 };
 
 const externalsItemTemplate = (option) => {
+  console.log("option", option);
   return (
     <div className="flex align-items-center gap-2">
       <img
@@ -31,29 +32,51 @@ const externalsItemTemplate = (option) => {
 };
 
 export const externalEditor = (options) => {
-  return (
-    <Dropdown
-      value={options.value}
-      options={externals}
-      itemTemplate={externalsItemTemplate}
-      onChange={(e) => options.editorCallback(e.value)}
-      optionLabel="name"
-      placeholder={options.value.name}
-      className="p-column-filter"
-    />
-  );
+  console.log("externals", externals);
+  console.log("options: ", options);
+  if(options.rowData.factorableType == factorableTypes.EXTERNAL)
+    return (
+      <Dropdown
+        value={options.value}
+        options={externals}
+        itemTemplate={externalsItemTemplate}
+        onChange={(e) => options.editorCallback(e.value)}
+        optionLabel="name"
+        placeholder={options.value.name}
+        className="p-column-filter"
+      />
+    );
+    return (
+      <Dropdown
+        value={options.rowData.internal.command}
+        options={externals}
+        itemTemplate={externalsItemTemplate}
+        onChange={(e) => options.editorCallback(e.value)}
+        optionLabel="name"
+        placeholder={options.rowData.internal.command}
+        className="p-column-filter"
+      />
+    );
 };
 
 export const externalBodyTemplate = (rowData) => {
-  const external = rowData.external;
+  console.log("rowdata", rowData);
+  let factor = { name: '', image: '' };
+
+  if (rowData.factorableType == factorableTypes.EXTERNAL)
+    factor = rowData.external;
+  else {
+    factor.name = rowData.internal.command;
+    factor.image = "inside.png";
+  }
   return (
     <div className="flex align-items-center gap-2">
       <img
-        alt={external.name}
-        src={window.location.origin + `/images/${external.image}`}
+        alt={factor.name}
+        src={window.location.origin + `/images/${factor.image}`}
         width="32"
       />
-      <p>{external.name}</p>
+      <p>{factor.name}</p>
     </div>
   );
 };
