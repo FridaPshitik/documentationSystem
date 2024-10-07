@@ -6,7 +6,8 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import SystemsTable from './components/table/SystemsTable';
 import { ProjectContext } from './services/ProjectContext';
 import { useEffect, useState } from 'react';
-import { getExternalFactor, getInternalFactor } from './services/ProjectService';
+import { getExternalFactor } from './services/ProjectService';
+import { getInternalDisplay } from './services/InternalService';
 
 function App() {
   const [projects, setProjects] = useState([]);
@@ -16,7 +17,7 @@ function App() {
   useEffect(() => {
     async function fetchData() {
       setExternals(await getExternalFactor());
-      setInternals(await getInternalFactor());
+      setInternals(await getInternalDisplay());
     }
     fetchData();
   }, []);

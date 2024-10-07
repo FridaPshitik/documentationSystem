@@ -28,7 +28,7 @@ import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/statu
 import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterTemplate } from '../../helpers/productionTime';
 import { textEditor } from '../../helpers/text';
 import { getStatusColor, statuses } from '../../services/consts';
-import { ProjectContext, ProjectContext2 } from '../../services/ProjectContext';
+import { ProjectContext } from '../../services/ProjectContext';
 import { AddProject } from '../form/projectForm/AddProject';
 import { del } from '../../services/axiosInstance';
 
@@ -150,7 +150,6 @@ export default function SystemsTable() {
     const onRowEditComplete = (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        console.log(newData);
         if (newData.status == statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
@@ -192,7 +191,6 @@ export default function SystemsTable() {
     };
     
     const confirmDeleteProject = (project) => {
-        console.log(project);
         setProject(project);
         setDeleteProjectDialog(true);
     };
@@ -213,7 +211,6 @@ export default function SystemsTable() {
             setLoading(false);
         });
     }, []);
-    console.log(projects);
 
     const convertDate = (data) => {
         return [...(data || [])].map((d) => {

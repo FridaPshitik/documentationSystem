@@ -18,7 +18,7 @@ import { createProject } from "../../../services/ProjectService";
 
 
 export const AddProject = () => {
-    const {projects , setProjects}=useContext(ProjectContext)
+    const {projects} = useContext(ProjectContext)
     const [project, setProject] = useState({  
         name :'',
         purpose : '',
@@ -68,18 +68,15 @@ export const AddProject = () => {
 
    const handelSelectExternal = async (value) => {
         let updates = {external : value , externalId: value.id}
-        value === 'אחר' ? setHideAddOperatingCompany(true) : setProject((prevProject) => ({
+        value.name === 'אחר' ? setHideAddOperatingCompany(true) : setProject((prevProject) => ({
             ...prevProject,
             ...updates
         }))
    }
 
     const submit=()=>{
-        console.log(project);
-        console.log('Add project');
         let { external, internal, require, ...data } = project;
-        let ans = createProject(data)
-        console.log(ans);
+        let _ = createProject(data)
         //TODO add project to DB.
     }
 
@@ -134,6 +131,7 @@ export const AddProject = () => {
                                 <label htmlFor="require">בחר גוף דורש</label>
                             </FloatLabel>
                         </div>
+                        <p value={project.require}></p>
                         <div className="card item4">
                             <FloatLabel className="field" >
                                 <Dropdown id="factorableType" value={project.factorableType} onChange={(e) => setProject((prevProject) => ({
@@ -169,7 +167,6 @@ export const AddProject = () => {
                                 <label htmlFor="dd-status">בחר סטטוס</label>
                             </FloatLabel>
                         </div>
-                        {console.log(project)}
                         <div className="card item7">
                             {project.status === statuses.DONE &&
                                 <FloatLabel className="field" >

@@ -11,13 +11,6 @@ export const getExternalFactor = async () => {
   return externals;
 };
 
-export const getInternalFactor = async () => {
-  // command, communicationType, contact, department, name,
-  let internals = await get("internal-factor");
-  internals.push({name:'אחר'})
-  return internals;
-};
-
 export const createProject = async (data) => {
   return await post("project", data);
 };

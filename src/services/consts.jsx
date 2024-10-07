@@ -1,4 +1,4 @@
-import { getExternals, getRequires } from "./api";
+import { getExternals } from "./api";
 
 export const classifications = {
   SODY: "סודי",
@@ -31,9 +31,6 @@ export const populations = {
   PATUR: "פטור",
 };
 
-//TODO
-export let requires = getRequires();
-requires = [...requires, "אחר"];
 
 //TODO
 export const externals = getExternals();
