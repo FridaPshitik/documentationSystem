@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { InputText } from 'primereact/inputtext';
 import { FloatLabel } from 'primereact/floatlabel';
 import { Button } from 'primereact/button';
@@ -7,7 +7,7 @@ import { createInternal } from "../../../services/InternalService";
 import { ProjectContext } from "../../../services/ProjectContext";
 
 
-export const AddInternal = ({ setProject, hide ,parent}) => {
+export const AddInternal = ({ setProject, hide ,parent , toast}) => {
 
     const {internals, setInternals} = useContext(ProjectContext);
     const [internal, setInternal]=useState({name:'',command:'',contact:'',department:'',phone:'',email:''})
@@ -20,7 +20,7 @@ export const AddInternal = ({ setProject, hide ,parent}) => {
 
         let updates= (parent=='require'?  {require : ans ,requiresId: ans.id} :  {internal : ans ,internalId: ans.id})
         setProject((prevProject) => ({ ...prevProject, ...updates}))
-
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הגוף נוסף בהצלחה', life: 3000 });
         hide(false);
     };
     
