@@ -207,7 +207,7 @@ export default function SystemsTable() {
     };
 
     useEffect(() => {
-        async function fetchData() {
+        const fetchData = async () => {
             let getProject = await getProjects();
             if (getProject.status == 200) {
                 setError(null);

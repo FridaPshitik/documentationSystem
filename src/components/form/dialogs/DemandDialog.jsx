@@ -2,7 +2,6 @@ import { Card } from 'primereact/card';
 
 
 export default function DemandDialog(data) {
-    console.log(data);
     return (
         <div className="card flex justify-content-center">
             <Card title={"יצירת קשר"}  >

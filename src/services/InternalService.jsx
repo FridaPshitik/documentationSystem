@@ -3,9 +3,7 @@ import { get, post } from "./axiosInstance";
 
 export const getInternals = async () => {
   try {
-
     let ans = await get("internal-factor");
-    console.log(ans);
     const internals = ans.data.map(item => item.command);
     return internals;
   }
@@ -15,7 +13,7 @@ export const getInternals = async () => {
 };
 
 export const getInternalDisplay = async () => {
-  try{
+  try {
     const internals = await get("internal-factor");
     internals.push({ name: 'אחר' })
     return internals;
@@ -26,11 +24,11 @@ export const getInternalDisplay = async () => {
 };
 
 export const createInternal = async (data) => {
-  try{
+  try {
     const ans = await post("internal-factor", data);
     return ans;
   }
-  catch (error){
+  catch (error) {
     return error;
   }
 };

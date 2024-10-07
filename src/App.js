@@ -16,7 +16,7 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       let externals = await getExternalFactor();
       let internals = await getInternalFactor();
       externals.status === 200 ? setExternals(externals.data) : setError(externals.message + ' -- שגיאה בקבלת גופים חיצוניים');
