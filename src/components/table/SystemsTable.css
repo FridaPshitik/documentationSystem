@@ -1,0 +1,109 @@
+* {
+    direction: rtl;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0%;
+}
+
+td {
+    text-align: right;
+}
+
+th {
+    text-align: right;
+}
+
+.p-datatable-wrapper {
+    margin: 15px 15px 15px 15px;
+    border: solid 1px gray;
+}
+
+.headerss{
+    margin-left: 15px;
+    margin-right: 15px;
+    /* background-color: white;
+    border: 1px solid white; */
+}
+
+.p-datatable .p-datatable-header {
+     background-color: white;
+    border: 1px solid white;
+}
+
+div.p-datatable {
+    width: 100vw;
+}
+
+.p-datatable-header {
+    padding: 0;
+    margin-bottom: 1%;
+}
+
+.p-icon-field.p-icon-field-left {
+    height: 15%;
+    width: 100%
+}
+
+.p-icon-field.p-icon-field-left input {
+    height: 100%;
+    width: 100%
+}
+
+.p-column-filter.p-dropdown.p-component.p-inputwrapper.p-dropdown-clearable.p-inputwrapper-filled svg {
+    /* color:red;
+    position:absolute;
+    left: 1px; */
+}
+
+.p-icon.p-dropdown-clear-icon.p-clickable {
+    color: white;
+    /* position:absolute; */
+    /* left:1px */
+}
+
+div.p-paginator-bottom.p-paginator.p-component {
+    direction: ltr;
+}
+
+div.p-datepicker-group {
+    direction: ltr;
+}
+
+#pr_id_14_panel .p-datepicker.p-component.p-ripple-disabled.p-connected-overlay-enter-done {
+    direction: ltr;
+}
+
+table.p-datepicker-calendar {
+    direction: ltr;
+}
+
+div.p-datepicker-header {
+    direction: ltr;
+}
+.p-column-filter-row .p-column-filter-element{
+    width: 100%;
+}
+
+input.p-column-filter.p-inputtext.p-component{
+    padding-right: 5px;
+}
+#delete_selected ,#download{
+    width: 5%;
+}
+#addNewProjectDialog{
+    width: '33vw';
+    text-align: 'center';
+}
+#add_project{
+    width: 15%;
+}
+
+div.p-column-header-content{
+    text-align: center;
+}
+
+#titleH3{
+    color: rgb(157, 169, 169);
+}

@@ -1,0 +1,82 @@
+.card {
+    padding: 0;
+}
+
+.card #calendar {
+    direction: ltr;
+    width: 100%;
+}
+
+.p-float-label>label {
+    right: 20%;
+    text-align: right;
+}
+
+#button {
+    text-align: center;
+}
+
+.card {
+    margin-top: 15px;
+}
+
+.item1 {
+    grid-area: name;
+}
+
+.item2 {
+    grid-area: description;
+}
+
+.item3 {
+    grid-area: demand;
+}
+
+.item4 {
+    grid-area: type;
+}
+
+.item5 {
+    grid-area: status;
+}
+
+.item6 {
+    grid-area: operating;
+}
+
+.item7 {
+    grid-area: date;
+}
+
+.item8 {
+    grid-area: goal;
+}
+.item9 {
+    grid-area: classification;
+}
+.item10 {
+    grid-area: devEnvironment;
+}
+.item11 {
+    grid-area: population;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        'name name'
+        'goal goal'
+        'description description'
+        'type  operating'
+        'demand classification'
+        'devEnvironment population'
+        'status  date';
+    gap: 5px;
+    padding: 15px;
+}
+
+.grid-container>div {
+    text-align: center;
+    padding: 5px;
+    font-size: 17px;
+}
