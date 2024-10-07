@@ -79,7 +79,6 @@ export const AddProject = ({toast}) => {
         let { external, internal, require, ...data } = project;
         let _ = createProject(data)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נוספה בהצלחה', life: 3000 });
-        //TODO add project to DB.
     }
 
 
