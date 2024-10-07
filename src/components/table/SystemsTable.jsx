@@ -34,7 +34,8 @@ import { del } from '../../services/axiosInstance';
 
 export default function SystemsTable() {
 
-    const {projects , setProjects}=useContext(ProjectContext)
+    const { projects, setProjects } = useContext(ProjectContext)
+    const { error, setError } = useContext(ProjectContext)
 
     let emptyProject = {
         id: null,
@@ -176,7 +177,7 @@ export default function SystemsTable() {
                 }
                 placeholder="בחר סטטוס"
                 itemTemplate={(option) => {
-                    return <Tag value={option} style={{background: getStatusColor(option)}}></Tag>;
+                    return <Tag value={option} style={{ background: getStatusColor(option) }}></Tag>;
                 }}
             />
         );
@@ -189,7 +190,7 @@ export default function SystemsTable() {
     const deleteBodyTemplate = (rowData) => {
         return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => confirmDeleteProject(rowData)} />;
     };
-    
+
     const confirmDeleteProject = (project) => {
         setProject(project);
         setDeleteProjectDialog(true);
@@ -206,10 +207,18 @@ export default function SystemsTable() {
     };
 
     useEffect(() => {
-        getProjects().then((data) => {
-            setProjects(convertDate(data));
-            setLoading(false);
-        });
+        const fetchData = async () => {
+            let getProject = await getProjects();
+            if (getProject.status == 200) {
+                setError(null);
+                setProjects(convertDate(getProject.data));
+                setLoading(false);
+            }
+            else {
+                setError(getProject.message);
+            }
+        }
+        fetchData();
     }, []);
 
     const convertDate = (data) => {
@@ -220,54 +229,55 @@ export default function SystemsTable() {
     };
 
     return <>
-    <div>
-        <Toast ref={toast} />
-        <div className="card">
-            <div style={{ textAlign: 'center' }}>
-                <img alt="סקייבר" src={window.location.origin + '/images/skyvar.png'} width="32" style={{ position: 'relative', marginBottom: '-1em' }} />
-                <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
-                <h3 id='titleH3'>תצוגת מערכות מידע</h3>
-            </div>
-            <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
-                selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'external.name', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
-                <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
-                <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
-                <Column field="purpose" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
-                <Column field='requires.command' header="גוף דורש" editor={(options) => requireEditor(options)} style={{ minWidth: '8rem' }} filter filterField='requires.command' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש" body={requireTemplate} filterElement={requireFilterTemplate}/>
-                <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
-                <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
-                <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
-                <Column field="factorableType" class="column" header="פיתוח" editor={(options) => factorableTypeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
-                <Column field="external" header="גוף מבצע" editor={(options) => externalEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }}body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
-                <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} filterField="productionTime" showFilterMenu={false} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
-                <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
-                <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
-            </DataTable>
-
-            <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
-                <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
-                    {project && (<span>האם למחוק <b>{project.name}</b>?</span>
-                    )}
-                    <div style={{ direction: "ltr", marginTop: "10px", marginLeft: '5px' }} >
-                        <Button icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
-                        <Button icon="pi pi-check" outlined text severity="danger" onClick={deleteProject} />
-                    </div>
-
+        <div>
+            <Toast ref={toast} position='top-left' />
+            <div className="card">
+                <div style={{ textAlign: 'center' }}>
+                    <img alt="סקייבר" src={window.location.origin + '/images/skyvar.png'} width="32" style={{ position: 'relative', marginBottom: '-1em' }} />
+                    <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
+                    <h3 id='titleH3'>תצוגת מערכות מידע</h3>
                 </div>
-            </Dialog>
+                <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
+                    selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+                    globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'external.name', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
+                    <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
+                    <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
+                    <Column field="purpose" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
+                    <Column field='requires.command' header="גוף דורש" editor={(options) => requireEditor(options)} style={{ minWidth: '8rem' }} filter filterField='requires.command' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש" body={requireTemplate} filterElement={requireFilterTemplate} />
+                    <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
+                    <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
+                    <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
+                    <Column field="factorableType" class="column" header="פיתוח" editor={(options) => factorableTypeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
+                    <Column field="external" header="גוף מבצע" editor={(options) => externalEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
+                    <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
+                    <Column field='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} filterField="productionTime" showFilterMenu={false} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
+                    <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                    <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
+                </DataTable>
 
-            <Dialog visible={visibleSystemDialog} style={{ width: '50vw' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
-                <DialogSystem dataSystem={dataSystem}></DialogSystem>
-            </Dialog>
+                <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
+                    <div className="confirmation-content">
+                        <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
+                        {project && (<span>האם למחוק <b>{project.name}</b>?</span>
+                        )}
+                        <div style={{ direction: "ltr", marginTop: "10px", marginLeft: '5px' }} >
+                            <Button icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
+                            <Button icon="pi pi-check" outlined text severity="danger" onClick={deleteProject} />
+                        </div>
 
-            <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false) }}>
-                <DemandDialog dataSystem={requireConcats}></DemandDialog>
-            </Dialog>
+                    </div>
+                </Dialog>
+
+                <Dialog visible={visibleSystemDialog} style={{ width: '50vw' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
+                    <DialogSystem dataSystem={dataSystem}></DialogSystem>
+                </Dialog>
+
+                <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false) }}>
+                    <DemandDialog dataSystem={requireConcats}></DemandDialog>
+                </Dialog>
+                {error !== null ? <>{toast.current.show({ severity: 'error', summary: 'Error', detail: error, sticky: true })}</> : <span></span>}
+            </div>
         </div>
-    </div>
 
     </>;
 }
