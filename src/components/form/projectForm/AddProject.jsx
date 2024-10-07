@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
@@ -17,7 +17,7 @@ import './AddProjectForm.css';
 import { createProject } from "../../../services/ProjectService";
 
 
-export const AddProject = () => {
+export const AddProject = ({toast}) => {
     const {projects} = useContext(ProjectContext)
     const [project, setProject] = useState({  
         name :'',
@@ -78,7 +78,7 @@ export const AddProject = () => {
     const submit=()=>{
         let { external, internal, require, ...data } = project;
         let _ = createProject(data)
-        //TODO add project to DB.
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נוספה בהצלחה', life: 3000 });
     }
 
 
@@ -217,11 +217,11 @@ export const AddProject = () => {
                 </Dialog>
 
                 <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
-                    footer={<AddInternal setProject={setProject} hide={setHideAddDemand} parent={'require'}/>}>
+                    footer={<AddInternal setProject={setProject} hide={setHideAddDemand} parent={'require'} toast={toast}/>}>
                 </Dialog>
                 
                 <Dialog header="הוספת גוף מבצע פנימי" visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
-                    footer={<AddInternal setProject={setProject} hide={setHideAddOperatingFactor} parent={'internal'} />}>
+                    footer={<AddInternal setProject={setProject} hide={setHideAddOperatingFactor} parent={'internal'} toast={toast} />}>
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}

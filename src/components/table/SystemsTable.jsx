@@ -87,7 +87,7 @@ export default function SystemsTable() {
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
                 <Dialog header="הוספת מערכת חדשה" id='addNewProjectDialog' visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
-                    <AddProject></AddProject>
+                    <AddProject toast={toast}></AddProject>
                 </Dialog>
                 <Button id='add_project' label='הוספת מערכת חדשה' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
 
@@ -202,7 +202,7 @@ export default function SystemsTable() {
         setProjects(_projects);
         setDeleteProjectDialog(false);//
         setProject(emptyProject);//
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הפרויקט נמחק בהצלחה', life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נמחקה בהצלחה', life: 3000 });
     };
 
     useEffect(() => {
