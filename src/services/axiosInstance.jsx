@@ -33,9 +33,9 @@ export const del = async (tablePath, id) => {
     }
 }
 
-export const put = async (tablePath, data) => {
+export const put = async (tablePath, id, data) => {
     try {
-        const answer = await axios.put(`${serverPath}/${tablePath}`, data)
+        const answer = await axios.put(`${serverPath}/${tablePath}/${id}`, data)
         return answer;
     }
     catch (error) {

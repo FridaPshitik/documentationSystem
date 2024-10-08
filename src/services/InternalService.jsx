@@ -15,8 +15,8 @@ export const getInternals = async () => {
 export const getInternalDisplay = async () => {
   try {
     const internals = await get("internal-factor");
-    internals.push({ name: 'אחר' })
-    return internals;
+    internals.data.push({ name: 'אחר' })
+    return internals.data;
   }
   catch (error) {
     return error;

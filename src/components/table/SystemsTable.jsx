@@ -19,18 +19,18 @@ import './SystemsTable.css';
 
 import { classificationBodyTemplate, classificationEditor, classificationRowFilterTemplate } from '../../helpers/classification';
 import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
-import { externalBodyTemplate, externalEditor, externalRowFilterTemplate } from '../../helpers/external';
-import { factorableTypeBodyTemplate, factorableTypeEditor, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
+import { externalBodyTemplate, activeEditor, externalRowFilterTemplate } from '../../helpers/external';
+import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
 import { populationBodyTemplate, populationRowFilterTemplate } from '../../helpers/population';
 import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
 import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/status';
 
 import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterTemplate } from '../../helpers/productionTime';
 import { textEditor } from '../../helpers/text';
-import { getStatusColor, statuses } from '../../services/consts';
+import { factorableTypes, getStatusColor, statuses } from '../../services/consts';
 import { ProjectContext } from '../../services/ProjectContext';
 import { AddProject } from '../form/projectForm/AddProject';
-import { del } from '../../services/axiosInstance';
+import { del, put } from '../../services/axiosInstance';
 
 export default function SystemsTable() {
 
@@ -148,14 +148,22 @@ export default function SystemsTable() {
         }));
     };
 
-    const onRowEditComplete = (e) => {
+    const onRowEditComplete = async (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
         if (newData.status == statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
+        const { external, internal, requires, ...updatedData } = newData;
+        if (newData.factorableType === factorableTypes.INTERNAL) {
+            newData.internal = newData.external
+            updatedData.internalId = newData.external.id
+            newData.external = null
+        }
+        else
+            updatedData.externalId = newData.external.id
+        await put('project', updatedData.id, updatedData)
         _projects[index] = newData;
-        //TODO edit request: id+newData
         setProjects(_projects);
     };
 
@@ -197,7 +205,6 @@ export default function SystemsTable() {
     };
 
     const deleteProject = () => {
-        // TODO Deleting the project from the DB
         let _projects = projects.filter((val) => val.id !== project.id);
         del('project', project.id);
         setProjects(_projects);
@@ -247,8 +254,8 @@ export default function SystemsTable() {
                     <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
                     <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
                     <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
-                    <Column field="factorableType" class="column" header="פיתוח" editor={(options) => factorableTypeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
-                    <Column field="external" header="גוף מבצע" editor={(options) => externalEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
+                    <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
+                    <Column field="external" header="גוף מבצע" editor={(options) => activeEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
                     <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                     <Column field='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} filterField="productionTime" showFilterMenu={false} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>

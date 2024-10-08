@@ -1,7 +1,7 @@
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { externals, factorableTypes } from "../services/consts";
-
+import { getInternalDisplay } from "../services/InternalService";
 
 export const externalRowFilterTemplate = (options) => {
   return (
@@ -30,6 +30,22 @@ const externalsItemTemplate = (option) => {
   );
 };
 
+const internalsItemTemplate = (option) => {
+  return (
+    <div>
+      <p>{option.command}</p>
+    </div>
+  )
+}
+
+const internals = await getInternalDisplay()
+
+export const activeEditor = (options) => {
+  if (options.rowData.factorableType === factorableTypes.EXTERNAL)
+    return externalEditor(options)
+  return internalEditor(options)
+};
+
 export const externalEditor = (options) => {
   return (
     <Dropdown
@@ -42,15 +58,30 @@ export const externalEditor = (options) => {
       className="p-column-filter"
     />
   );
-};
+}
 
+export const internalEditor = (options) => {
+  return (
+    <Dropdown
+      value={options.value}
+      options={internals}
+      itemTemplate={internalsItemTemplate}
+      onChange={(e) => {
+        options.editorCallback(e.value)
+      }
+      }
+      optionLabel="command"
+      placeholder={options.rowData.internal.command}
+      className="p-column-filter"
+    />
+  );
+}
 export const externalBodyTemplate = (rowData) => {
-
-  let factor = {name:'',image:''};
+  let factor = { name: '', image: '' };
 
   if (rowData.factorableType == factorableTypes.EXTERNAL)
     factor = rowData.external;
-  else{
+  else {
     factor.name = rowData.internal.command;
     factor.image = "inside.png";
   }
