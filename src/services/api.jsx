@@ -6,8 +6,3 @@ export const getExternals = () => {
     { id: 20, name: "צהל", image: "inside.png" },
   ];
 };
-
-export const getRequires = () => {
-  //TODO get data from the external table
-  return ['פיקוד צפון', 'פיקוד דרום']
-};

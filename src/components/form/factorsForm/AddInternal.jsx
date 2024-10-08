@@ -7,7 +7,7 @@ import { createInternal } from "../../../services/InternalService";
 import { ProjectContext } from "../../../services/ProjectContext";
 
 
-export const AddInternal = ({ setProject, hide }) => {
+export const AddInternal = ({ setProject, hide ,parent}) => {
 
     const {internals, setInternals} = useContext(ProjectContext);
     const [internal, setInternal]=useState({name:'',command:'',contact:'',department:'',phone:'',email:''})
@@ -18,7 +18,7 @@ export const AddInternal = ({ setProject, hide }) => {
         const ans = await createInternal(internal)
         await setInternals([...internals, ans])
 
-        let updates = {require : ans ,requiresId: ans.id}
+        let updates= (parent=='require'?  {require : ans ,requiresId: ans.id} :  {internal : ans ,internalId: ans.id})
         setProject((prevProject) => ({ ...prevProject, ...updates}))
 
         hide(false);

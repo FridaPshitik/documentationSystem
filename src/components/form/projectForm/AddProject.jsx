@@ -40,7 +40,8 @@ export const AddProject = () => {
     });
     const [visible, setVisible] = useState(false);
     const [hideAddDemand, setHideAddDemand] = useState(false);
-    // const [selectedDemandFactor, setSelectedDemandFactor] = useState(null);
+    const [hideAddOperatingCompany, setHideAddOperatingCompany] = useState(false);
+    const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
 
 
     const handleValidation = (name) => {
@@ -79,9 +80,6 @@ export const AddProject = () => {
         let _ = createProject(data)
         //TODO add project to DB.
     }
-
-    const [hideAddOperatingCompany, setHideAddOperatingCompany] = useState(false);
-    const [hideAddOperatingFactor, setHideAddOperatingFactor] = useState(false);
 
 
    const {externals, setExternals} = useContext(ProjectContext);
@@ -219,11 +217,11 @@ export const AddProject = () => {
                 </Dialog>
 
                 <Dialog header="הוספת גוף דורש " visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
-                    footer={<AddInternal setProject={setProject} hide={setHideAddDemand} />}>
+                    footer={<AddInternal setProject={setProject} hide={setHideAddDemand} parent={'require'}/>}>
                 </Dialog>
                 
                 <Dialog header="הוספת גוף מבצע פנימי" visible={hideAddOperatingFactor} onHide={() => { if (!hideAddOperatingFactor) return; setHideAddOperatingFactor(false); }}
-                    footer={<AddInternal setProject={setProject} hide={hideAddOperatingFactor} />}>
+                    footer={<AddInternal setProject={setProject} hide={setHideAddOperatingFactor} parent={'internal'} />}>
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}
