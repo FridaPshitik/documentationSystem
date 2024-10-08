@@ -35,6 +35,7 @@ import { del, put } from '../../services/axiosInstance';
 export default function SystemsTable() {
 
     const { projects, setProjects } = useContext(ProjectContext)
+    const { error, setError } = useContext(ProjectContext)
 
     let emptyProject = {
         id: null,
@@ -87,7 +88,7 @@ export default function SystemsTable() {
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
                 <Dialog header="הוספת מערכת חדשה" id='addNewProjectDialog' visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
-                    <AddProject></AddProject>
+                    <AddProject toast={toast}></AddProject>
                 </Dialog>
                 <Button id='add_project' label='הוספת מערכת חדשה' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
 
@@ -210,14 +211,22 @@ export default function SystemsTable() {
         setProjects(_projects);
         setDeleteProjectDialog(false);//
         setProject(emptyProject);//
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הפרויקט נמחק בהצלחה', life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נמחקה בהצלחה', life: 3000 });
     };
 
     useEffect(() => {
-        getProjects().then((data) => {
-            setProjects(convertDate(data));
-            setLoading(false);
-        });
+        const fetchData = async () => {
+            let getProject = await getProjects();
+            if (getProject.status == 200) {
+                setError(null);
+                setProjects(convertDate(getProject.data));
+                setLoading(false);
+            }
+            else {
+                setError(getProject.message);
+            }
+        }
+        fetchData();
     }, []);
 
     const convertDate = (data) => {
@@ -229,7 +238,7 @@ export default function SystemsTable() {
 
     return <>
         <div>
-            <Toast ref={toast} />
+            <Toast ref={toast} position='top-left' />
             <div className="card">
                 <div style={{ textAlign: 'center' }}>
                     <img alt="סקייבר" src={window.location.origin + '/images/skyvar.png'} width="32" style={{ position: 'relative', marginBottom: '-1em' }} />
@@ -253,6 +262,7 @@ export default function SystemsTable() {
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                     <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
                 </DataTable>
+
                 <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
@@ -273,7 +283,9 @@ export default function SystemsTable() {
                 <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false) }}>
                     <DemandDialog dataSystem={requireConcats}></DemandDialog>
                 </Dialog>
+                {error !== null ? <>{toast.current.show({ severity: 'error', summary: 'Error', detail: error, sticky: true })}</> : <span></span>}
             </div>
         </div>
+
     </>;
 }
