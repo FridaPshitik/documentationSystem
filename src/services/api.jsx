@@ -1,8 +1,8 @@
 export const getExternals = () => {
   //TODO get data from the external table
   return [
-    { name: "סקייבר", image: "skyvar.png" },
-    { name: "אלביט", image: "elbit.png" },
-    { name: "צהל", image: "inside.png" },
+    { id: 18, name: "סקייבר", image: "skyvar.png" },
+    { id: 19, name: "אלביט", image: "elbit.png" },
+    { id: 20, name: "צהל", image: "inside.png" },
   ];
 };
