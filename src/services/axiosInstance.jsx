@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const serverPath = process.env.REACT_APP_SERVER_PATH || "http://localhost:2000"
+const serverPath = process.env.REACT_APP_SERVER_PATH || "http://localhost:8000"
 
 
 export const get = async (tablePath) => {

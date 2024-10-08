@@ -162,7 +162,7 @@ export default function SystemsTable() {
         }
         else
             updatedData.externalId = newData.external.id
-        await put('project', updatedData.id, updatedData,)
+        await put('project', updatedData.id, updatedData)
         _projects[index] = newData;
         setProjects(_projects);
     };
@@ -205,7 +205,6 @@ export default function SystemsTable() {
     };
 
     const deleteProject = () => {
-        // TODO Deleting the project from the DB
         let _projects = projects.filter((val) => val.id !== project.id);
         del('project', project.id);
         setProjects(_projects);

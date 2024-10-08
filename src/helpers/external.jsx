@@ -43,7 +43,6 @@ const internals = await getInternalDisplay()
 export const activeEditor = (options) => {
   if (options.rowData.factorableType === factorableTypes.EXTERNAL)
     return externalEditor(options)
-  console.log("internall", options)
   return internalEditor(options)
 };
 
@@ -62,7 +61,6 @@ export const externalEditor = (options) => {
 }
 
 export const internalEditor = (options) => {
-  console.log("internals", internals)
   return (
     <Dropdown
       value={options.value}
