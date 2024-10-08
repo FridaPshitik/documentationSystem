@@ -1,7 +1,7 @@
 import { Card } from 'primereact/card';
 
 
-export default function DialogRequire(data) {
+export default function RequireDialog(data) {
 
     return (
         <div className="card flex justify-content-center">

@@ -3,9 +3,9 @@ import { Tag } from 'primereact/tag';
 
 import {getStatusColor, getFactorableTypeColor} from '../../services/consts';
 import {getClassificationColor, getEnvironmentColor, getPopulationColor} from '../../services/consts'
-import './DialogSystem.css'
+import './SystemDialog.css'
 
-export default function DialogSystem(system) {
+export default function SystemDialog(system) {
     system = system.dataSystem;
 
     const factor = system.internal == null ? {"name" :system.external.name,"image":system.external.image} : 
