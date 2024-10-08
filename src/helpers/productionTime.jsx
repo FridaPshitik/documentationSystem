@@ -5,7 +5,7 @@ export const productionTimeFilterTemplate = (options) => {
 };
 
 export const productionTimeBodyTemplate = (rowData) => {
-    return rowData.productionTime != 'Invalid Date' ? formatDate(rowData.productionTime) : ''
+    return rowData.productionTime !== '' ? formatDate(rowData.productionTime) : ''
 };
 
 const formatDate = (value) => {

@@ -151,7 +151,7 @@ export default function SystemsTable() {
     const onRowEditComplete = async (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        if (newData.status == statuses.DONE && newData.productionTime == 'Invalid Date') {
+        if (newData.status == statuses.DONE && newData.productionTime === '') {
             newData.productionTime = new Date();
         }
         const { external, internal, requires, ...updatedData } = newData;
@@ -230,7 +230,7 @@ export default function SystemsTable() {
 
     const convertDate = (data) => {
         return [...(data || [])].map((d) => {
-            d.productionTime = new Date(d.productionTime);
+            d.productionTime = d.productionTime ? new Date(d.productionTime) : ''
             return d;
         });
     };
