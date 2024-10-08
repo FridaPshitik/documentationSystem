@@ -19,8 +19,8 @@ import './SystemsTable.css';
 
 import { classificationBodyTemplate, classificationEditor, classificationRowFilterTemplate } from '../../helpers/classification';
 import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
-import { externalBodyTemplate, externalEditor, externalRowFilterTemplate } from '../../helpers/external';
-import { factorableTypeBodyTemplate, factorableTypeEditor, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
+import { externalBodyTemplate, activeEditor, externalRowFilterTemplate } from '../../helpers/external';
+import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
 import { populationBodyTemplate, populationRowFilterTemplate } from '../../helpers/population';
 import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
 import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/status';
@@ -150,12 +150,10 @@ export default function SystemsTable() {
     const onRowEditComplete = async (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        console.log(newData);
         if (newData.status == statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
         const { external, internal, requires, ...updatedData } = newData;
-        console.log("dataaaaaa", newData)
         if (newData.factorableType === factorableTypes.INTERNAL) {
             newData.internal = newData.external
             updatedData.internalId = newData.external.id
@@ -164,8 +162,6 @@ export default function SystemsTable() {
         else
             updatedData.externalId = newData.external.id
         await put('project', updatedData.id, updatedData,)
-        //TODO edit request: index+newData
-
         _projects[index] = newData;
         setProjects(_projects);
     };
@@ -251,7 +247,7 @@ export default function SystemsTable() {
                     <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
                     <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
                     <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
-                    <Column field="external" header="גוף מבצע" editor={(options) => externalEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
+                    <Column field="external" header="גוף מבצע" editor={(options) => activeEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
                     <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                     <Column field='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} filterField="productionTime" showFilterMenu={false} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>

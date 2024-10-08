@@ -1,7 +1,7 @@
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { externals, factorableTypes } from "../services/consts";
-import { getInternalDisplay, getInternals } from "../services/InternalService";
+import { getInternalDisplay } from "../services/InternalService";
 
 export const externalRowFilterTemplate = (options) => {
   return (
@@ -18,7 +18,6 @@ export const externalRowFilterTemplate = (options) => {
 };
 
 const externalsItemTemplate = (option) => {
-  console.log("option", option);
   return (
     <div className="flex align-items-center gap-2">
       <img
@@ -41,29 +40,33 @@ const internalsItemTemplate = (option) => {
 
 const internals = await getInternalDisplay()
 
-export const externalEditor = (options) => {
-  console.log("externals", externals);
-  console.log("options: ", options);
-  if (options.rowData.factorableType == factorableTypes.EXTERNAL)
-    return (
-      <Dropdown
-        value={options.value}
-        options={externals}
-        itemTemplate={externalsItemTemplate}
-        onChange={(e) => options.editorCallback(e.value)}
-        optionLabel="name"
-        placeholder={options.value.name}
-        className="p-column-filter"
-      />
-    );
+export const activeEditor = (options) => {
+  if (options.rowData.factorableType === factorableTypes.EXTERNAL)
+    return externalEditor(options)
+  return internalEditor(options)
+};
 
+export const externalEditor = (options) => {
+  return (
+    <Dropdown
+      value={options.value}
+      options={externals}
+      itemTemplate={externalsItemTemplate}
+      onChange={(e) => options.editorCallback(e.value)}
+      optionLabel="name"
+      placeholder={options.value.name}
+      className="p-column-filter"
+    />
+  );
+}
+
+export const internalEditor = (options) => {
   return (
     <Dropdown
       value={options.value}
       options={internals}
       itemTemplate={internalsItemTemplate}
       onChange={(e) => {
-        console.log("================================", e)
         options.editorCallback(e.value)
       }
       }
@@ -72,8 +75,7 @@ export const externalEditor = (options) => {
       className="p-column-filter"
     />
   );
-};
-
+}
 export const externalBodyTemplate = (rowData) => {
   let factor = { name: '', image: '' };
 
