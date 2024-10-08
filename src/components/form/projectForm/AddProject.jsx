@@ -34,9 +34,7 @@ export const AddProject = ({toast}) => {
         external:null,
         externalId:null,
         internal:null,
-        internalId:null,
-        population:''
-
+        internalId:null
     });
     const [visible, setVisible] = useState(false);
     const [hideAddDemand, setHideAddDemand] = useState(false);
@@ -77,13 +75,13 @@ export const AddProject = ({toast}) => {
 
     const submit=()=>{
         let { external, internal, require, ...data } = project;
-        let _ = createProject(data)
+        createProject(data)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נוספה בהצלחה', life: 3000 });
     }
 
 
-   const {externals, setExternals} = useContext(ProjectContext);
-   const {internals, setInternals} = useContext(ProjectContext);
+   const {externals} = useContext(ProjectContext);
+   const {internals} = useContext(ProjectContext);
 
 
   return (
@@ -143,7 +141,7 @@ export const AddProject = ({toast}) => {
 
                         <div className="card item6">
                             <FloatLabel className="field">
-                                {project.factorableType == '' && <Dropdown inputid="dd-operating"
+                                {project.factorableType === '' && <Dropdown inputid="dd-operating"
                                     options={['לאחר בחירת סוג  יאופשר שדה זה']} className="w-full md:w-14rem field" />}
                                 {project.factorableType === factorableTypes.INTERNAL && <Dropdown inputid="dd-operating" value={project.internal}
                                     onChange={(e) => handelSelectInternal(e.value)}

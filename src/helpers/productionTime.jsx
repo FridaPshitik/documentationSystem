@@ -1,11 +1,12 @@
 import { Calendar } from "primereact/calendar";
+import { statuses } from "../services/consts";
 
 export const productionTimeFilterTemplate = (options) => {
-    return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" />;
+    return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" mask="99/99/9999"/>;
 };
 
 export const productionTimeBodyTemplate = (rowData) => {
-    return rowData.productionTime !== '' ? formatDate(rowData.productionTime) : ''
+    return rowData.status === statuses.DONE ? formatDate(rowData.productionTime) : ''
 };
 
 const formatDate = (value) => {
