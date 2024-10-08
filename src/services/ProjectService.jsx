@@ -1,24 +1,16 @@
-import { get } from './routes';
+import { get, post } from "./axiosInstance";
 
-export const ProjectService = {
-    
-    async getProjects(){
-        return await get('project')
-    },
+export const getProjects = async () => {
+  return await get("project");
+};
 
-    getProjectsSmall() {
-        return Promise.resolve(this.getProjects().slice(0, 10));
-    },
+export const getExternalFactor = async () => {
+  // id, name, image
+  const externals = await get("external-factor");
+  externals.push({name:'אחר'})
+  return externals;
+};
 
-    getProjectsMedium() {
-        return Promise.resolve(this.getProjects());
-    },
-
-    getProjectsLarge() {
-        return Promise.resolve(this.getData().slice(0, 200));
-    },
-
-    getProjectsXLarge() {
-        return Promise.resolve(this.getData());
-    },
-}
+export const createProject = async (data) => {
+  return await post("project", data);
+};

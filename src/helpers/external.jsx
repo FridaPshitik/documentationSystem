@@ -1,7 +1,7 @@
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
-import { externals } from "../services/consts";
-import { factorableTypes } from "../services/consts";
+import { externals, factorableTypes } from "../services/consts";
+import { getInternalDisplay, getInternals } from "../services/InternalService";
 
 export const externalRowFilterTemplate = (options) => {
   return (
@@ -31,10 +31,20 @@ const externalsItemTemplate = (option) => {
   );
 };
 
+const internalsItemTemplate = (option) => {
+  return (
+    <div>
+      <p>{option.command}</p>
+    </div>
+  )
+}
+
+const internals = await getInternalDisplay()
+
 export const externalEditor = (options) => {
   console.log("externals", externals);
   console.log("options: ", options);
-  if(options.rowData.factorableType == factorableTypes.EXTERNAL)
+  if (options.rowData.factorableType == factorableTypes.EXTERNAL)
     return (
       <Dropdown
         value={options.value}
@@ -46,21 +56,25 @@ export const externalEditor = (options) => {
         className="p-column-filter"
       />
     );
-    return (
-      <Dropdown
-        value={options.rowData.internal.command}
-        options={externals}
-        itemTemplate={externalsItemTemplate}
-        onChange={(e) => options.editorCallback(e.value)}
-        optionLabel="name"
-        placeholder={options.rowData.internal.command}
-        className="p-column-filter"
-      />
-    );
+
+  return (
+    <Dropdown
+      value={options.value}
+      options={internals}
+      itemTemplate={internalsItemTemplate}
+      onChange={(e) => {
+        console.log("================================", e)
+        options.editorCallback(e.value)
+      }
+      }
+      optionLabel="command"
+      placeholder={options.rowData.internal.command}
+      className="p-column-filter"
+    />
+  );
 };
 
 export const externalBodyTemplate = (rowData) => {
-  console.log("rowdata", rowData);
   let factor = { name: '', image: '' };
 
   if (rowData.factorableType == factorableTypes.EXTERNAL)
