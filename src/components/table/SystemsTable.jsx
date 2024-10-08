@@ -13,8 +13,8 @@ import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
 
 import { getProjects } from '../../services/ProjectService';
-import DemandDialog from '../form/dialogs/DemandDialog';
-import DialogSystem from '../form/dialogs/DialogSystem';
+import DialogRequire from '../dialogs/DialogRequire';
+import DialogSystem from '../dialogs/DialogSystem';
 import './SystemsTable.css';
 
 import { classificationBodyTemplate, classificationEditor, classificationRowFilterTemplate } from '../../helpers/classification';
@@ -273,7 +273,7 @@ export default function SystemsTable() {
                 </Dialog>
 
                 <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false) }}>
-                    <DemandDialog dataSystem={requireConcats}></DemandDialog>
+                    <DialogRequire dataSystem={requireConcats}></DialogRequire>
                 </Dialog>
                 {error !== null ? <>{toast.current.show({ severity: 'error', summary: 'Error', detail: error, sticky: true })}</> : <span></span>}
             </div>
