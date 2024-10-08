@@ -143,14 +143,14 @@ export default function SystemsTable() {
 
         setEditableRows((prevEditableRows) => ({
             ...prevEditableRows,
-            [id]: status == statuses.DONE,
+            [id]: status === statuses.DONE,
         }));
     };
 
     const onRowEditComplete = (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        if (newData.status == statuses.DONE && newData.productionTime == 'Invalid Date') {
+        if (newData.status === statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
         _projects[index] = newData;
@@ -241,7 +241,7 @@ export default function SystemsTable() {
                 <Column field="factorableType" class="column" header="פיתוח" editor={(options) => factorableTypeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
                 <Column field="external" header="גוף מבצע" editor={(options) => externalEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }}body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
                 <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                <Column field='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} filterField="productionTime" showFilterMenu={false} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
+                <Column filterField='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                 <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
             </DataTable>
