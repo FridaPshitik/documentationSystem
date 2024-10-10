@@ -1,34 +1,30 @@
 import { get, post } from "./axiosInstance";
 
-
-export const getInternals = async () => {
-  try {
-    let ans = await get("internal-factor");
-    const internals = ans.data.map(item => item.command);
-    return internals;
-  }
-  catch (error) {
-    return error;
-  }
-};
-
-export const getInternalDisplay = async () => {
-  try {
-    const internals = await get("internal-factor");
-    internals.data.push({ name: 'אחר' })
-    return internals.data;
-  }
-  catch (error) {
-    return error;
-  }
-};
-
 export const createInternal = async (data) => {
   try {
     const ans = await post("internal-factor", data);
     return ans;
-  }
-  catch (error) {
+  } catch (error) {
     return error;
   }
+};
+
+const getInternals = async () => {
+  try {
+    let internals = await get("internal-factor");
+    return internals;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getInternalsArray = async () => {
+  let ans = await getInternals();
+  return [...new Set(ans.data.map((item) => item.command))];
+};
+
+export const getInternalDisplay = async () => {
+  let internals = await getInternals();
+  internals.data.push({ name: "אחר" });
+  return internals;
 };

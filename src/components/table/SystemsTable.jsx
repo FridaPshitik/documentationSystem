@@ -19,7 +19,7 @@ import './SystemsTable.css';
 
 import { classificationBodyTemplate, classificationEditor, classificationRowFilterTemplate } from '../../helpers/classification';
 import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
-import { externalBodyTemplate, activeEditor, externalRowFilterTemplate } from '../../helpers/external';
+import { performBodyTemplate, performEditor, performRowFilterTemplate } from '../../helpers/perform';
 import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
 import { populationBodyTemplate, populationRowFilterTemplate } from '../../helpers/population';
 import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
@@ -34,7 +34,7 @@ import { del, put } from '../../services/axiosInstance';
 
 export default function SystemsTable() {
 
-    const { projects, setProjects } = useContext(ProjectContext)
+    const { projects, setProjects, internals, externals } = useContext(ProjectContext)
     const { error, setError } = useContext(ProjectContext)
 
     let emptyProject = {
@@ -255,7 +255,7 @@ export default function SystemsTable() {
                     <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
                     <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
                     <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
-                    <Column field="external" header="גוף מבצע" editor={(options) => activeEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
+                    <Column field="external" header="גוף מבצע" editor={(options) => performEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={performBodyTemplate} filter filterElement={performRowFilterTemplate} />
                     <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                     <Column filterField='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
