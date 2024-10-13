@@ -52,7 +52,7 @@ export default function SystemDialog(system) {
                 </h3>
 
                 <div>
-                    {system.productionTime !== '' ? <div>
+                    {system.productionTime != 'Invalid Date' ? <div>
                         <h3> תאריך עליה לאוויר:</h3 >
                         <p className="m-0">
                             {formatDate(system.productionTime)}
