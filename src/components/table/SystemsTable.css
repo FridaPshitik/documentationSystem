@@ -23,8 +23,6 @@ th {
 .headerss {
     margin-left: 15px;
     margin-right: 15px;
-    /* background-color: white;
-    border: 1px solid white; */
 }
 
 .p-datatable .p-datatable-header {
@@ -51,16 +49,8 @@ div.p-datatable {
     width: 100%
 }
 
-.p-column-filter.p-dropdown.p-component.p-inputwrapper.p-dropdown-clearable.p-inputwrapper-filled svg {
-    /* color:red;
-    position:absolute;
-    left: 1px; */
-}
-
 .p-icon.p-dropdown-clear-icon.p-clickable {
     color: white;
-    /* position:absolute; */
-    /* left:1px */
 }
 
 div.p-paginator-bottom.p-paginator.p-component {
