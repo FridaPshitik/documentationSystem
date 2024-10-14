@@ -21,7 +21,7 @@ import { classificationBodyTemplate, classificationEditor, classificationRowFilt
 import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
 import { externalBodyTemplate, activeEditor, externalRowFilterTemplate } from '../../helpers/external';
 import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
-import { populationBodyTemplate, populationRowFilterTemplate } from '../../helpers/population';
+import { populationBodyTemplate, populationEditor, populationRowFilterTemplate } from '../../helpers/population';
 import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
 import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/status';
 
@@ -251,7 +251,7 @@ export default function SystemsTable() {
                     <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                     <Column field="purpose" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                     <Column field='requires.command' header="גוף דורש" editor={(options) => requireEditor(options)} style={{ minWidth: '8rem' }} filter filterField='requires.command' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש" body={requireTemplate} filterElement={requireFilterTemplate} />
-                    <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
+                    <Column field='population' header="סוג אוכלוסיה" editor={(options) => populationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
                     <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
                     <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
                     <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
