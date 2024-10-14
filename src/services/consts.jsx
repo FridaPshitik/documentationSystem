@@ -1,4 +1,4 @@
-import { getExternals } from "./api";
+export const internalImage = 'inside';
 
 export const classifications = {
   SODY: "סודי",
@@ -30,10 +30,6 @@ export const populations = {
   AAZTIM: 'אע"צים',
   PATUR: "פטור",
 };
-
-
-//TODO
-export const externals = getExternals();
 
 export const getStatusColor = (status) => {
   switch (status) {

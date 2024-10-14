@@ -6,8 +6,8 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import SystemsTable from './components/table/SystemsTable';
 import { ProjectContext } from './services/ProjectContext';
 import { useEffect, useState } from 'react';
-import { getExternalFactor, getInternalFactor } from './services/ProjectService';
 import { getInternalDisplay } from './services/InternalService';
+import { getExternalDisplay } from './services/externalService';
 
 function App() {
   const [projects, setProjects] = useState([]);
@@ -17,8 +17,8 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      let externals = await getExternalFactor();
-      let internals = await getInternalFactor();
+      let externals = await getExternalDisplay();
+      let internals = await getInternalDisplay();
       externals.status === 200 ? setExternals(externals.data) : setError(externals.message + ' -- שגיאה בקבלת גופים חיצוניים');
       internals.status === 200 ? setInternals(internals.data) : setError(internals.message + ' --שגיאה בקבלת גופים פנימיים');
     }
