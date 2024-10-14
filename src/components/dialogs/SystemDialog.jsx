@@ -1,7 +1,7 @@
 import { Card } from 'primereact/card';
 import { Tag } from 'primereact/tag';
 
-import {getStatusColor, getFactorableTypeColor} from '../../services/consts';
+import {getStatusColor, getFactorableTypeColor, internalImage} from '../../services/consts';
 import {getClassificationColor, getEnvironmentColor, getPopulationColor} from '../../services/consts'
 import './SystemDialog.css'
 
@@ -9,7 +9,7 @@ export default function SystemDialog(system) {
     system = system.dataSystem;
 
     const factor = system.internal == null ? {"name" :system.external.name,"image":system.external.image} : 
-    {"name" :system.internal.command,"image":"inside.png"} ;
+    {"name" :system.internal.command,"image":internalImage} ;
 
     const header = (
         <img alt="Card" src="https://primefaces.org/cdn/primereact/images/usercard.png" className="md:w-25rem" />
@@ -40,7 +40,7 @@ export default function SystemDialog(system) {
                 <h3>גוף מבצע: &nbsp;<Tag value={system.factorableType} style={{ backgroundColor:getFactorableTypeColor(system.factorableType)}} />
                 </h3>
                 <div className="flex align-items-center gap-2">
-                    <img alt={factor.name} src={window.location.origin + `/images/${factor.image}`} width="32" />
+                    <img alt={factor.name} src={window.location.origin + `/images/${factor.image}.png`} width="32" />
                     <span>{factor.name}</span>
                 </div>
                 <h3>סטטוס: &nbsp;<Tag value={system.status} style={{ backgroundColor:getStatusColor(system.status)}}></Tag></h3>

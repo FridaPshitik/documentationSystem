@@ -1,3 +1,4 @@
+export const internalImage = 'inside';
 
 export const classifications = {
   SODY: "סודי",

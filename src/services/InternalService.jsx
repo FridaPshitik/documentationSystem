@@ -1,4 +1,5 @@
 import { get, post } from "./axiosInstance";
+import { internalImage } from "./consts";
 
 export const createInternal = async (data) => {
   try {
@@ -26,5 +27,13 @@ export const getInternalsArray = async () => {
 export const getInternalDisplay = async () => {
   let internals = await getInternals();
   internals.data.push({ name: "אחר" });
+  return internals;
+};
+
+export const getInternalsNameImage = async () => {
+  let ans = await getInternals();
+  let internals = ans.data.map((obj) => {
+    return { name: obj.command, image: internalImage };
+  });
   return internals;
 };

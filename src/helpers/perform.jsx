@@ -1,15 +1,24 @@
 import { MultiSelect } from "primereact/multiselect";
 import { factorableTypes } from "../services/consts";
+import { getExternalsNameImage } from "../services/externalService";
+import { getInternalsNameImage } from "../services/InternalService";
 import { externalEditor } from "./external";
 import { internalEditor } from "./internal";
 
+const getPerforms = async () => {
+  let exter = await getExternalsNameImage();
+  let inter = await getInternalsNameImage();
+  return exter.concat(inter);
+};
+
+let performs = await getPerforms();
+
 export const performRowFilterTemplate = (options) => {
-  let performs = [];
   return (
     <MultiSelect
       value={options.value}
       options={performs}
-      itemTemplate={performBodyTemplate}
+      itemTemplate={performBody}
       onChange={(e) => options.filterApplyCallback(e.value)}
       optionLabel="name"
       placeholder="סנן"
@@ -18,20 +27,26 @@ export const performRowFilterTemplate = (options) => {
   );
 };
 
-export const performBodyTemplate = (rowData) => {
-  let factor = { name: "", image: "" };
-
-  if (rowData.factorableType === factorableTypes.EXTERNAL)
-    factor = rowData.external;
-  else {
-    factor.name = rowData.internal.command;
-    factor.image = "inside.png";
-  }
+const performBody = (rowData) => {
   return (
     <div className="flex align-items-center gap-2">
       <img
-        alt={factor.name}
-        src={window.location.origin + `/images/${factor.image}`}
+        alt={rowData.image}
+        src={window.location.origin + `/images/${rowData.image}.png`}
+        width="32"
+      />
+      <span>{rowData.name}</span>
+    </div>
+  );
+};
+
+export const performBodyTemplate = (rowData) => {
+  let factor = rowData.perform;
+  return (
+    <div className="flex align-items-center gap-2">
+      <img
+        alt={factor.image}
+        src={window.location.origin + `/images/${factor.image}.png`}
         width="32"
       />
       <p>{factor.name}</p>

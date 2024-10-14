@@ -27,14 +27,15 @@ import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/statu
 
 import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterTemplate } from '../../helpers/productionTime';
 import { textEditor } from '../../helpers/text';
-import { factorableTypes, getStatusColor, statuses } from '../../services/consts';
+import { factorableTypes, getStatusColor, internalImage, statuses } from '../../services/consts';
 import { ProjectContext } from '../../services/ProjectContext';
 import { AddProject } from '../form/projectForm/AddProject';
 import { del, put } from '../../services/axiosInstance';
 
 export default function SystemsTable() {
 
-    const { projects, setProjects, internals, externals } = useContext(ProjectContext)
+    const { projects, setProjects } = useContext(ProjectContext)
+    const [ displayProjects, setDisplayProjects ] = useState([])
     const { error, setError } = useContext(ProjectContext)
 
     let emptyProject = {
@@ -62,7 +63,7 @@ export default function SystemsTable() {
         factorableType: { value: null, matchMode: FilterMatchMode.EQUALS },
         classification: { value: null, matchMode: FilterMatchMode.EQUALS },
         environment: { value: null, matchMode: FilterMatchMode.EQUALS },
-        external: { value: null, matchMode: FilterMatchMode.IN },
+        perform: { value: null, matchMode: FilterMatchMode.IN },
         population: { value: null, matchMode: FilterMatchMode.CONTAINS }
     });
     const [visible, setVisibleAddProjectFormDialog] = useState(false);
@@ -225,7 +226,17 @@ export default function SystemsTable() {
                 setError(getProject.message);
             }
         }
+        const getdisplayProjects = async () => {
+            let getProject = await getProjects();
+            setDisplayProjects(convertDate(getProject.data).map(obj => {
+                if (obj.internal)
+                    return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
+                else if (obj.external)
+                    return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
+            }))
+        }
         fetchData();
+        getdisplayProjects();
     }, []);
 
     const convertDate = (data) => {
@@ -244,9 +255,9 @@ export default function SystemsTable() {
                     <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
                     <h3 id='titleH3'>תצוגת מערכות מידע</h3>
                 </div>
-                <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
+                <DataTable ref={dt} value={displayProjects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                     selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                    globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'external.name', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
+                    globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
                     <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                     <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                     <Column field="purpose" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
@@ -255,7 +266,7 @@ export default function SystemsTable() {
                     <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
                     <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
                     <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
-                    <Column field="external" header="גוף מבצע" editor={(options) => performEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={performBodyTemplate} filter filterElement={performRowFilterTemplate} />
+                    <Column field="perform" header="גוף מבצע" editor={(options) => performEditor(options)} filterField="perform" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={performBodyTemplate} filter filterElement={performRowFilterTemplate} />
                     <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
                     <Column filterField='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
