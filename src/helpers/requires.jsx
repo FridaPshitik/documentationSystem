@@ -1,8 +1,8 @@
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
-import { getInternals } from "../services/InternalService";
+import { getInternalsArray } from "../services/InternalService";
 
-let requires = await getInternals()
+let requires = await getInternalsArray()
 
 export const requireFilterTemplate = (options) => {
   return (

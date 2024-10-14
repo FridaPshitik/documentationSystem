@@ -13,28 +13,29 @@ import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
 
 import { getProjects } from '../../services/ProjectService';
-import DemandDialog from '../form/dialogs/DemandDialog';
-import DialogSystem from '../form/dialogs/DialogSystem';
+import RequireDialog from '../dialogs/RequireDialog';
+import SystemDialog from '../dialogs/SystemDialog';
 import './SystemsTable.css';
 
 import { classificationBodyTemplate, classificationEditor, classificationRowFilterTemplate } from '../../helpers/classification';
 import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
-import { externalBodyTemplate, externalEditor, externalRowFilterTemplate } from '../../helpers/external';
-import { factorableTypeBodyTemplate, factorableTypeEditor, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
-import { populationBodyTemplate, populationRowFilterTemplate } from '../../helpers/population';
+import { performBodyTemplate, performEditor, performRowFilterTemplate } from '../../helpers/perform';
+import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
+import { populationBodyTemplate, populationEditor, populationRowFilterTemplate } from '../../helpers/population';
 import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
 import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/status';
 
 import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterTemplate } from '../../helpers/productionTime';
 import { textEditor } from '../../helpers/text';
-import { getStatusColor, statuses } from '../../services/consts';
+import { factorableTypes, getStatusColor, internalImage, statuses } from '../../services/consts';
 import { ProjectContext } from '../../services/ProjectContext';
 import { AddProject } from '../form/projectForm/AddProject';
-import { del } from '../../services/axiosInstance';
+import { del, put } from '../../services/axiosInstance';
 
 export default function SystemsTable() {
 
     const { projects, setProjects } = useContext(ProjectContext)
+    const [ displayProjects, setDisplayProjects ] = useState([])
     const { error, setError } = useContext(ProjectContext)
 
     let emptyProject = {
@@ -62,7 +63,7 @@ export default function SystemsTable() {
         factorableType: { value: null, matchMode: FilterMatchMode.EQUALS },
         classification: { value: null, matchMode: FilterMatchMode.EQUALS },
         environment: { value: null, matchMode: FilterMatchMode.EQUALS },
-        external: { value: null, matchMode: FilterMatchMode.IN },
+        perform: { value: null, matchMode: FilterMatchMode.IN },
         population: { value: null, matchMode: FilterMatchMode.CONTAINS }
     });
     const [visible, setVisibleAddProjectFormDialog] = useState(false);
@@ -144,18 +145,26 @@ export default function SystemsTable() {
 
         setEditableRows((prevEditableRows) => ({
             ...prevEditableRows,
-            [id]: status == statuses.DONE,
+            [id]: status === statuses.DONE,
         }));
     };
 
-    const onRowEditComplete = (e) => {
+    const onRowEditComplete = async (e) => {
         let _projects = [...projects];
         let { newData, index } = e;
-        if (newData.status == statuses.DONE && newData.productionTime == 'Invalid Date') {
+        if (newData.status === statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
+        const { external, internal, requires, ...updatedData } = newData;
+        if (newData.factorableType === factorableTypes.INTERNAL) {
+            newData.internal = newData.external
+            updatedData.internalId = newData.external.id
+            newData.external = null
+        }
+        else
+            updatedData.externalId = newData.external.id
+        await put('project', updatedData.id, updatedData)
         _projects[index] = newData;
-        //TODO edit request: id+newData
         setProjects(_projects);
     };
 
@@ -197,7 +206,6 @@ export default function SystemsTable() {
     };
 
     const deleteProject = () => {
-        // TODO Deleting the project from the DB
         let _projects = projects.filter((val) => val.id !== project.id);
         del('project', project.id);
         setProjects(_projects);
@@ -218,12 +226,22 @@ export default function SystemsTable() {
                 setError(getProject.message);
             }
         }
+        const getdisplayProjects = async () => {
+            let getProject = await getProjects();
+            setDisplayProjects(convertDate(getProject.data).map(obj => {
+                if (obj.internal)
+                    return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
+                else if (obj.external)
+                    return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
+            }))
+        }
         fetchData();
+        getdisplayProjects();
     }, []);
 
     const convertDate = (data) => {
         return [...(data || [])].map((d) => {
-            d.productionTime = new Date(d.productionTime);
+            d.productionTime = new Date(d.productionTime ? d.productionTime : '');
             return d;
         });
     };
@@ -237,20 +255,20 @@ export default function SystemsTable() {
                     <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
                     <h3 id='titleH3'>תצוגת מערכות מידע</h3>
                 </div>
-                <DataTable ref={dt} value={projects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
+                <DataTable ref={dt} value={displayProjects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                     selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                    globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'external.name', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
+                    globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
                     <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                     <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                     <Column field="purpose" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                     <Column field='requires.command' header="גוף דורש" editor={(options) => requireEditor(options)} style={{ minWidth: '8rem' }} filter filterField='requires.command' showFilterMenu={false} filterPlaceholder="חיפוש גוף דורש" body={requireTemplate} filterElement={requireFilterTemplate} />
-                    <Column field='population' header="סוג אוכלוסיה" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
+                    <Column field='population' header="סוג אוכלוסיה" editor={(options) => populationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={populationBodyTemplate} filter filterElement={populationRowFilterTemplate} />
                     <Column field='classification' header="סיווג" editor={(options) => classificationEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={classificationBodyTemplate} filter filterElement={classificationRowFilterTemplate} />
                     <Column field='environment' header="סביבת פיתוח" editor={(options) => environmentEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={environmentBodyTemplate} filter filterElement={environmentRowFilterTemplate} />
-                    <Column field="factorableType" class="column" header="פיתוח" editor={(options) => factorableTypeEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
-                    <Column field="external" header="גוף מבצע" editor={(options) => externalEditor(options)} filterField="external" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={externalBodyTemplate} filter filterElement={externalRowFilterTemplate} />
+                    <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
+                    <Column field="perform" header="גוף מבצע" editor={(options) => performEditor(options)} filterField="perform" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={performBodyTemplate} filter filterElement={performRowFilterTemplate} />
                     <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                    <Column field='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} filterField="productionTime" showFilterMenu={false} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
+                    <Column filterField='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                     <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
                 </DataTable>
@@ -269,11 +287,11 @@ export default function SystemsTable() {
                 </Dialog>
 
                 <Dialog visible={visibleSystemDialog} style={{ width: '50vw' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
-                    <DialogSystem dataSystem={dataSystem}></DialogSystem>
+                    <SystemDialog dataSystem={dataSystem}></SystemDialog>
                 </Dialog>
 
                 <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false) }}>
-                    <DemandDialog dataSystem={requireConcats}></DemandDialog>
+                    <RequireDialog dataSystem={requireConcats}></RequireDialog>
                 </Dialog>
                 {error !== null ? <>{toast.current.show({ severity: 'error', summary: 'Error', detail: error, sticky: true })}</> : <span></span>}
             </div>

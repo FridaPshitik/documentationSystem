@@ -1,33 +1,38 @@
 import { get, post } from "./axiosInstance";
 const serverPath = process.env.REACT_APP_SERVER_PATH || "http://localhost:8000"
 
-
-export const getExternals = async () => {
+const getExternals = async () => {
   try {
-    let ans = await get("external-factor");
-    const externals = ans.data.map(item => item.name);
+    let externals = await get("external-factor");
     return externals;
-  }
-  catch (error) {
+  } catch (error) {
     return error;
   }
+};
+
+export const getExternalsArray = async () => {
+  let ans = await getExternals();
+  return [...new Set(ans.data.map((item) => item.name))];
+};
+
+export const getExternalDisplay = async () => {
+  let externals = await getExternals();
+  externals.data.push({ name: "אחר" });
+  return externals;
+};
+
+export const getExternalsNameImage = async () => {
+  let ans = await getExternals();
+  let externals = ans.data.map((obj) => {
+    return { name: obj.name, image: obj.image };
+  });
+  return externals;
 };
 
 export const getExternalImag = (image) => {
   try {
     let ans = `${serverPath}/external-factor/${image}`;
     return ans;
-  }
-  catch (error) {
-    return error;
-  }
-};
-
-export const getExternalsDisplay = async () => {
-  try {
-    const externals = await get("external-factor");
-    externals.push({ name: 'אחר' })
-    return externals;
   }
   catch (error) {
     return error;

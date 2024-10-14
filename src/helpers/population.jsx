@@ -22,6 +22,19 @@ const populationItemTemplate = (option) => {
   );
 };
 
+export const populationEditor = (options) =>{
+  return (
+    <MultiSelect
+      value={options.value}
+      options={Object.values(populations)}
+      itemTemplate={populationItemTemplate}
+      onChange={(e) => options.editorCallback(e.value)}
+      placeholder="בחר סוג אכלוסייה"
+      className="p-column-filter"
+    />
+  );
+};
+
 export const populationBodyTemplate = (rowData) => {
   return (
     <div>

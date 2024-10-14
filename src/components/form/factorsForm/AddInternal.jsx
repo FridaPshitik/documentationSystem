@@ -15,8 +15,10 @@ export const AddInternal = ({ setProject, hide ,parent , toast}) => {
     const submit = async (e) => {
 
         e.preventDefault()
-        const ans = await createInternal(internal)
-        await setInternals([...internals, ans])
+        const res = await createInternal(internal)
+        const ans = res.data
+        
+        await setInternals([ ...internals.slice(0, internals.length - 1), ans, ...internals.slice(internals.length - 1)])
 
         let updates= (parent=='require'?  {require : ans ,requiresId: ans.id} :  {internal : ans ,internalId: ans.id})
         setProject((prevProject) => ({ ...prevProject, ...updates}))
