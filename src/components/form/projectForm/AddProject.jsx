@@ -225,7 +225,7 @@ export const AddProject = ({toast}) => {
                 </Dialog>
 
                 <Dialog header="הוספת גוף מבצע חיצוני" visible={hideAddOperatingCompany} onHide={() => { if (!hideAddOperatingCompany) return; setHideAddOperatingCompany(false); }}
-                    footer={<AddExternal/>}>
+                    footer={<AddExternal setProject={setProject} hide={setHideAddOperatingCompany} toast={toast} />}>
                 </Dialog>
             </div>
 

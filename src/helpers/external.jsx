@@ -1,7 +1,7 @@
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { externals, factorableTypes } from "../services/consts";
-
+import { getExternalImag } from "../services/ExternalsService";
 
 export const externalRowFilterTemplate = (options) => {
   return (
@@ -22,7 +22,7 @@ const externalsItemTemplate = (option) => {
     <div className="flex align-items-center gap-2">
       <img
         alt={option.name}
-        src={window.location.origin + `/images/${option.image}`}
+        src={getExternalImag(option.image)}
         width="32"
       />
       <span>{option.name}</span>
@@ -46,19 +46,19 @@ export const externalEditor = (options) => {
 
 export const externalBodyTemplate = (rowData) => {
 
-  let factor = {name:'',image:''};
+  let factor = { name: '', image: '' };
 
   if (rowData.factorableType == factorableTypes.EXTERNAL)
     factor = rowData.external;
-  else{
+  else {
     factor.name = rowData.internal.command;
     factor.image = "inside.png";
-  }
+  }   
   return (
     <div className="flex align-items-center gap-2">
       <img
         alt={factor.name}
-        src={window.location.origin + `/images/${factor.image}`}
+        src={getExternalImag(factor.image)}
         width="32"
       />
       <p>{factor.name}</p>
