@@ -52,14 +52,14 @@ export const AddProject = ({toast}) => {
 
     const handelSelectRequire = (value) => {
         let updates = {require: value, requiresId: value.id}
-        value.name === 'אחר' ? setHideAddDemand(true) :setProject((prevProject) => ({
+        value.command === 'אחר' ? setHideAddDemand(true) :setProject((prevProject) => ({
             ...prevProject,
             ...updates
         })) 
     }
     const handelSelectInternal = (value) => {
         let updates = {internal : value , internalId : value.id}
-        value.name === 'אחר' ? setHideAddOperatingFactor(true) : setProject((prevProject) => ({
+        value.command === 'אחר' ? setHideAddOperatingFactor(true) : setProject((prevProject) => ({
             ...prevProject,
             ...updates            
         }))
@@ -123,7 +123,7 @@ export const AddProject = ({toast}) => {
                             <FloatLabel className="field" >
                                 <Dropdown id="require" value={project.require}
                                 onChange={(e) => handelSelectRequire(e.value)}
-                                    options={internals} optionLabel="name" className="w-full md:w-14rem field" />
+                                    options={internals} optionLabel="command" className="w-full md:w-14rem field" />
                                 <label htmlFor="require">בחר גוף דורש</label>
                             </FloatLabel>
                         </div>
@@ -145,7 +145,7 @@ export const AddProject = ({toast}) => {
                                     options={['לאחר בחירת סוג  יאופשר שדה זה']} className="w-full md:w-14rem field" />}
                                 {project.factorableType === factorableTypes.INTERNAL && <Dropdown inputid="dd-operating" value={project.internal}
                                     onChange={(e) => handelSelectInternal(e.value)}
-                                    options={internals} optionLabel="name" className="w-full md:w-14rem field" />}
+                                    options={internals} optionLabel="command" className="w-full md:w-14rem field" />}
                                 {project.factorableType === factorableTypes.EXTERNAL && <Dropdown inputid="dd-operating" value={project.external}
                                     onChange={(e) => handelSelectExternal(e.value)}
                                     options={externals} optionLabel="name" className="w-full md:w-14rem field" />}
