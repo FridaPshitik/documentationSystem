@@ -149,23 +149,24 @@ export default function SystemsTable() {
         }));
     };
 
-    const onRowEditComplete = async (e) => {
+    const onRowEditComplete = async (event) => {
         let _projects = [...projects];
-        let { newData, index } = e;
+        let _displayProjects = [...displayProjects]
+        let { newData, index } = event;
         if (newData.status === statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
-        const { external, internal, requires, ...updatedData } = newData;
-        if (newData.factorableType === factorableTypes.INTERNAL) {
-            newData.internal = newData.external
-            updatedData.internalId = newData.external.id
-            newData.external = null
-        }
-        else
-            updatedData.externalId = newData.external.id
-        await put('project', updatedData.id, updatedData)
+        const { perform, external, internal, requires, ...updatedData } = newData;
+        let newData2 = addPerform(newData)
+        
+        let updated = await put('project', updatedData.id, updatedData)
+        console.log(updated);
+        
         _projects[index] = newData;
+        _displayProjects[index] = newData2
+
         setProjects(_projects);
+        setDisplayProjects(_displayProjects)
     };
 
     const statusEditor = (options) => {
@@ -228,16 +229,19 @@ export default function SystemsTable() {
         }
         const getdisplayProjects = async () => {
             let getProject = await getProjects();
-            setDisplayProjects(convertDate(getProject.data).map(obj => {
-                if (obj.internal)
-                    return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
-                else if (obj.external)
-                    return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
-            }))
+            setDisplayProjects(convertDate(getProject.data).map(obj =>addPerform(obj) ))
         }
         fetchData();
         getdisplayProjects();
     }, []);
+
+
+    const addPerform = (obj) =>{
+        if (obj.internal)
+            return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
+        else if (obj.external)
+            return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
+    }
 
     const convertDate = (data) => {
         return [...(data || [])].map((d) => {
