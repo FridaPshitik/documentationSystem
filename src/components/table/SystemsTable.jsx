@@ -149,23 +149,23 @@ export default function SystemsTable() {
         }));
     };
 
-    const onRowEditComplete = async (e) => {
+    const onRowEditComplete = async (event) => {
         let _projects = [...projects];
-        let { newData, index } = e;
+        let _displayProjects = [...displayProjects]
+        let { newData, index } = event;
         if (newData.status === statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
-        const { external, internal, requires, ...updatedData } = newData;
-        if (newData.factorableType === factorableTypes.INTERNAL) {
-            newData.internal = newData.external
-            updatedData.internalId = newData.external.id
-            newData.external = null
-        }
-        else
-            updatedData.externalId = newData.external.id
-        await put('project', updatedData.id, updatedData)
+        const { perform, external, internal, requires, ...updatedData } = newData;
+        let newData2 = addPerform(newData)
+
+        let updated = await put('project', updatedData.id, updatedData)
+        
         _projects[index] = newData;
+        _displayProjects[index] = newData2
+
         setProjects(_projects);
+        setDisplayProjects(_displayProjects)
     };
 
     const statusEditor = (options) => {
@@ -228,16 +228,19 @@ export default function SystemsTable() {
         }
         const getdisplayProjects = async () => {
             let getProject = await getProjects();
-            setDisplayProjects(convertDate(getProject.data).map(obj => {
-                if (obj.internal)
-                    return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
-                else if (obj.external)
-                    return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
-            }))
+            setDisplayProjects(convertDate(getProject.data).map(obj =>addPerform(obj) ))
         }
         fetchData();
         getdisplayProjects();
     }, []);
+
+
+    const addPerform = (obj) =>{
+        if (obj.internal)
+            return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
+        else if (obj.external)
+            return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
+    }
 
     const convertDate = (data) => {
         return [...(data || [])].map((d) => {
@@ -268,7 +271,7 @@ export default function SystemsTable() {
                     <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
                     <Column field="perform" header="גוף מבצע" editor={(options) => performEditor(options)} filterField="perform" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={performBodyTemplate} filter filterElement={performRowFilterTemplate} />
                     <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                    <Column filterField='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
+                    <Column field="productionTime" filterField="productionTime" dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                     <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
                 </DataTable>

@@ -7,10 +7,12 @@ export const internalEditor = (options) => {
   return (
     <Dropdown
       value={options.value}
-      options={internals}
+      options={internals.data}
       itemTemplate={ItemTemplate}
       onChange={(e) => {
         options.editorCallback(e.value);
+        options.rowData.internal = e.value
+        options.rowData.internalId = e.value.id
       }}
       optionLabel="command"
       placeholder={options.rowData.internal.command}
