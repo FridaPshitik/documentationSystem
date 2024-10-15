@@ -158,14 +158,8 @@ export default function SystemsTable() {
         }
         const { perform, external, internal, requires, ...updatedData } = newData;
         let newData2 = addPerform(newData)
-        
-        console.log(emptyProject);
-        console.log(newData);
-        console.log(updatedData);
-
 
         let updated = await put('project', updatedData.id, updatedData)
-        console.log(updated);
         
         _projects[index] = newData;
         _displayProjects[index] = newData2
