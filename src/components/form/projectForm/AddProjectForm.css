@@ -16,8 +16,19 @@
     text-align: center;
 }
 
+.field{
+    margin-bottom: 0.2rem;
+
+}
+
+.p-inline-message-error{
+    background-color: #ffffff;
+    padding: 0;
+}
+
 .card {
-    margin-top: 15px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 .item1 {
@@ -76,7 +87,7 @@
 }
 
 .grid-container>div {
-    text-align: center;
+    /* text-align: center; */
     padding: 5px;
     font-size: 17px;
 }
