@@ -1,4 +1,5 @@
-import { get } from "./axiosInstance";
+import { get, post } from "./axiosInstance";
+const serverPath = process.env.REACT_APP_SERVER_PATH || "http://localhost:8000"
 
 const getExternals = async () => {
   try {
@@ -26,4 +27,24 @@ export const getExternalsNameImage = async () => {
     return { name: obj.name, image: obj.image };
   });
   return externals;
+};
+
+export const getExternalImag = (image) => {
+  try {
+    let ans = `${serverPath}/external-factor/${image}`;
+    return ans;
+  }
+  catch (error) {
+    return error;
+  }
+};
+
+export const createExternal = async (data) => {
+  try {
+    const ans = await post("external-factor", data);
+    return ans;
+  }
+  catch (error) {
+    return error;
+  }
 };

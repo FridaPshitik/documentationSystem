@@ -7,7 +7,7 @@ import SystemsTable from './components/table/SystemsTable';
 import { ProjectContext } from './services/ProjectContext';
 import { useEffect, useState } from 'react';
 import { getInternalDisplay } from './services/InternalService';
-import { getExternalDisplay } from './services/externalService';
+import { getExternalDisplay } from './services/ExternalsService';
 
 function App() {
   const [projects, setProjects] = useState([]);

@@ -1,4 +1,4 @@
-export const internalImage = 'inside';
+export const internalImage = 'inside.png';
 
 export const classifications = {
   SODY: "סודי",

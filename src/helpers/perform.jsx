@@ -1,9 +1,10 @@
 import { MultiSelect } from "primereact/multiselect";
 import { factorableTypes } from "../services/consts";
-import { getExternalsNameImage } from "../services/externalService";
+import { getExternalsNameImage } from "../services/ExternalsService";
 import { getInternalsNameImage } from "../services/InternalService";
 import { externalEditor } from "./external";
 import { internalEditor } from "./internal";
+import { getExternalImag } from "../services/ExternalsService";
 
 const getPerforms = async () => {
   let exter = await getExternalsNameImage();
@@ -32,7 +33,7 @@ const performBody = (rowData) => {
     <div className="flex align-items-center gap-2">
       <img
         alt={rowData.image}
-        src={window.location.origin + `/images/${rowData.image}.png`}
+        src={getExternalImag(rowData.image)}
         width="32"
       />
       <span>{rowData.name}</span>
@@ -46,7 +47,7 @@ export const performBodyTemplate = (rowData) => {
     <div className="flex align-items-center gap-2">
       <img
         alt={factor.image}
-        src={window.location.origin + `/images/${factor.image}.png`}
+        src={getExternalImag(factor.image)}
         width="32"
       />
       <p>{factor.name}</p>

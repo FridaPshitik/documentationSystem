@@ -1,5 +1,6 @@
 import { Dropdown } from "primereact/dropdown";
-import { getExternalDisplay } from "../services/externalService";
+import { factorableTypes } from "../services/consts";
+import { getExternalImag, getExternalDisplay } from "../services/ExternalsService";
 
 export const externals = await getExternalDisplay();
 
@@ -22,10 +23,32 @@ const ItemTemplate = (option) => {
     <div className="flex align-items-center gap-2">
       <img
         alt={option.name}
-        src={window.location.origin + `/images/${option.image}`}
+        src={getExternalImag(option.image)}
         width="32"
       />
       <span>{option.name}</span>
+    </div>
+  );
+};
+
+export const externalBodyTemplate = (rowData) => {
+
+  let factor = { name: '', image: '' };
+
+  if (rowData.factorableType == factorableTypes.EXTERNAL)
+    factor = rowData.external;
+  else {
+    factor.name = rowData.internal.command;
+    factor.image = "inside.png";
+  }
+  return (
+    <div className="flex align-items-center gap-2">
+      <img
+        alt={factor.name}
+        src={getExternalImag(factor.image)}
+        width="32"
+      />
+      <p>{factor.name}</p>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Tag } from 'primereact/tag';
 import {getStatusColor, getFactorableTypeColor, internalImage} from '../../services/consts';
 import {getClassificationColor, getEnvironmentColor, getPopulationColor} from '../../services/consts'
 import './SystemDialog.css'
+import { getExternalImag } from '../../services/ExternalsService';
 
 export default function SystemDialog(system) {
     system = system.dataSystem;
@@ -40,7 +41,7 @@ export default function SystemDialog(system) {
                 <h3>גוף מבצע: &nbsp;<Tag value={system.factorableType} style={{ backgroundColor:getFactorableTypeColor(system.factorableType)}} />
                 </h3>
                 <div className="flex align-items-center gap-2">
-                    <img alt={factor.name} src={window.location.origin + `/images/${factor.image}.png`} width="32" />
+                    <img alt={factor.name} src={getExternalImag(factor.image)} width="32" />
                     <span>{factor.name}</span>
                 </div>
                 <h3>סטטוס: &nbsp;<Tag value={system.status} style={{ backgroundColor:getStatusColor(system.status)}}></Tag></h3>
