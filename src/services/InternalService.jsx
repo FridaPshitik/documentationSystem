@@ -26,7 +26,7 @@ export const getInternalsArray = async () => {
 
 export const getInternalDisplay = async () => {
   let internals = await getInternals();
-  internals.data.push({ name: "אחר" });
+  internals.data.push({ command: "אחר" });
   return internals;
 };
 
