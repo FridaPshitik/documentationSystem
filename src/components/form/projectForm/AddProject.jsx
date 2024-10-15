@@ -74,6 +74,7 @@ export const AddProject = ({toast}) => {
    }
 
     const submit=()=>{
+        //TODO add preventDefault in order to prevent  re-render
         let { external, internal, require, ...data } = project;
         createProject(data)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נוספה בהצלחה', life: 3000 });

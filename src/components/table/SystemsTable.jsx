@@ -181,7 +181,7 @@ export default function SystemsTable() {
                             [options.rowData.id]: true,
                         }));
                     }
-
+                    else options.rowData.productionTime = new Date('');
                 }
                 }
                 placeholder="בחר סטטוס"
@@ -207,8 +207,10 @@ export default function SystemsTable() {
 
     const deleteProject = () => {
         let _projects = projects.filter((val) => val.id !== project.id);
+        let _displayProjects = displayProjects.filter((val) => val.id !== project.id);
         del('project', project.id);
         setProjects(_projects);
+        setDisplayProjects(_displayProjects)
         setDeleteProjectDialog(false);//
         setProject(emptyProject);//
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נמחקה בהצלחה', life: 3000 });
@@ -289,8 +291,8 @@ export default function SystemsTable() {
                     </div>
                 </Dialog>
 
-                <Dialog visible={visibleSystemDialog} style={{ width: '50vw' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
-                    <SystemDialog dataSystem={dataSystem}></SystemDialog>
+                <Dialog visible={visibleSystemDialog} style={{ width: '25%' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
+                    <SystemDialog dataSystem={dataSystem} style={{ width: '100%' }}></SystemDialog>
                 </Dialog>
 
                 <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false) }}>
