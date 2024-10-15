@@ -1,4 +1,4 @@
-export const internalImage = 'inside.png';
+export const internalImage = "inside.png";
 
 export const classifications = {
   SODY: "סודי",
@@ -34,16 +34,16 @@ export const populations = {
 export const getStatusColor = (status) => {
   switch (status) {
     case statuses.IN_PROGRESS:
-      return "Olive";
+      return "#1e88e5";
 
     case statuses.IN_DEVELOPMENM:
-      return "MediumAquamarine";
+      return "#42a5f5";
 
     case statuses.IN_CHARACTERIZING:
-      return "LightSeaGreen";
+      return "#90caf9";
 
     case statuses.DONE:
-      return "YellowGreen";
+      return "#1565c0";
 
     default:
       return "";
@@ -53,26 +53,26 @@ export const getStatusColor = (status) => {
 export const getFactorableTypeColor = (type) => {
   switch (type) {
     case factorableTypes.INTERNAL:
-      return "Khaki";
+      return "#673ab7";
 
     case factorableTypes.EXTERNAL:
-      return "DarkKhaki";
+      return "#9575cd";
 
     default:
-      return "dark";
+      return "";
   }
 };
 
 export const getClassificationColor = (classification) => {
   switch (classification) {
     case classifications.BALMAS:
-      return "MediumPurple";
+      return "#388e3c";
 
     case classifications.SODY:
-      return "SlateBlue";
+      return "#43a047";
 
     case classifications.SODY_BEYOTER:
-      return "BlueViolet";
+      return "#66bb6a";
 
     default:
       return "";
@@ -82,10 +82,11 @@ export const getClassificationColor = (classification) => {
 export const getEnvironmentColor = (environment) => {
   switch (environment) {
     case environments.RED:
-      return "red";
+      return "#ef5350";
 
     case environments.BLACK:
-      return "black";
+      return "#424242";
+
     default:
       return "";
   }
@@ -94,15 +95,20 @@ export const getEnvironmentColor = (environment) => {
 export const getPopulationColor = (population) => {
   switch (population) {
     case populations.AAZTIM:
-      return "DeepSkyBlue";
+      return "#00695c";
+
     case populations.KEVA:
-      return "CornflowerBlue";
+      return "#00897b";
+
     case populations.MILUIM:
-      return "RoyalBlue";
+      return "#26a69a";
+
     case populations.MUST:
-      return "SkyBlue";
+      return "#4db6ac";
+
     case populations.PATUR:
-      return "PowderBlue";
+      return "#80cbc4";
+
     default:
       return "";
   }
