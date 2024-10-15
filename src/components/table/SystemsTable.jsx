@@ -159,6 +159,11 @@ export default function SystemsTable() {
         const { perform, external, internal, requires, ...updatedData } = newData;
         let newData2 = addPerform(newData)
         
+        console.log(emptyProject);
+        console.log(newData);
+        console.log(updatedData);
+
+
         let updated = await put('project', updatedData.id, updatedData)
         console.log(updated);
         
@@ -272,7 +277,7 @@ export default function SystemsTable() {
                     <Column field="factorableType" class="column" header="פיתוח" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={factorableTypeBodyTemplate} filter filterElement={factorableTypeRowFilterTemplate} />
                     <Column field="perform" header="גוף מבצע" editor={(options) => performEditor(options)} filterField="perform" showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '8rem' }} body={performBodyTemplate} filter filterElement={performRowFilterTemplate} />
                     <Column field="status" header="סטטוס" editor={(options) => statusEditor(options)} showFilterMenu={false} filterMenuStyle={{ width: '8rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusRowFilterTemplate} />
-                    <Column filterField='productionTime' dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
+                    <Column field="productionTime" filterField="productionTime" dataType="date" header="תאריך עליה לאויר" sortable editor={(options) => editableRows[options.rowData.id] ? productionTimeEditor(options) : null} style={{ minWidth: '15rem' }} body={productionTimeBodyTemplate} filter filterElement={productionTimeFilterTemplate} />
                     <Column rowEditor={true} style={{ minWidth: '7rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                     <Column body={deleteBodyTemplate} style={{ minWidth: '6rem' }}></Column>
                 </DataTable>
