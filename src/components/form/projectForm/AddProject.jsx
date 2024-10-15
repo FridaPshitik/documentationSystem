@@ -77,7 +77,9 @@ export const AddProject = ({ toast }) => {
         }))
     }
 
+
     const submit = (event) => {
+        //TODO add preventDefault in order to prevent  re-render
         event.preventDefault()
         setFormSubmitted(true);
         let { external, internal, require, ...data } = project;
