@@ -6,11 +6,14 @@ import { factorableTypes } from "../services/consts";
 import { externalEditor } from "./external";
 import { internalEditor } from "./internal";
 
-
 const getPerforms = async () => {
-  let exter = await getExternalsNameImage();
-  let inter = await getInternalsNameImage();
-  return exter.concat(inter);
+  try {
+    let exter = await getExternalsNameImage();
+    let inter = await getInternalsNameImage();
+    return exter.concat(inter);
+  } catch (error) {
+    return error;
+  } 
 };
 
 let performs = await getPerforms();
@@ -46,11 +49,7 @@ export const performBodyTemplate = (rowData) => {
   let factor = rowData.perform;
   return (
     <div className="flex align-items-center gap-2">
-      <img
-        alt={factor.image}
-        src={getExternalImag(factor.image)}
-        width="32"
-      />
+      <img alt={factor.image} src={getExternalImag(factor.image)} width="32" />
       <p>{factor.name}</p>
     </div>
   );

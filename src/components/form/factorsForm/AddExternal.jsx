@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { createExternal } from "../../../services/ExternalsService";
 import { ProjectContext } from "../../../services/ProjectContext";
 import '../projectForm/AddProjectForm.css';
+import { displayToast } from "../../../services/toast";
 
 
 export const AddExternal = ({ setProject, hide, toast }) => {
@@ -19,13 +20,26 @@ export const AddExternal = ({ setProject, hide, toast }) => {
         const formData = new FormData();
         formData.append("name", external.name);
         formData.append("image", external.image);
+
         const res = await createExternal(formData);
-        const ans = res.data;
-        await setExternals([...externals.slice(0, externals.length - 1), ans, ...externals.slice(externals.length - 1)])
-        let updates = { external: ans, externalId: ans.id }
-        setProject((prevProject) => ({ ...prevProject, ...updates }))
-        toast.current.show({ severity: 'info', summary: 'Success', detail: 'הגוף המבצע נוסף בהצלחה' });
+
+        let updates
+        
+        if(res.data){
+            const ans = res.data;
+            await setExternals([...externals.slice(0, externals.length - 1), ans, ...externals.slice(externals.length - 1)])
+            updates = { external: ans, externalId: ans.id }
+            displayToast(toast, 'success', 'Success', ans.name+' נוסף בהצלחה')
+        }
+
+        else if(res.response.data.error){
+            updates= { external: null, externalId: null }
+            displayToast(toast, 'error', 'Error', res.response.data.error)
+        }
+
+        setProject((prevProject) => ({ ...prevProject, ...updates}))
         hide(false);
+
     };
     const handleFileUpload = (e) => {
         let selectedImage = e.files[0];
