@@ -1,15 +1,16 @@
 import { MultiSelect } from "primereact/multiselect";
+import { Dropdown } from "primereact/dropdown";
 import { Tag } from "primereact/tag";
 import { getPopulationColor, populations } from "../services/consts";
 
 
 export const populationRowFilterTemplate = (options) => {
   return (
-    <MultiSelect
+    <Dropdown
       value={options.value}
       options={Object.values(populations)}
-      itemTemplate={populationItemTemplate}
       onChange={(e) => options.filterApplyCallback(e.value)}
+      itemTemplate={populationItemTemplate}
       placeholder="סנן"
       className="p-column-filter"
     />
@@ -22,7 +23,7 @@ const populationItemTemplate = (option) => {
   );
 };
 
-export const populationEditor = (options) =>{
+export const populationEditor = (options) => {
   return (
     <MultiSelect
       value={options.value}
