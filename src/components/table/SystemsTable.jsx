@@ -261,7 +261,7 @@ export default function SystemsTable() {
                     <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
                     <h3 id='titleH3'>תצוגת מערכות מידע</h3>
                 </div>
-                <DataTable ref={dt} value={displayProjects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
+                <DataTable  ref={dt} value={displayProjects} exportFilename="documentation" paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                     selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                     globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
                     <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
