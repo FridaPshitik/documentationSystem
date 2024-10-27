@@ -1,5 +1,4 @@
 import { Button } from "primereact/button";
-
 import './CheckMultipleName.css'
 
 const CheckMultipleName = ({setVisible,setProject}) => {

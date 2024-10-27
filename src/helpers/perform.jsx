@@ -1,10 +1,11 @@
 import { MultiSelect } from "primereact/multiselect";
-import { factorableTypes } from "../services/consts";
 import { getExternalsNameImage } from "../services/ExternalsService";
 import { getInternalsNameImage } from "../services/InternalService";
+import { getExternalImag } from "../services/ExternalsService";
+import { factorableTypes } from "../services/consts";
 import { externalEditor } from "./external";
 import { internalEditor } from "./internal";
-import { getExternalImag } from "../services/ExternalsService";
+
 
 const getPerforms = async () => {
   let exter = await getExternalsNameImage();
