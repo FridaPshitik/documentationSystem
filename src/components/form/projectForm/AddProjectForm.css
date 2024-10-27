@@ -16,48 +16,59 @@
     text-align: center;
 }
 
-.card {
-    margin-top: 15px;
+.field{
+    margin-bottom: 0.2rem;
+
 }
 
-.item1 {
+.p-inline-message-error{
+    background-color: #ffffff;
+    padding: 0;
+}
+
+.card {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.name {
     grid-area: name;
 }
 
-.item2 {
+.description {
     grid-area: description;
 }
 
-.item3 {
+.external {
     grid-area: demand;
 }
 
-.item4 {
+.factorableType {
     grid-area: type;
 }
 
-.item5 {
+.status {
     grid-area: status;
 }
 
-.item6 {
+.perform {
     grid-area: operating;
 }
 
-.item7 {
+.productionTime {
     grid-area: date;
 }
 
-.item8 {
+.purpose {
     grid-area: goal;
 }
-.item9 {
+.classification {
     grid-area: classification;
 }
-.item10 {
+.environment {
     grid-area: devEnvironment;
 }
-.item11 {
+.population {
     grid-area: population;
 }
 
@@ -76,7 +87,6 @@
 }
 
 .grid-container>div {
-    text-align: center;
     padding: 5px;
     font-size: 17px;
 }

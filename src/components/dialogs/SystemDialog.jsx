@@ -46,7 +46,7 @@ export default function SystemDialog(system) {
           <div className="flex align-items-center gap-2">
             <h3>איש קשר:</h3>
             <p>
-              {system.requires.name} | {system.requires.phone} |
+              {system.requires.contact} | {system.requires.phone} |
               <a href={"mailto:" + system.requires.email}>
                 {system.requires.email}
               </a>

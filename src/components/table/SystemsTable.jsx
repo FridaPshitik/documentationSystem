@@ -12,25 +12,25 @@ import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
 
+import { classificationBodyTemplate, classificationEditor, classificationRowFilterTemplate } from '../../helpers/classification';
+import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterTemplate } from '../../helpers/productionTime';
+import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
+import { populationBodyTemplate, populationEditor, populationRowFilterTemplate } from '../../helpers/population';
+import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
+import { performBodyTemplate, performEditor, performRowFilterTemplate } from '../../helpers/perform';
+import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/status';
+import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
+import { textEditor } from '../../helpers/text';
+
+import { getStatusColor, internalImage, statuses } from '../../services/consts';
+import { ProjectContext } from '../../services/ProjectContext';
 import { getProjects } from '../../services/ProjectService';
+import { del, put } from '../../services/axiosInstance';
+
+import { AddProject } from '../form/projectForm/AddProject';
 import RequireDialog from '../dialogs/RequireDialog';
 import SystemDialog from '../dialogs/SystemDialog';
 import './SystemsTable.css';
-
-import { classificationBodyTemplate, classificationEditor, classificationRowFilterTemplate } from '../../helpers/classification';
-import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
-import { performBodyTemplate, performEditor, performRowFilterTemplate } from '../../helpers/perform';
-import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
-import { populationBodyTemplate, populationEditor, populationRowFilterTemplate } from '../../helpers/population';
-import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
-import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/status';
-
-import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterTemplate } from '../../helpers/productionTime';
-import { textEditor } from '../../helpers/text';
-import { factorableTypes, getStatusColor, internalImage, statuses } from '../../services/consts';
-import { ProjectContext } from '../../services/ProjectContext';
-import { AddProject } from '../form/projectForm/AddProject';
-import { del, put } from '../../services/axiosInstance';
 
 export default function SystemsTable() {
 
@@ -66,6 +66,7 @@ export default function SystemsTable() {
         perform: { value: null, matchMode: FilterMatchMode.IN },
         population: { value: null, matchMode: FilterMatchMode.CONTAINS }
     });
+
     const [visible, setVisibleAddProjectFormDialog] = useState(false);
     const [editableRows, setEditableRows] = useState({});
     const [visibleSystemDialog, setVisibleSystemDialog] = useState(false);
@@ -79,7 +80,6 @@ export default function SystemsTable() {
     const [dataSystem, setDataSystem] = useState({})
     const toast = useRef(null);
     const dt = useRef(null);
-
 
     const renderHeader = () => {
         return (
@@ -123,7 +123,7 @@ export default function SystemsTable() {
     const ShowSystemDialog = (rowData) => {
         setDataSystem(rowData)
         setVisibleSystemDialog(true)
-    }
+    };
 
     const requireTemplate = (option) => {
         return (
@@ -136,7 +136,7 @@ export default function SystemsTable() {
                 <span > {option.requires.command} </span>
             </div>
         )
-    }
+    };
 
     const header = renderHeader();
 
@@ -159,7 +159,7 @@ export default function SystemsTable() {
         const { perform, external, internal, requires, ...updatedData } = newData;
         let newData2 = addPerform(newData)
 
-        let updated = await put('project', updatedData.id, updatedData)
+        await put('project', updatedData.id, updatedData)
         
         _projects[index] = newData;
         _displayProjects[index] = newData2
@@ -206,13 +206,15 @@ export default function SystemsTable() {
     };
 
     const deleteProject = () => {
-        let _projects = projects.filter((val) => val.id !== project.id);
-        let _displayProjects = displayProjects.filter((val) => val.id !== project.id);
+        const _projects = projects.filter((val) => val.id !== project.id);
+        const _displayProjects = displayProjects.filter((val) => val.id !== project.id);
+        
         del('project', project.id);
+        
         setProjects(_projects);
         setDisplayProjects(_displayProjects)
-        setDeleteProjectDialog(false);//
-        setProject(emptyProject);//
+        setDeleteProjectDialog(false);
+        setProject(emptyProject);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נמחקה בהצלחה', life: 3000 });
     };
 
@@ -236,13 +238,12 @@ export default function SystemsTable() {
         getdisplayProjects();
     }, []);
 
-
     const addPerform = (obj) =>{
         if (obj.internal)
             return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
         else if (obj.external)
             return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
-    }
+    };
 
     const convertDate = (data) => {
         return [...(data || [])].map((d) => {
@@ -260,7 +261,7 @@ export default function SystemsTable() {
                     <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
                     <h3 id='titleH3'>תצוגת מערכות מידע</h3>
                 </div>
-                <DataTable ref={dt} value={displayProjects} paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
+                <DataTable  ref={dt} value={displayProjects} exportFilename="documentation" paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                     selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                     globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
                     <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
