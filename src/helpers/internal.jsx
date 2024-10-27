@@ -1,7 +1,7 @@
 import { Dropdown } from "primereact/dropdown";
-import { getInternalDisplay } from "../services/InternalService";
+import { getInternalEdit } from "../services/InternalService";
 
-export const internals = await getInternalDisplay();
+export const internals = await getInternalEdit();
 
 export const internalEditor = (options) => {
   return (

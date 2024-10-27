@@ -38,6 +38,15 @@ export const getInternalDisplay = async () => {
   }
 };
 
+export const getInternalEdit = async () => {
+  try {
+    let internals = await getInternals();
+    return internals;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const getInternalsNameImage = async () => {
   try {
     let ans = await getInternals();

@@ -25,6 +25,15 @@ export const getExternalDisplay = async () => {
   }
 };
 
+export const getExternalEdit = async () => {
+  try {
+    let externals = await getExternals();
+    return externals;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const getExternalsNameImage = async () => {
   try {
     let ans = await getExternals();

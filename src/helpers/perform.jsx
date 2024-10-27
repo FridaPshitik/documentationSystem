@@ -5,11 +5,15 @@ import { getExternalImag } from "../services/ExternalsService";
 import { factorableTypes } from "../services/consts";
 import { externalEditor } from "./external";
 import { internalEditor } from "./internal";
+import { getProjects } from "../services/ProjectService"
 
 const getPerforms = async () => {
   try {
     let exter = await getExternalsNameImage();
     let inter = await getInternalsNameImage();
+    let pro = await getProjects()
+    let internalsPerform = pro.data.filter(item => item.internal).map(item => item.internal.command);
+    inter = inter.filter(item => internalsPerform.includes(item.name));
     return exter.concat(inter);
   } catch (error) {
     return error;
