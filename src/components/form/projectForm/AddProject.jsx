@@ -246,7 +246,7 @@ export const AddProject = ({toast}) => {
                                     options={Object.values(classifications)} className="w-full md:w-14rem field" required />
                                 <label htmlFor="classification">בחר סיווג</label>
                             </FloatLabel>
-                            {formSubmitted && !project.environment && (
+                            {formSubmitted && !project.classification && (
                                 <Message severity="error" text=" הבחירה הינה חובה " />
                             )}
                         </div>
