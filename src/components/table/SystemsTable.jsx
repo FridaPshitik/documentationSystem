@@ -280,7 +280,7 @@ export default function SystemsTable() {
         return (
           <Dropdown
             value={options.value}
-            options={externals.data}
+            options={externals}
             itemTemplate={externalItemTemplate}
             onChange={(e) => {
               options.editorCallback(e.value);
@@ -298,7 +298,7 @@ export default function SystemsTable() {
         return (
           <Dropdown
             value={options.value}
-            options={internals.data}
+            options={internals}
             itemTemplate={internalItemTemplate}
             onChange={(e) => {
               options.editorCallback(e.value);

@@ -17,14 +17,6 @@ export const getExternalDisplay = (externalData) => {
   }
 };
 
-export const getExternalEdit = async () => {
-  try {
-    return await getExternals();
-  } catch (error) {
-    return error;
-  }
-};
-
 export const getExternalsNameImage = (externalsData) => {
   try {
     let externals = externalsData.map((obj) => {

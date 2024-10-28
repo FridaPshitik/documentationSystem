@@ -33,14 +33,6 @@ export const getInternalDisplay = (internalsData) => {
   }
 };
 
-export const getInternalEdit = async () => {
-  try {
-    return await getInternals();
-  } catch (error) {
-    return error;
-  }
-};
-
 export const getInternalsNameImage = (internalsData) => {
   try {
     let internals = internalsData.map((obj) => {
