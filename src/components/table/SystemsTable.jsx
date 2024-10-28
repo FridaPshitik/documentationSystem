@@ -35,7 +35,7 @@ import { displayToast } from '../../services/toast';
 export default function SystemsTable() {
 
     const { projects, setProjects } = useContext(ProjectContext)
-    const [ displayProjects, setDisplayProjects ] = useState([])
+    const { displayProjects, setDisplayProjects } = useContext(ProjectContext)
     const { error, setError } = useContext(ProjectContext)
 
     let emptyProject = {
@@ -89,7 +89,7 @@ export default function SystemsTable() {
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="הזן ערך לחיפוש" />
                 </IconField>
                 <Dialog header="הוספת מערכת חדשה" id='addNewProjectDialog' visible={visible} onHide={() => { if (!visible) return; setVisibleAddProjectFormDialog(false); }}>
-                    <AddProject toast={toast}></AddProject>
+                    <AddProject toast={toast} hide={setVisibleAddProjectFormDialog}></AddProject>
                 </Dialog>
                 <Button id='add_project' label='הוספת מערכת חדשה' icon="pi pi-plus" outlined onClick={() => setVisibleAddProjectFormDialog(true)} />
 

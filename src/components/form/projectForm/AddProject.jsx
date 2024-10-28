@@ -10,7 +10,7 @@ import { Message } from 'primereact/message';
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
-import { factorableTypes, populations, statuses } from "../../../services/consts";
+import { factorableTypes, internalImage, populations, statuses } from "../../../services/consts";
 import { classifications, environments} from "../../../services/consts";
 import { ProjectContext } from "../../../services/ProjectContext";
 import { createProject } from "../../../services/ProjectService";
@@ -22,8 +22,9 @@ import './AddProjectForm.css';
 import { displayToast } from "../../../services/toast";
 
 
-export const AddProject = ({toast}) => {
-    const {projects} = useContext(ProjectContext)
+export const AddProject = ({toast,hide}) => {
+    const {projects, setProjects} = useContext(ProjectContext)
+    const {setDisplayProjects} = useContext(ProjectContext)
     const [project, setProject] = useState({  
         name: '',
         purpose: '',
@@ -85,22 +86,31 @@ export const AddProject = ({toast}) => {
    }
 
     const submit = async (event) => {
-        //TODO add preventDefault in order to prevent  re-render
         event.preventDefault();
         setFormSubmitted(true);
         let { external, internal, require, ...data } = project;
         if (dataValidation(data)) {
             const res = await createProject(data);
             if(res.data){
+                if(!res.data.productionTime) res.data.productionTime = new Date('')
+                setProjects(pro => [...pro, res.data]);
+                setDisplayProjects(pro => [...pro, addPerform(res.data)]);
                 displayToast(toast, 'success', 'Success', res.data.name+' נוסף בהצלחה')
             }
             else if(res.response.data.error){
                 displayToast(toast, 'error', 'Error', res.response.data.error)
             }
             setFormSubmitted(false);
-            formRef.current.submit()
+            hide(false)
         }
     }
+
+    const addPerform = (obj) =>{
+        if (obj.internal)
+            return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
+        else if (obj.external)
+            return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
+    };
 
     const dataValidation = (data) => {
         const validationStatus = data.status && project.status === statuses.DONE && project.productionTime || project.status !== statuses.DONE && data.status;
