@@ -1,4 +1,4 @@
-import { getExternalImag } from "../services/ExternalsService";
+import { getExternalImage } from "../services/ExternalsService";
 
 
 export const performBody = (rowData) => {
@@ -6,7 +6,7 @@ export const performBody = (rowData) => {
     <div className="flex align-items-center gap-2">
       <img
         alt={rowData.image}
-        src={getExternalImag(rowData.image)}
+        src={getExternalImage(rowData.image)}
         width="32"
       />
       <span>{rowData.name}</span>
@@ -18,7 +18,7 @@ export const performBodyTemplate = (rowData) => {
   let factor = rowData.perform;
   return (
     <div className="flex align-items-center gap-2">
-      <img alt={factor.image} src={getExternalImag(factor.image)} width="32" />
+      <img alt={factor.image} src={getExternalImage(factor.image)} width="32" />
       <p>{factor.name}</p>
     </div>
   );

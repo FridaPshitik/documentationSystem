@@ -13,7 +13,7 @@ import {
   getPopulationColor,
 } from "../../services/consts";
 import "./SystemDialog.css";
-import { getExternalImag } from "../../services/ExternalsService";
+import { getExternalImage } from "../../services/ExternalsService";
 
 export default function SystemDialog(system) {
   system = system.dataSystem;
@@ -64,7 +64,7 @@ export default function SystemDialog(system) {
             <div className="flex align-items-center gap-2">
               <img
                 alt={factor.name}
-                src={getExternalImag(factor.image)}
+                src={getExternalImage(factor.image)}
                 width="32"
               />
               <span>{factor.name}</span>

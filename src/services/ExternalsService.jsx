@@ -28,7 +28,7 @@ export const getExternalsNameImage = (externalsData) => {
   }
 };
 
-export const getExternalImag = (image) => {
+export const getExternalImage = (image) => {
   try {
     return `${serverPath}/external-factor/${image}`;
   } catch (error) {
