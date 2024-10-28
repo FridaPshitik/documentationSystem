@@ -5,6 +5,7 @@ import { Button } from 'primereact/button';
 
 import { createInternal } from "../../../services/InternalService";
 import { ProjectContext } from "../../../services/ProjectContext";
+import { displayToast } from "../../../services/toast"
 import '../projectForm/AddProjectForm.css';
 
 export const AddInternal = ({ setProject, hide ,parent , toast}) => {
@@ -16,13 +17,21 @@ export const AddInternal = ({ setProject, hide ,parent , toast}) => {
 
         e.preventDefault()
         const res = await createInternal(internal)
-        const ans = res.data
+        let updates;
         
-        await setInternals([ ...internals.slice(0, internals.length - 1), ans, ...internals.slice(internals.length - 1)])
+        if(res.data){
+            const ans = res.data;
+            await setInternals([ ...internals.slice(0, internals.length - 1), ans, ...internals.slice(internals.length - 1)])
+            updates = (parent=='require'?  {require : ans ,requiresId: ans.id} :  {internal : ans ,internalId: ans.id})
+            displayToast(toast, 'success', 'Success', ans.name+' נוסף בהצלחה')
+        }
 
-        let updates= (parent=='require'?  {require : ans ,requiresId: ans.id} :  {internal : ans ,internalId: ans.id})
+        else if(res.response.data.error){
+            updates = (parent=='require'?  {require : null ,requiresId: null} :  {internal : null ,internalId: null})
+            displayToast(toast, 'error', 'Error', res.response.data.error)
+        }
+
         setProject((prevProject) => ({ ...prevProject, ...updates}))
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'הגוף נוסף בהצלחה', life: 3000 });
         hide(false);
     };
     

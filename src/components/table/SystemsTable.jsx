@@ -24,13 +24,13 @@ import { textEditor } from '../../helpers/text';
 
 import { getStatusColor, internalImage, statuses } from '../../services/consts';
 import { ProjectContext } from '../../services/ProjectContext';
-import { getProjects } from '../../services/ProjectService';
-import { del, put } from '../../services/axiosInstance';
+import { deleteProject, getProjects, updateProject } from '../../services/ProjectService';
 
 import { AddProject } from '../form/projectForm/AddProject';
 import RequireDialog from '../dialogs/RequireDialog';
 import SystemDialog from '../dialogs/SystemDialog';
 import './SystemsTable.css';
+import { displayToast } from '../../services/toast';
 
 export default function SystemsTable() {
 
@@ -153,16 +153,23 @@ export default function SystemsTable() {
         let _projects = [...projects];
         let _displayProjects = [...displayProjects]
         let { newData, index } = event;
+
         if (newData.status === statuses.DONE && newData.productionTime == 'Invalid Date') {
             newData.productionTime = new Date();
         }
         const { perform, external, internal, requires, ...updatedData } = newData;
-        let newData2 = addPerform(newData)
+        let displayData = addPerform(newData)
 
-        await put('project', updatedData.id, updatedData)
-        
-        _projects[index] = newData;
-        _displayProjects[index] = newData2
+        const res = await updateProject('project', updatedData.id, updatedData)
+        if(res.data){
+            displayToast(toast, 'success', 'Success', res.data.name+' עודכן בהצלחה')
+            _projects[index] = newData;
+            _displayProjects[index] = displayData
+        }
+
+        else if(res.response.data.error){
+            displayToast(toast, 'error', 'Error', res.response.data.error)
+        }
 
         setProjects(_projects);
         setDisplayProjects(_displayProjects)
@@ -205,17 +212,22 @@ export default function SystemsTable() {
         setDeleteProjectDialog(true);
     };
 
-    const deleteProject = () => {
+    const confirmDelete = async () => {
         const _projects = projects.filter((val) => val.id !== project.id);
         const _displayProjects = displayProjects.filter((val) => val.id !== project.id);
         
-        del('project', project.id);
-        
-        setProjects(_projects);
-        setDisplayProjects(_displayProjects)
+        const res = await deleteProject(project.id);
+        if(res.data){
+            displayToast(toast, 'success', 'Success', res.data.name+' נמחק בהצלחה')
+            setProjects(_projects);
+            setDisplayProjects(_displayProjects)
+        }
+        else if(res.response.data.error){
+            displayToast(toast, 'error', 'Error', res.response.data.error)
+        }     
+           
         setDeleteProjectDialog(false);
         setProject(emptyProject);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נמחקה בהצלחה', life: 3000 });
     };
 
     useEffect(() => {
@@ -286,7 +298,7 @@ export default function SystemsTable() {
                         )}
                         <div style={{ direction: "ltr", marginTop: "10px", marginLeft: '5px' }} >
                             <Button icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
-                            <Button icon="pi pi-check" outlined text severity="danger" onClick={deleteProject} />
+                            <Button icon="pi pi-check" outlined text severity="danger" onClick={confirmDelete} />
                         </div>
 
                     </div>
