@@ -1,5 +1,7 @@
 .card {
     padding: 0;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 .card #calendar {
@@ -18,17 +20,11 @@
 
 .field{
     margin-bottom: 0.2rem;
-
 }
 
 .p-inline-message-error{
     background-color: #ffffff;
     padding: 0;
-}
-
-.card {
-    margin-top: 3px;
-    margin-bottom: 3px;
 }
 
 .name {
@@ -62,12 +58,15 @@
 .purpose {
     grid-area: goal;
 }
+
 .classification {
     grid-area: classification;
 }
+
 .environment {
     grid-area: devEnvironment;
 }
+
 .population {
     grid-area: population;
 }

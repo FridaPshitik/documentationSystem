@@ -10,19 +10,24 @@ import { Message } from 'primereact/message';
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
-import { factorableTypes, populations, statuses } from "../../../services/consts";
+import { factorableTypes, internalImage} from "../../../services/consts";
 import { classifications, environments} from "../../../services/consts";
+import { getExternalDisplay } from "../../../services/ExternalsService";
+import { getInternalDisplay } from "../../../services/InternalService";
 import { ProjectContext } from "../../../services/ProjectContext";
+import { populations, statuses } from "../../../services/consts";
 import { createProject } from "../../../services/ProjectService";
+import { displayToast } from "../../../services/toast";
 
-import CheckMultipleName from "../CheckMultipleName";
 import { AddInternal } from "../factorsForm/AddInternal";
 import { AddExternal } from "../factorsForm/AddExternal";
+import CheckMultipleName from "../CheckMultipleName";
 import './AddProjectForm.css';
 
 
-export const AddProject = ({toast}) => {
-    const {projects} = useContext(ProjectContext)
+export const AddProject = ({toast,hide}) => {
+    const {projects, setProjects} = useContext(ProjectContext);
+    const {setDisplayProjects} = useContext(ProjectContext);
     const [project, setProject] = useState({  
         name: '',
         purpose: '',
@@ -65,7 +70,7 @@ export const AddProject = ({toast}) => {
             ...prevProject,
             ...updates
         })) 
-    }
+    };
 
     const handelSelectInternal = (value) => {
         let updates = {internal : value , internalId : value.id}
@@ -73,7 +78,7 @@ export const AddProject = ({toast}) => {
             ...prevProject,
             ...updates            
         }))
-   }
+   };
 
    const handelSelectExternal = async (value) => {
         let updates = {external : value , externalId: value.id}
@@ -81,23 +86,37 @@ export const AddProject = ({toast}) => {
             ...prevProject,
             ...updates
         }))
-   }
+   };
 
-    const submit = (event) => {
-        //TODO add preventDefault in order to prevent  re-render
+    const submit = async (event) => {
         event.preventDefault();
         setFormSubmitted(true);
         let { external, internal, require, ...data } = project;
         if (dataValidation(data)) {
-            createProject(data)
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נוספה בהצלחה', life: 3000 });
+            const res = await createProject(data);
+            if(res.data){
+                if(!res.data.productionTime) res.data.productionTime = new Date('')
+                setProjects(pro => [...pro, res.data]);
+                setDisplayProjects(pro => [...pro, addPerform(res.data)]);
+                displayToast(toast, 'success', 'Success', res.data.name+' נוסף בהצלחה')
+            }
+            else if(res.response.data.error){
+                displayToast(toast, 'error', 'Error', res.response.data.error)
+            }
             setFormSubmitted(false);
-            formRef.current.submit()
+            hide(false)
         }
-    }
+    };
+
+    const addPerform = (obj) =>{
+        if (obj.internal)
+            return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
+        else if (obj.external)
+            return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
+    };
 
     const dataValidation = (data) => {
-        const validationStatus = data.status && project.status === statuses.DONE && project.productionTime || project.status !== statuses.DONE && data.status;
+        const validationStatus = (data.status && project.status == statuses.DONE && project.productionTime) || (project.status != statuses.DONE && data.status);
         const developmentType = data.internalId || data.externalId;
         return data.name &&
             data.purpose &&
@@ -109,15 +128,14 @@ export const AddProject = ({toast}) => {
             data.environment &&
             data.population &&
             developmentType
-    }
+    };
       
     
   return (
     <>
       <div id="addProjectForm">
                 <form ref={formRef} noValidate action="">
-                    <div className="card grid-container">
-                        
+                    <div className="card grid-container">          
                         <div className="card name">
                             <FloatLabel className="field">
                                 <InputText className="w-full md:w-30rem field" id="name" value={project.name} onChange={(e) => {
@@ -162,7 +180,7 @@ export const AddProject = ({toast}) => {
                             <Dropdown id="require"
                                     value={project.require}
                                     onChange={(e) => handelSelectRequire(e.value)}
-                                    options={internals}
+                                    options={getInternalDisplay(internals)}
                                     optionLabel="command"
                                     className="w-full md:w-14rem field"
                                     required
@@ -197,10 +215,10 @@ export const AddProject = ({toast}) => {
                                     options={['לאחר בחירת סוג יאופשר שדה זה']} className="w-full md:w-14rem field" required />}
                                 {project.factorableType === factorableTypes.INTERNAL && <Dropdown inputid="dd-operating" value={project.internal}
                                     onChange={(e) => handelSelectInternal(e.value)}
-                                    options={internals} optionLabel="command" className="w-full md:w-14rem field" required />}
+                                    options={getInternalDisplay(internals)} optionLabel="command" className="w-full md:w-14rem field" required />}
                                 {project.factorableType === factorableTypes.EXTERNAL && <Dropdown inputid="dd-operating" value={project.external}
                                     onChange={(e) => handelSelectExternal(e.value)}
-                                    options={externals} optionLabel="name" className="w-full md:w-14rem field" required />}
+                                    options={getExternalDisplay(externals)} optionLabel="name" className="w-full md:w-14rem field" required />}
                                 <label htmlFor="dd-operating">בחר גוף מבצע</label>
                             </FloatLabel>
                             {formSubmitted && !project.internal && !project.external && (
@@ -292,7 +310,6 @@ export const AddProject = ({toast}) => {
                     footer={<AddExternal setProject={setProject} hide={setHideAddOperatingCompany} toast={toast} />}>
                 </Dialog>
             </div>
-
     </>
   );
 };
