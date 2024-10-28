@@ -11,6 +11,7 @@ import { getExternalDisplay } from './services/ExternalsService';
 
 function App() {
   const [projects, setProjects] = useState([]);
+  const [displayProjects, setDisplayProjects] = useState([]);
   const [externals, setExternals] = useState([]);
   const [internals, setInternals] = useState([]);
   const [error, setError] = useState(null);
@@ -27,7 +28,7 @@ function App() {
 
 
   return <>
-    <ProjectContext.Provider value={{ projects, setProjects, externals, setExternals, internals, setInternals, error, setError }}>
+    <ProjectContext.Provider value={{ projects, setProjects,displayProjects, setDisplayProjects, externals, setExternals, internals, setInternals, error, setError }}>
       <SystemsTable></SystemsTable>
     </ProjectContext.Provider>
   </>
