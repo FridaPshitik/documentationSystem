@@ -20,20 +20,41 @@ const getInternals = async () => {
 };
 
 export const getInternalsArray = async () => {
-  let ans = await getInternals();
-  return [...new Set(ans.data.map((item) => item.command))];
+  try {
+    let ans = await getInternals();
+    return [...new Set(ans.data.map((item) => item.command))];
+  } catch (error) {
+    return error;
+  }
 };
 
 export const getInternalDisplay = async () => {
-  let internals = await getInternals();
-  internals.data.push({ command: "אחר" });
-  return internals;
+  try {
+    let internals = await getInternals();
+    internals.data.push({ command: "אחר" });
+    return internals;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getInternalEdit = async () => {
+  try {
+    let internals = await getInternals();
+    return internals;
+  } catch (error) {
+    return error;
+  }
 };
 
 export const getInternalsNameImage = async () => {
-  let ans = await getInternals();
-  let internals = ans.data.map((obj) => {
-    return { name: obj.command, image: internalImage };
-  });
-  return internals;
+  try {
+    let ans = await getInternals();
+    let internals = ans.data.map((obj) => {
+      return { name: obj.command, image: internalImage };
+    });
+    return internals;
+  } catch (error) {
+    return error;
+  }
 };
