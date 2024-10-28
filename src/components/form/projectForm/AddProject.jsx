@@ -23,12 +23,11 @@ import { AddInternal } from "../factorsForm/AddInternal";
 import { AddExternal } from "../factorsForm/AddExternal";
 import CheckMultipleName from "../CheckMultipleName";
 import './AddProjectForm.css';
-import { displayToast } from "../../../services/toast";
 
 
 export const AddProject = ({toast,hide}) => {
-    const {projects, setProjects} = useContext(ProjectContext);
-    const {setDisplayProjects} = useContext(ProjectContext);
+    const {projects, setProjects} = useContext(ProjectContext)
+    const {setDisplayProjects} = useContext(ProjectContext)
     const [project, setProject] = useState({  
         name: '',
         purpose: '',
@@ -87,25 +86,18 @@ export const AddProject = ({toast,hide}) => {
             ...prevProject,
             ...updates
         }))
-   };
+   }
 
     const submit = async (event) => {
-<<<<<<< HEAD
-=======
-        //TODO add preventDefault in order to prevent  re-render
->>>>>>> 31e5a16c84cddaca7f58dc6807d5c720512e538b
         event.preventDefault();
         setFormSubmitted(true);
         let { external, internal, require, ...data } = project;
         if (dataValidation(data)) {
             const res = await createProject(data);
             if(res.data){
-<<<<<<< HEAD
                 if(!res.data.productionTime) res.data.productionTime = new Date('')
                 setProjects(pro => [...pro, res.data]);
                 setDisplayProjects(pro => [...pro, addPerform(res.data)]);
-=======
->>>>>>> 31e5a16c84cddaca7f58dc6807d5c720512e538b
                 displayToast(toast, 'success', 'Success', res.data.name+' נוסף בהצלחה')
             }
             else if(res.response.data.error){
@@ -114,7 +106,7 @@ export const AddProject = ({toast,hide}) => {
             setFormSubmitted(false);
             hide(false)
         }
-    };
+    }
 
     const addPerform = (obj) =>{
         if (obj.internal)
@@ -136,14 +128,15 @@ export const AddProject = ({toast,hide}) => {
             data.environment &&
             data.population &&
             developmentType
-    };
+    }
       
     
   return (
     <>
       <div id="addProjectForm">
                 <form ref={formRef} noValidate action="">
-                    <div className="card grid-container">          
+                    <div className="card grid-container">
+                        
                         <div className="card name">
                             <FloatLabel className="field">
                                 <InputText className="w-full md:w-30rem field" id="name" value={project.name} onChange={(e) => {
@@ -318,6 +311,7 @@ export const AddProject = ({toast,hide}) => {
                     footer={<AddExternal setProject={setProject} hide={setHideAddOperatingCompany} toast={toast} />}>
                 </Dialog>
             </div>
+
     </>
   );
 };
