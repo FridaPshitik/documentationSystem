@@ -69,12 +69,15 @@ export const AddExternal = ({ setProject, hide, toast }) => {
                     <InputText className="w-full md:w-14rem field" id="factorName" value={external.name} onChange={(e) => setExternal((prevExternal) => ({ ...prevExternal, name: e.target.value }))} />
                     <label htmlFor="factorName">שם</label>
                 </FloatLabel>
-                <div className="card flex justify-content-center b-color">
-                    <FileUpload mode="basic" customUpload="true" onSelect={handleFileUpload} chooseLabel="הוסף לוגו חברה" />
-                </div>
-                {formSubmitted && (
-                    <Message severity="error" text="חובה למלא את כל השדות" />
+                {formSubmitted && !external.name && (
+                    <Message severity="error" text="שם החברה הינו שדה חובה" />
                 )}
+                <div className="card">
+                    <FileUpload mode="basic" customUpload="true" onSelect={handleFileUpload} chooseLabel="הוסף לוגו חברה" />
+                    {formSubmitted && !external.image && (
+                        <Message severity="error" text="לוגו החברה הינו שדה חובה" />
+                    )}
+                </div>
             </div>
             <div id="button">
                 <Button severity="secondary" label="הוסף" onClick={submit} />

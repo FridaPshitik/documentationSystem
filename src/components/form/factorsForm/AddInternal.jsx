@@ -59,24 +59,36 @@ export const AddInternal = ({ setProject, hide ,parent , toast}) => {
                     <InputText className="w-full md:w-14rem field" inputid="name" value={internal.name} onChange={(e) => setInternal((prevInternal) => ({...prevInternal, name: e.target.value}))} />
                     <label htmlFor="name">שם יחידה</label>
                 </FloatLabel>
+                {formSubmitted && !internal.name && (
+                    <Message severity="error" text="שדה זה הינו חובה" />
+                )}
                 <FloatLabel className="field">
                     <InputText className="w-full md:w-14rem field" inputid="command" value={internal.command} onChange={(e) => setInternal((prevInternal) => ({...prevInternal, command: e.target.value}))} />
                     <label htmlFor="command">אזור פיקוד</label>
                 </FloatLabel>
+                {formSubmitted && !internal.command && (
+                    <Message severity="error" text="שדה זה הינו חובה" />
+                )}
                 <FloatLabel className="field">
                     <InputText className="w-full md:w-14rem field" inputid="contact" value={internal.contact} onChange={(e) => setInternal((prevInternal) => ({...prevInternal, contact: e.target.value}))} />
                     <label htmlFor="contact">שם איש קשר</label>
                 </FloatLabel>
+                {formSubmitted && !internal.contact && (
+                    <Message severity="error" text="שדה זה הינו חובה" />
+                )}
                 <FloatLabel className="field">
                     <InputText className="w-full md:w-14rem field" inputid="phone" value={internal.phone} onChange={(e) => setInternal((prevInternal) => ({...prevInternal, phone: e.target.value}))} />
                     <label htmlFor="phone">טלפון איש קשר</label>
                 </FloatLabel>
+                {formSubmitted && !internal.phone && (
+                    <Message severity="error" text="שדה זה הינו חובה" />
+                )}
                 <FloatLabel className="field">
                     <InputText className="w-full md:w-14rem field" inputid="email" value={internal.email} onChange={(e) => setInternal((prevInternal) => ({...prevInternal, email: e.target.value}))} />
                     <label htmlFor="email">מייל איש קשר</label>
                 </FloatLabel>
-                {formSubmitted && (
-                    <Message severity="error" text="חובה למלא את כל השדות" />
+                {formSubmitted && !internal.email && (
+                    <Message severity="error" text="שדה זה הינו חובה" />
                 )}
             </div>
             <div id="button">

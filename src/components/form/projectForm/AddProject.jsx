@@ -10,23 +10,24 @@ import { Message } from 'primereact/message';
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
-import { factorableTypes, internalImage, populations, statuses } from "../../../services/consts";
+import { factorableTypes, internalImage} from "../../../services/consts";
 import { classifications, environments} from "../../../services/consts";
-import { ProjectContext } from "../../../services/ProjectContext";
-import { createProject } from "../../../services/ProjectService";
-
-import CheckMultipleName from "../CheckMultipleName";
-import { AddInternal } from "../factorsForm/AddInternal";
-import { AddExternal } from "../factorsForm/AddExternal";
-import './AddProjectForm.css';
-import { displayToast } from "../../../services/toast";
 import { getExternalDisplay } from "../../../services/ExternalsService";
 import { getInternalDisplay } from "../../../services/InternalService";
+import { ProjectContext } from "../../../services/ProjectContext";
+import { populations, statuses } from "../../../services/consts";
+import { createProject } from "../../../services/ProjectService";
+import { displayToast } from "../../../services/toast";
+
+import { AddInternal } from "../factorsForm/AddInternal";
+import { AddExternal } from "../factorsForm/AddExternal";
+import CheckMultipleName from "../CheckMultipleName";
+import './AddProjectForm.css';
 
 
 export const AddProject = ({toast,hide}) => {
-    const {projects, setProjects} = useContext(ProjectContext)
-    const {setDisplayProjects} = useContext(ProjectContext)
+    const {projects, setProjects} = useContext(ProjectContext);
+    const {setDisplayProjects} = useContext(ProjectContext);
     const [project, setProject] = useState({  
         name: '',
         purpose: '',
@@ -58,34 +59,34 @@ export const AddProject = ({toast,hide}) => {
     const handleValidation = (name) => {
         projects.forEach(obj => {
             if (obj.name === name) {
-                setVisible(true)
+                setVisible(true);
             }
         })
     };
 
     const handelSelectRequire = (value) => {
-        let updates = {require: value, requiresId: value.id}
+        let updates = {require: value, requiresId: value.id};
         value.command === 'אחר' ? setHideAddDemand(true) :setProject((prevProject) => ({
             ...prevProject,
             ...updates
-        })) 
-    }
+        })) ;
+    };
 
     const handelSelectInternal = (value) => {
-        let updates = {internal : value , internalId : value.id}
+        let updates = {internal : value , internalId : value.id};
         value.command === 'אחר' ? setHideAddOperatingFactor(true) : setProject((prevProject) => ({
             ...prevProject,
             ...updates            
-        }))
-   }
+        }));
+    };
 
-   const handelSelectExternal = async (value) => {
-        let updates = {external : value , externalId: value.id}
+    const handelSelectExternal = async (value) => {
+        let updates = {external : value , externalId: value.id};
         value.name === 'אחר' ? setHideAddOperatingCompany(true) : setProject((prevProject) => ({
             ...prevProject,
             ...updates
-        }))
-   }
+        }));
+    }
 
     const submit = async (event) => {
         event.preventDefault();
@@ -105,7 +106,7 @@ export const AddProject = ({toast,hide}) => {
             setFormSubmitted(false);
             hide(false)
         }
-    }
+    };
 
     const addPerform = (obj) =>{
         if (obj.internal)
@@ -127,15 +128,14 @@ export const AddProject = ({toast,hide}) => {
             data.environment &&
             data.population &&
             developmentType
-    }
+    };
       
     
   return (
     <>
       <div id="addProjectForm">
                 <form ref={formRef} noValidate action="">
-                    <div className="card grid-container">
-                        
+                    <div className="card grid-container">             
                         <div className="card name">
                             <FloatLabel className="field">
                                 <InputText className="w-full md:w-30rem field" id="name" value={project.name} onChange={(e) => {
@@ -310,7 +310,6 @@ export const AddProject = ({toast,hide}) => {
                     footer={<AddExternal setProject={setProject} hide={setHideAddOperatingCompany} toast={toast} />}>
                 </Dialog>
             </div>
-
     </>
   );
 };
