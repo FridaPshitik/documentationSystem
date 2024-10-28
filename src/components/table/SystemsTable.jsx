@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { FilterMatchMode } from 'primereact/api';
 import { Button } from 'primereact/button';
@@ -17,12 +17,11 @@ import { productionTimeBodyTemplate, productionTimeEditor, productionTimeFilterT
 import { environmentBodyTemplate, environmentEditor, environmentRowFilterTemplate } from '../../helpers/enviroments';
 import { populationBodyTemplate, populationEditor, populationRowFilterTemplate } from '../../helpers/population';
 import { factorableTypeBodyTemplate, factorableTypeRowFilterTemplate } from '../../helpers/factorableType';
-import { performBodyTemplate, performEditor, performRowFilterTemplate } from '../../helpers/perform';
+import { performBody, performBodyTemplate } from '../../helpers/perform';
 import { statusBodyTemplate, statusRowFilterTemplate } from '../../helpers/status';
-import { requireEditor, requireFilterTemplate } from '../../helpers/requires';
 import { textEditor } from '../../helpers/text';
 
-import { getStatusColor, internalImage, statuses } from '../../services/consts';
+import { factorableTypes, getStatusColor, internalImage, statuses } from '../../services/consts';
 import { ProjectContext } from '../../services/ProjectContext';
 import { deleteProject, getProjects, updateProject } from '../../services/ProjectService';
 
@@ -31,12 +30,19 @@ import RequireDialog from '../dialogs/RequireDialog';
 import SystemDialog from '../dialogs/SystemDialog';
 import './SystemsTable.css';
 import { displayToast } from '../../services/toast';
+import { getExternals, getExternalsNameImage } from '../../services/ExternalsService';
+import { getInternals, getInternalsArray, getInternalsNameImage } from '../../services/InternalService';
+import { externalItemTemplate } from '../../helpers/external';
+import { internalItemTemplate } from '../../helpers/internal';
+import { MultiSelect } from 'primereact/multiselect';
 
 export default function SystemsTable() {
 
-    const { projects, setProjects } = useContext(ProjectContext)
-    const { displayProjects, setDisplayProjects } = useContext(ProjectContext)
-    const { error, setError } = useContext(ProjectContext)
+    const [projects, setProjects] = useState([]);
+    const [displayProjects, setDisplayProjects] = useState([]);
+
+    const [externals, setExternals] = useState([]);
+    const [internals, setInternals] = useState([]);
 
     let emptyProject = {
         id: null,
@@ -229,26 +235,26 @@ export default function SystemsTable() {
         setDeleteProjectDialog(false);
         setProject(emptyProject);
     };
+    
 
     useEffect(() => {
         const fetchData = async () => {
             let getProject = await getProjects();
-            if (getProject.status === 200) {
-                setError(null);
+            let externals = await getExternals();
+            let internals = await getInternals();
+            
+            externals.status === 200 ? setExternals(externals.data) : displayToast(toast, 'error', 'Error', externals.message )
+            internals.status === 200 ? setInternals(internals.data) : displayToast(toast, 'error', 'Error', internals.message );
+
+            if (getProject.status == 200) {
                 setProjects(convertDate(getProject.data));
+                setDisplayProjects(convertDate(getProject.data).map(obj =>addPerform(obj) ))
                 setLoading(false);
             }
-            else {
-                setError(getProject.message);
-            }
-        }
-        const getdisplayProjects = async () => {
-            let getProject = await getProjects();
-            setDisplayProjects(convertDate(getProject.data).map(obj => addPerform(obj)))
+            else displayToast(toast, 'error', 'Error', getProject.message )
         }
         fetchData();
-        getdisplayProjects();
-    }, [setDisplayProjects, setError, setProjects]);
+    }, []);
 
     const addPerform = (obj) => {
         if (obj.internal)
@@ -263,8 +269,113 @@ export default function SystemsTable() {
             return d;
         });
     };
+// perform-helper
+    const performEditor = (options) => {
+        if (options.rowData.factorableType === factorableTypes.EXTERNAL)
+          return externalEditor(options);
+        return internalEditor(options);
+    };
+
+    const externalEditor = (options) => {
+        return (
+          <Dropdown
+            value={options.value}
+            options={externals}
+            itemTemplate={externalItemTemplate}
+            onChange={(e) => {
+              options.editorCallback(e.value);
+              options.rowData.external = e.value;
+              options.rowData.externalId = e.value.id;
+            }}
+            optionLabel="name"
+            placeholder={options.value.name}
+            className="p-column-filter"
+          />
+        );
+      };
+
+    const internalEditor = (options) => {
+        return (
+          <Dropdown
+            value={options.value}
+            options={internals}
+            itemTemplate={internalItemTemplate}
+            onChange={(e) => {
+              options.editorCallback(e.value);
+              options.rowData.internal = e.value
+              options.rowData.internalId = e.value.id
+            }}
+            optionLabel="command"
+            placeholder={options.rowData.internal.command}
+            className="p-column-filter"
+          />
+        );
+      };
+
+    const getPerforms = () => {
+        try {
+          let exter = getExternalsNameImage(externals);
+          let inter = getInternalsNameImage(internals);
+          let externalPerform = projects.filter(item => item.external).map(item => item.external.name);
+          let internalPerform = projects.filter(item => item.internal).map(item => item.internal.command);
+          exter = exter.filter(item => externalPerform.includes(item.name));
+          inter = inter.filter(item => internalPerform.includes(item.name));
+          return exter.concat(inter);
+        } catch (error) {
+          return error;
+        } 
+    };  
+
+const performRowFilterTemplate = (options) => {
+    let performs = getPerforms()
+    return (
+      <MultiSelect
+        value={options.value}
+        options={performs}
+        itemTemplate={performBody}
+        onChange={(e) => options.filterApplyCallback(e.value)}
+        optionLabel="name"
+        placeholder="סנן"
+        className="p-column-filter"
+      />
+    );
+  };
+
+// requires
+    const requires = getInternalsArray(internals)
+
+    const requireFilterTemplate = (options) => {
+        return (
+          <MultiSelect
+            value={options.value}
+            options={requires}
+            itemTemplate={requireItemTemplate}
+            onChange={(e) => options.filterApplyCallback(e.value)}
+            placeholder="סנן"
+            className="p-column-filter"
+          />
+        );
+    };
+
+    const requireItemTemplate = (option) => {
+        return <p>{option}</p>;
+    };
+
+    const requireEditor = (options) => {
+        return (
+          <Dropdown
+            value={options.value}
+            options={requires}
+            itemTemplate={requireItemTemplate}
+            onChange={(e) => options.editorCallback(e.value)}
+            placeholder="בחר גוף דורש"
+            className="p-column-filter"
+          />
+        );
+    };
 
     return <>
+    <ProjectContext.Provider value={{ projects, setProjects,displayProjects, setDisplayProjects, externals, setExternals, internals, setInternals}}>
         <div>
             <Toast ref={toast} position='top-left' />
             <div className="card">
@@ -311,9 +422,9 @@ export default function SystemsTable() {
                 <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false) }}>
                     <RequireDialog dataSystem={requireConcats}></RequireDialog>
                 </Dialog>
-                {error !== null ? <>{toast.current.show({ severity: 'error', summary: 'Error', detail: error, sticky: true })}</> : <span></span>}
             </div>
         </div>
 
+        </ProjectContext.Provider>
     </>;
 }

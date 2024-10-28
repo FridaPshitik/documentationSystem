@@ -20,6 +20,8 @@ import { AddInternal } from "../factorsForm/AddInternal";
 import { AddExternal } from "../factorsForm/AddExternal";
 import './AddProjectForm.css';
 import { displayToast } from "../../../services/toast";
+import { getExternalDisplay } from "../../../services/ExternalsService";
+import { getInternalDisplay } from "../../../services/InternalService";
 
 
 export const AddProject = ({toast,hide}) => {
@@ -178,7 +180,7 @@ export const AddProject = ({toast,hide}) => {
                             <Dropdown id="require"
                                     value={project.require}
                                     onChange={(e) => handelSelectRequire(e.value)}
-                                    options={internals}
+                                    options={getInternalDisplay(internals)}
                                     optionLabel="command"
                                     className="w-full md:w-14rem field"
                                     required
@@ -213,10 +215,10 @@ export const AddProject = ({toast,hide}) => {
                                     options={['לאחר בחירת סוג יאופשר שדה זה']} className="w-full md:w-14rem field" required />}
                                 {project.factorableType === factorableTypes.INTERNAL && <Dropdown inputid="dd-operating" value={project.internal}
                                     onChange={(e) => handelSelectInternal(e.value)}
-                                    options={internals} optionLabel="command" className="w-full md:w-14rem field" required />}
+                                    options={getInternalDisplay(internals)} optionLabel="command" className="w-full md:w-14rem field" required />}
                                 {project.factorableType === factorableTypes.EXTERNAL && <Dropdown inputid="dd-operating" value={project.external}
                                     onChange={(e) => handelSelectExternal(e.value)}
-                                    options={externals} optionLabel="name" className="w-full md:w-14rem field" required />}
+                                    options={getExternalDisplay(externals)} optionLabel="name" className="w-full md:w-14rem field" required />}
                                 <label htmlFor="dd-operating">בחר גוף מבצע</label>
                             </FloatLabel>
                             {formSubmitted && !project.internal && !project.external && (
