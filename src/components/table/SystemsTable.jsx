@@ -269,7 +269,7 @@ export default function SystemsTable() {
             return d;
         });
     };
-// ---------------------------------------------------------------------
+// perform-helper
     const performEditor = (options) => {
         if (options.rowData.factorableType === factorableTypes.EXTERNAL)
           return externalEditor(options);
@@ -311,23 +311,20 @@ export default function SystemsTable() {
           />
         );
       };
-// ---------------------------------------------------------------------
 
-
-// =====================================================================
-const getPerforms = () => {
-    try {
-      let exter = getExternalsNameImage(externals);
-      let inter = getInternalsNameImage(internals);
-      let externalPerform = projects.filter(item => item.external).map(item => item.external.name);
-      let internalPerform = projects.filter(item => item.internal).map(item => item.internal.command);
-      exter = exter.filter(item => externalPerform.includes(item.name));
-      inter = inter.filter(item => internalPerform.includes(item.name));
-      return exter.concat(inter);
-    } catch (error) {
-      return error;
-    } 
-  };  
+    const getPerforms = () => {
+        try {
+          let exter = getExternalsNameImage(externals);
+          let inter = getInternalsNameImage(internals);
+          let externalPerform = projects.filter(item => item.external).map(item => item.external.name);
+          let internalPerform = projects.filter(item => item.internal).map(item => item.internal.command);
+          exter = exter.filter(item => externalPerform.includes(item.name));
+          inter = inter.filter(item => internalPerform.includes(item.name));
+          return exter.concat(inter);
+        } catch (error) {
+          return error;
+        } 
+    };  
 
 const performRowFilterTemplate = (options) => {
     let performs = getPerforms()
@@ -343,10 +340,8 @@ const performRowFilterTemplate = (options) => {
       />
     );
   };
-// =====================================================================
 
 // requires
-// ---------------------------------
     const requires = getInternalsArray(internals)
 
     const requireFilterTemplate = (options) => {
@@ -378,7 +373,6 @@ const performRowFilterTemplate = (options) => {
           />
         );
     };
-// ---------------------------------
 
     return <>
     <ProjectContext.Provider value={{ projects, setProjects,displayProjects, setDisplayProjects, externals, setExternals, internals, setInternals}}>
