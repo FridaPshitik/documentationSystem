@@ -167,13 +167,13 @@ export default function SystemsTable() {
         let displayData = addPerform(newData)
 
         const res = await updateProject(updatedData.id, updatedData)
-        if(res.data){
-            displayToast(toast, 'success', 'Success', res.data.name+' עודכן בהצלחה')
+        if (res.data) {
+            displayToast(toast, 'success', 'Success', res.data.name + ' עודכן בהצלחה')
             _projects[index] = newData;
             _displayProjects[index] = displayData
         }
 
-        else if(res.response.data.error){
+        else if (res.response.data.error) {
             displayToast(toast, 'error', 'Error', res.response.data.error)
         }
 
@@ -221,17 +221,17 @@ export default function SystemsTable() {
     const confirmDelete = async () => {
         const _projects = projects.filter((val) => val.id !== project.id);
         const _displayProjects = displayProjects.filter((val) => val.id !== project.id);
-        
+
         const res = await deleteProject(project.id);
-        if(res.data){
-            displayToast(toast, 'success', 'Success', res.data.name+' נמחק בהצלחה')
+        if (res.data) {
+            displayToast(toast, 'success', 'Success', res.data.name + ' נמחק בהצלחה')
             setProjects(_projects);
             setDisplayProjects(_displayProjects)
         }
-        else if(res.response.data.error){
+        else if (res.response.data.error) {
             displayToast(toast, 'error', 'Error', res.response.data.error)
-        }     
-           
+        }
+
         setDeleteProjectDialog(false);
         setProject(emptyProject);
     };
@@ -256,11 +256,11 @@ export default function SystemsTable() {
         fetchData();
     }, []);
 
-    const addPerform = (obj) =>{
+    const addPerform = (obj) => {
         if (obj.internal)
-            return { ...obj, perform: {name: obj.internal.command, image: internalImage} };
+            return { ...obj, perform: { name: obj.internal.command, image: internalImage } };
         else if (obj.external)
-            return { ...obj, perform: {name: obj.external.name, image: obj.external.image } };
+            return { ...obj, perform: { name: obj.external.name, image: obj.external.image } };
     };
 
     const convertDate = (data) => {
@@ -384,7 +384,7 @@ const performRowFilterTemplate = (options) => {
                     <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
                     <h3 id='titleH3'>תצוגת מערכות מידע</h3>
                 </div>
-                <DataTable  ref={dt} value={displayProjects} exportFilename="documentation" paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
+                <DataTable ref={dt} value={displayProjects} exportFilename="documentation" paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                     selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
                     globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform.name', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
                     <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />

@@ -1,0 +1,24 @@
+name: 💄 React Linter
+
+on: push
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📂 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: ⏬ Install dependencies
+        run: |
+          npm install eslint --save-dev
+          npm install eslint-plugin-react@latest --save-dev
+
+      - name: 💄Run ESLint
+        run: npx eslint --no-error-on-unmatched-pattern --ext .jsx . --ext .js .

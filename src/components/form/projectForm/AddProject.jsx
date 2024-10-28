@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 import { InputTextarea } from "primereact/inputtextarea";
 import { MultiSelect } from 'primereact/multiselect';
@@ -115,7 +115,7 @@ export const AddProject = ({toast,hide}) => {
     };
 
     const dataValidation = (data) => {
-        const validationStatus = data.status && project.status === statuses.DONE && project.productionTime || project.status !== statuses.DONE && data.status;
+        const validationStatus = (data.status && project.status == statuses.DONE && project.productionTime) || (project.status != statuses.DONE && data.status);
         const developmentType = data.internalId || data.externalId;
         return data.name &&
             data.purpose &&

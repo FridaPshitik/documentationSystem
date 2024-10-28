@@ -33,12 +33,12 @@ export const AddInternal = ({ setProject, hide ,parent , toast}) => {
             if(res.data){
                 const ans = res.data;
                 await setInternals([ ...internals.slice(0, internals.length - 1), ans, ...internals.slice(internals.length - 1)]);
-                updates = (parent=='require'?  {require : ans ,requiresId: ans.id} :  {internal : ans ,internalId: ans.id});
+                updates = (parent==='require'?  {require : ans ,requiresId: ans.id} :  {internal : ans ,internalId: ans.id});
                 displayToast(toast, 'success', 'Success', ans.name+' נוסף בהצלחה');
             }
 
             else if(res.response.data.error){
-                updates = (parent=='require'?  {require : null ,requiresId: null} :  {internal : null ,internalId: null});
+                updates = (parent==='require'?  {require : null ,requiresId: null} :  {internal : null ,internalId: null});
                 displayToast(toast, 'error', 'Error', res.response.data.error);
             }
 

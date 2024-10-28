@@ -19,7 +19,7 @@ export const externalBodyTemplate = (rowData) => {
 
   let factor = { name: '', image: '' };
 
-  if (rowData.factorableType == factorableTypes.EXTERNAL)
+  if (rowData.factorableType === factorableTypes.EXTERNAL)
     factor = rowData.external;
   else {
     factor.name = rowData.internal.command;
