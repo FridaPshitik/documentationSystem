@@ -12,7 +12,9 @@ const getPerforms = async () => {
     let exter = await getExternalsNameImage();
     let inter = await getInternalsNameImage();
     let pro = await getProjects()
+    let externalPerform = pro.data.filter(item => item.external).map(item => item.external.name);
     let internalsPerform = pro.data.filter(item => item.internal).map(item => item.internal.command);
+    exter = exter.filter(item => externalPerform.includes(item.name));
     inter = inter.filter(item => internalsPerform.includes(item.name));
     return exter.concat(inter);
   } catch (error) {
