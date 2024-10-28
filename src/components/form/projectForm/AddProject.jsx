@@ -113,7 +113,7 @@ export const AddProject = ({toast,hide}) => {
     };
 
     const dataValidation = (data) => {
-        const validationStatus = (data.status && project.status === statuses.DONE) && ((project.productionTime || project.status !== statuses.DONE) && data.status);
+        const validationStatus = (data.status && project.status == statuses.DONE && project.productionTime) || (project.status != statuses.DONE && data.status);
         const developmentType = data.internalId || data.externalId;
         return data.name &&
             data.purpose &&
