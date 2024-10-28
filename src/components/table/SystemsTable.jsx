@@ -160,7 +160,7 @@ export default function SystemsTable() {
         const { perform, external, internal, requires, ...updatedData } = newData;
         let displayData = addPerform(newData)
 
-        const res = await updateProject('project', updatedData.id, updatedData)
+        const res = await updateProject(updatedData.id, updatedData)
         if(res.data){
             displayToast(toast, 'success', 'Success', res.data.name+' עודכן בהצלחה')
             _projects[index] = newData;
@@ -275,7 +275,7 @@ export default function SystemsTable() {
                 </div>
                 <DataTable  ref={dt} value={displayProjects} exportFilename="documentation" paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay="row" loading={loading} scrollable
                     selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
-                    globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
+                    globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform.name', 'population', 'classification', 'environment']} header={header} emptyMessage="אין מערכות להציג" >
                     <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
                     <Column field="name" header="שם המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
                     <Column field="purpose" header="מטרת המערכת" editor={(options) => textEditor(options)} sortable filter filterPlaceholder="חפש" style={{ minWidth: '15rem' }} />
