@@ -342,8 +342,8 @@ const performRowFilterTemplate = (options) => {
   };
 
 // requires
-    const requires = getInternalsArray(internals)
-
+    let activeRequires = projects.map(item => item.requires.command);
+    let requires = getInternalsArray(internals).filter(item => activeRequires.includes(item));
     const requireFilterTemplate = (options) => {
         return (
           <MultiSelect
