@@ -11,7 +11,6 @@ import { displayToast } from "../../../services/toast"
 import '../projectForm/AddProjectForm.css';
 
 export const AddInternal = ({ setProject, hide ,parent , toast}) => {
-
     const {internals, setInternals} = useContext(ProjectContext);
     const [internal, setInternal]=useState({name:'',command:'',contact:'',department:'',phone:'',email:''})
     const [formSubmitted, setFormSubmitted] = useState(false);
@@ -22,7 +21,7 @@ export const AddInternal = ({ setProject, hide ,parent , toast}) => {
             data.contact &&
             data.phone &&
             data.email
-    }
+    };
     
     const submit = async (event) => {
         event.preventDefault();
@@ -80,7 +79,6 @@ export const AddInternal = ({ setProject, hide ,parent , toast}) => {
                     <Message severity="error" text="חובה למלא את כל השדות" />
                 )}
             </div>
-            
             <div id="button">
                 <Button severity="secondary" label="הוסף" />
             </div>

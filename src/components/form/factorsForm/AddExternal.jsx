@@ -12,7 +12,6 @@ import { displayToast } from "../../../services/toast";
 import '../projectForm/AddProjectForm.css';
 
 export const AddExternal = ({ setProject, hide, toast }) => {
-
     const { externals, setExternals } = useContext(ProjectContext);
     const [external, setExternal] = useState({ name: '', image: '' });
     const [formSubmitted, setFormSubmitted] = useState(false);
@@ -20,7 +19,7 @@ export const AddExternal = ({ setProject, hide, toast }) => {
     const dataValidation = (data) => { 
         return data.name &&
             data.image
-    }
+    };
 
     const submit = async (event) => {
         event.preventDefault();
@@ -77,7 +76,6 @@ export const AddExternal = ({ setProject, hide, toast }) => {
                     <Message severity="error" text="חובה למלא את כל השדות" />
                 )}
             </div>
-
             <div id="button">
                 <Button severity="secondary" label="הוסף" onClick={submit} />
             </div>

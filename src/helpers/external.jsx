@@ -1,8 +1,8 @@
 import { Dropdown } from "primereact/dropdown";
 import { factorableTypes } from "../services/consts";
-import { getExternalImag, getExternalDisplay } from "../services/ExternalsService";
+import { getExternalImag, getExternalEdit } from "../services/ExternalsService";
 
-export const externals = await getExternalDisplay();
+export const externals = await getExternalEdit();
 
 export const externalEditor = (options) => {
   return (

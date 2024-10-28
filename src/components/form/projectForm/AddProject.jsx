@@ -19,6 +19,7 @@ import CheckMultipleName from "../CheckMultipleName";
 import { AddInternal } from "../factorsForm/AddInternal";
 import { AddExternal } from "../factorsForm/AddExternal";
 import './AddProjectForm.css';
+import { displayToast } from "../../../services/toast";
 
 
 export const AddProject = ({toast}) => {
@@ -83,14 +84,19 @@ export const AddProject = ({toast}) => {
         }))
    }
 
-    const submit = (event) => {
+    const submit = async (event) => {
         //TODO add preventDefault in order to prevent  re-render
         event.preventDefault();
         setFormSubmitted(true);
         let { external, internal, require, ...data } = project;
         if (dataValidation(data)) {
-            createProject(data)
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'המערכת נוספה בהצלחה', life: 3000 });
+            const res = await createProject(data);
+            if(res.data){
+                displayToast(toast, 'success', 'Success', res.data.name+' נוסף בהצלחה')
+            }
+            else if(res.response.data.error){
+                displayToast(toast, 'error', 'Error', res.response.data.error)
+            }
             setFormSubmitted(false);
             formRef.current.submit()
         }
