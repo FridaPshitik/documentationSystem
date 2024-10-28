@@ -3,36 +3,31 @@ import { internalImage } from "./consts";
 
 export const createInternal = async (data) => {
   try {
-    const ans = await post("internal-factor", data);
-    return ans;
+    return await post("internal-factor", data);
   } catch (error) {
     return error;
   }
 };
 
-const getInternals = async () => {
+export const getInternals = async () => {
   try {
-    let internals = await get("internal-factor");
-    return internals;
+    return await get("internal-factor");
   } catch (error) {
     return error;
   }
 };
 
-export const getInternalsArray = async () => {
+export const getInternalsArray = (internalsData) => {
   try {
-    let ans = await getInternals();
-    return [...new Set(ans.data.map((item) => item.command))];
+    return [...new Set(internalsData.map((item) => item.command))];
   } catch (error) {
     return error;
   }
 };
 
-export const getInternalDisplay = async () => {
+export const getInternalDisplay = (internalsData) => {
   try {
-    let internals = await getInternals();
-    internals.data.push({ command: "אחר" });
-    return internals;
+    return [...internalsData,{ command: "אחר" }];
   } catch (error) {
     return error;
   }
@@ -40,17 +35,15 @@ export const getInternalDisplay = async () => {
 
 export const getInternalEdit = async () => {
   try {
-    let internals = await getInternals();
-    return internals;
+    return await getInternals();
   } catch (error) {
     return error;
   }
 };
 
-export const getInternalsNameImage = async () => {
+export const getInternalsNameImage = (internalsData) => {
   try {
-    let ans = await getInternals();
-    let internals = ans.data.map((obj) => {
+    let internals = internalsData.map((obj) => {
       return { name: obj.command, image: internalImage };
     });
     return internals;

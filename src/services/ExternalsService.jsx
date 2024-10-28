@@ -1,25 +1,17 @@
 import { get, post } from "./axiosInstance";
 const serverPath = process.env.REACT_APP_SERVER_PATH || "http://localhost:8000";
 
-const getExternals = async () => {
+export const getExternals = async () => {
   try {
-    let externals = await get("external-factor");
-    return externals;
+    return await get("external-factor");
   } catch (error) {
     return error;
   }
 };
 
-export const getExternalsArray = async () => {
-  let ans = await getExternals();
-  return [...new Set(ans.data.map((item) => item.name))];
-};
-
-export const getExternalDisplay = async () => {
+export const getExternalDisplay = (externalData) => {
   try {
-    let externals = await getExternals();
-    externals.data.push({ name: "אחר" });
-    return externals;
+    return [...externalData, { name: "אחר" }];
   } catch (error) {
     return error;
   }
@@ -27,17 +19,15 @@ export const getExternalDisplay = async () => {
 
 export const getExternalEdit = async () => {
   try {
-    let externals = await getExternals();
-    return externals;
+    return await getExternals();
   } catch (error) {
     return error;
   }
 };
 
-export const getExternalsNameImage = async () => {
+export const getExternalsNameImage = (externalsData) => {
   try {
-    let ans = await getExternals();
-    let externals = ans.data.map((obj) => {
+    let externals = externalsData.map((obj) => {
       return { name: obj.name, image: obj.image };
     });
     return externals;
@@ -48,8 +38,7 @@ export const getExternalsNameImage = async () => {
 
 export const getExternalImag = (image) => {
   try {
-    let ans = `${serverPath}/external-factor/${image}`;
-    return ans;
+    return `${serverPath}/external-factor/${image}`;
   } catch (error) {
     return error;
   }
@@ -57,8 +46,7 @@ export const getExternalImag = (image) => {
 
 export const createExternal = async (data) => {
   try {
-    const ans = await post("external-factor", data);
-    return ans;
+    return await post("external-factor", data);
   } catch (error) {
     return error;
   }

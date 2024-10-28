@@ -1,28 +1,8 @@
-import { Dropdown } from "primereact/dropdown";
 import { factorableTypes } from "../services/consts";
-import { getExternalImag, getExternalEdit } from "../services/ExternalsService";
+import { getExternalImag } from "../services/ExternalsService";
 
-export const externals = await getExternalEdit();
 
-export const externalEditor = (options) => {
-  return (
-    <Dropdown
-      value={options.value}
-      options={externals.data}
-      itemTemplate={ItemTemplate}
-      onChange={(e) => {
-        options.editorCallback(e.value);
-        options.rowData.external = e.value;
-        options.rowData.externalId = e.value.id;
-      }}
-      optionLabel="name"
-      placeholder={options.value.name}
-      className="p-column-filter"
-    />
-  );
-};
-
-const ItemTemplate = (option) => {
+export const externalItemTemplate = (option) => {
   return (
     <div className="flex align-items-center gap-2">
       <img
