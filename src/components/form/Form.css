@@ -21,6 +21,10 @@
 
 }
 
+.input{
+    margin-bottom: 20px;
+}
+
 .p-inline-message-error{
     background-color: #ffffff;
     padding: 0;

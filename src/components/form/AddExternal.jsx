@@ -68,7 +68,7 @@ export const AddExternal = ({ setProject, hide, toast }) => {
         <div id="addOperatingFactorForm">
             <div className="card field">
                 <FloatLabel className="field">
-                    <InputText className="w-full md:w-14rem field" id="factorName" value={external.name} onChange={(e) => setExternal((prevExternal) => ({ ...prevExternal, name: e.target.value }))} />
+                    <InputText className="input md:w-14rem field" id="factorName" value={external.name} onChange={(e) => setExternal((prevExternal) => ({ ...prevExternal, name: e.target.value }))} />
                     <label htmlFor="factorName">שם</label>
                 </FloatLabel>
                 <div className="card flex justify-content-center b-color">
