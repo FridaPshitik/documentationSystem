@@ -6,16 +6,17 @@ import {
   getFactorableTypeColor,
   internalImage,
   statuses,
-} from "../../services/consts";
-import {
   getClassificationColor,
   getEnvironmentColor,
   getPopulationColor,
 } from "../../services/consts";
-import "./SystemDialog.css";
 import { getExternalImage } from "../../services/ExternalsService";
 
-export default function SystemDialog(system) {
+import "./SystemDialog.css";
+
+
+export const SystemDialog = (system) => {
+
   system = system.dataSystem;
 
   const factor =
@@ -38,7 +39,7 @@ export default function SystemDialog(system) {
     >
       <Card title={system.name} subTitle={system.purpose}>
         <p>{system.description}</p>
-        <div className="details">
+        <div>
           <div className="flex align-items-center gap-2">
             <h3>גוף דורש:</h3>
             <p>{system.requires.command}</p>
@@ -118,4 +119,4 @@ export default function SystemDialog(system) {
       </Card>
     </div>
   );
-}
+};

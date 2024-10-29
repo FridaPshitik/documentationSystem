@@ -25,9 +25,9 @@ import { factorableTypes, getStatusColor, internalImage, statuses } from '../../
 import { ProjectContext } from '../../services/ProjectContext';
 import { deleteProject, getProjects, updateProject } from '../../services/ProjectService';
 
-import { AddProject } from '../form/projectForm/AddProject';
+import { AddProject } from '../form/AddProject';
 import RequireDialog from '../dialogs/RequireDialog';
-import SystemDialog from '../dialogs/SystemDialog';
+import { SystemDialog } from '../dialogs/SystemDialog';
 import './SystemsTable.css';
 import { displayToast } from '../../services/toast';
 import { getExternals, getExternalsNameImage } from '../../services/ExternalsService';
@@ -35,6 +35,7 @@ import { getInternals, getInternalsArray, getInternalsNameImage } from '../../se
 import { externalItemTemplate } from '../../helpers/external';
 import { internalItemTemplate } from '../../helpers/internal';
 import { MultiSelect } from 'primereact/multiselect';
+import { DeleteDialog } from '../dialogs/DeleteDialog';
 
 export default function SystemsTable() {
 
@@ -205,17 +206,17 @@ export default function SystemsTable() {
         );
     };
 
-    const hideDeleteProjectDialog = () => {
-        setDeleteProjectDialog(false);
-    };
-
     const deleteBodyTemplate = (rowData) => {
-        return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => confirmDeleteProject(rowData)} />;
+        return <Button icon="pi pi-trash" rounded text outlined style={{ color: 'grey' }} onClick={() => deleteProjectButton(rowData)} />;
     };
 
-    const confirmDeleteProject = (project) => {
+    const deleteProjectButton = (project) => {
         setProject(project);
         setDeleteProjectDialog(true);
+    };
+
+    const hideDeleteProjectDialog = () => {
+        setDeleteProjectDialog(false);
     };
 
     const confirmDelete = async () => {
@@ -292,7 +293,7 @@ export default function SystemsTable() {
             className="p-column-filter"
           />
         );
-      };
+    };
 
     const internalEditor = (options) => {
         return (
@@ -310,7 +311,7 @@ export default function SystemsTable() {
             className="p-column-filter"
           />
         );
-      };
+    };
 
     const getPerforms = () => {
         try {
@@ -326,7 +327,7 @@ export default function SystemsTable() {
         } 
     };  
 
-const performRowFilterTemplate = (options) => {
+    const performRowFilterTemplate = (options) => {
     let performs = getPerforms()
     return (
       <MultiSelect
@@ -339,11 +340,11 @@ const performRowFilterTemplate = (options) => {
         className="p-column-filter"
       />
     );
-  };
+    };
 
 // requires
-    const requires = getInternalsArray(internals)
-
+    const activeRequires = projects.map(item => item.requires.command);
+    const requires = getInternalsArray(internals).filter(item => activeRequires.includes(item));
     const requireFilterTemplate = (options) => {
         return (
           <MultiSelect
@@ -403,16 +404,7 @@ const performRowFilterTemplate = (options) => {
                 </DataTable>
 
                 <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="אזהרה!" modal onHide={hideDeleteProjectDialog}>
-                    <div className="confirmation-content">
-                        <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem', paddingLeft: '1rem' }} />
-                        {project && (<span>האם למחוק <b>{project.name}</b>?</span>
-                        )}
-                        <div style={{ direction: "ltr", marginTop: "10px", marginLeft: '5px' }} >
-                            <Button icon="pi pi-times" outlined text onClick={hideDeleteProjectDialog} />
-                            <Button icon="pi pi-check" outlined text severity="danger" onClick={confirmDelete} />
-                        </div>
-
-                    </div>
+                    <DeleteDialog project={project} confirmDelete={confirmDelete} hideDeleteProjectDialog={hideDeleteProjectDialog}></DeleteDialog>
                 </Dialog>
 
                 <Dialog visible={visibleSystemDialog} style={{ width: '25%' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>

@@ -10,19 +10,18 @@ import { Message } from 'primereact/message';
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
-import { factorableTypes, internalImage} from "../../../services/consts";
-import { classifications, environments} from "../../../services/consts";
-import { getExternalDisplay } from "../../../services/ExternalsService";
-import { getInternalDisplay } from "../../../services/InternalService";
-import { ProjectContext } from "../../../services/ProjectContext";
-import { populations, statuses } from "../../../services/consts";
-import { createProject } from "../../../services/ProjectService";
-import { displayToast } from "../../../services/toast";
+import { factorableTypes, internalImage, populations, statuses, classifications, environments } from "../../services/consts";
+import { ProjectContext } from "../../services/ProjectContext";
+import { createProject } from "../../services/ProjectService";
+import { getExternalDisplay } from "../../services/ExternalsService";
+import { getInternalDisplay } from "../../services/InternalService";
+import { displayToast } from "../../services/toast";
 
-import { AddInternal } from "../factorsForm/AddInternal";
-import { AddExternal } from "../factorsForm/AddExternal";
-import CheckMultipleName from "../CheckMultipleName";
-import './AddProjectForm.css';
+import { AddInternal } from "./AddInternal";
+import { AddExternal } from "./AddExternal";
+import { CheckMultipleName } from "./CheckMultipleName";
+
+import './Form.css';
 
 
 export const AddProject = ({toast,hide}) => {
