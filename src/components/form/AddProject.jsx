@@ -13,14 +13,15 @@ import { Dialog } from "primereact/dialog";
 import { factorableTypes, internalImage, populations, statuses, classifications, environments } from "../../services/consts";
 import { ProjectContext } from "../../services/ProjectContext";
 import { createProject } from "../../services/ProjectService";
-
-import { CheckMultipleName } from "./CheckMultipleName";
-import { AddInternal } from "./AddInternal";
-import { AddExternal } from "./AddExternal";
-import './Form.css';
-import { displayToast } from "../../services/toast";
 import { getExternalDisplay } from "../../services/ExternalsService";
 import { getInternalDisplay } from "../../services/InternalService";
+import { displayToast } from "../../services/toast";
+
+import { AddInternal } from "./AddInternal";
+import { AddExternal } from "./AddExternal";
+import { CheckMultipleName } from "./CheckMultipleName";
+
+import './Form.css';
 
 
 export const AddProject = ({toast,hide}) => {

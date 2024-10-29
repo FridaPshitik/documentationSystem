@@ -7,7 +7,7 @@ export const DeleteDialog = ({
 }) => {
   return (
     <>
-      <div className="confirmation-content">
+      <div>
         <i
           className="pi pi-exclamation-triangle mr-3"
           style={{ fontSize: "2rem", paddingLeft: "1rem" }}
