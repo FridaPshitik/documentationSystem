@@ -25,7 +25,7 @@ export const SystemDialog = (system) => {
       : { name: system.internal.command, image: internalImage };
 
   const formatDate = (value) => {
-    return value.toLocaleDateString("en-US", {
+    return value.toLocaleDateString("en-IL", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",

@@ -75,7 +75,7 @@ export const AddExternal = ({ setProject, hide, toast }) => {
                     <Message severity="error" text="שם החברה הינו שדה חובה" />
                 )}
                 <div className="card">
-                    <FileUpload mode="basic" customUpload="true" onSelect={handleFileUpload} chooseLabel="הוסף לוגו חברה" />
+                    <FileUpload className="input" mode="basic" customUpload="true" onSelect={handleFileUpload} chooseLabel="הוסף לוגו חברה" />
                     {formSubmitted && !external.image && (
                         <Message severity="error" text="לוגו החברה הינו שדה חובה" />
                     )}

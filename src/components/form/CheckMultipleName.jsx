@@ -18,7 +18,7 @@ export const CheckMultipleName = ({ setVisible, setProject }) => {
   return (
     <>
       <p className="m-0">
-        כבר קיים פרויקט בשם זה.
+        כבר קיימת מערכת בשם זה.
         <br></br>
         האם אתה בטוח שברצונך להמשיך?
       </p>
