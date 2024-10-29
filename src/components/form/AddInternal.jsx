@@ -5,10 +5,10 @@ import { InputText } from 'primereact/inputtext';
 import { Message } from 'primereact/message';
 import { Button } from 'primereact/button';
 
-import { createInternal } from "../../../services/InternalService";
-import { ProjectContext } from "../../../services/ProjectContext";
-import { displayToast } from "../../../services/toast"
-import '../projectForm/AddProjectForm.css';
+import { createInternal } from "../../services/InternalService";
+import { ProjectContext } from "../../services/ProjectContext";
+import { displayToast } from "../../services/toast"
+import './Form.css';
 
 export const AddInternal = ({ setProject, hide ,parent , toast}) => {
     const {internals, setInternals} = useContext(ProjectContext);

@@ -6,16 +6,17 @@ import {
   getFactorableTypeColor,
   internalImage,
   statuses,
-} from "../../services/consts";
-import {
   getClassificationColor,
   getEnvironmentColor,
   getPopulationColor,
 } from "../../services/consts";
-import "./SystemDialog.css";
 import { getExternalImage } from "../../services/ExternalsService";
 
-export default function SystemDialog(system) {
+import "./SystemDialog.css";
+
+
+export const SystemDialog = (system) => {
+
   system = system.dataSystem;
 
   const factor =
@@ -118,4 +119,4 @@ export default function SystemDialog(system) {
       </Card>
     </div>
   );
-}
+};

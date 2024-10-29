@@ -25,9 +25,9 @@ import { factorableTypes, getStatusColor, internalImage, statuses } from '../../
 import { ProjectContext } from '../../services/ProjectContext';
 import { deleteProject, getProjects, updateProject } from '../../services/ProjectService';
 
-import { AddProject } from '../form/projectForm/AddProject';
+import { AddProject } from '../form/AddProject';
 import RequireDialog from '../dialogs/RequireDialog';
-import SystemDialog from '../dialogs/SystemDialog';
+import { SystemDialog } from '../dialogs/SystemDialog';
 import './SystemsTable.css';
 import { displayToast } from '../../services/toast';
 import { getExternals, getExternalsNameImage } from '../../services/ExternalsService';
