@@ -1,6 +1,6 @@
-import { Dropdown } from "primereact/dropdown";
-import { Tag } from "primereact/tag";
-import { getStatusColor, statuses } from "../services/consts";
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
+import { getStatusColor, statuses } from '../services/consts';
 
 
 export const statusRowFilterTemplate = (options) => {
@@ -10,8 +10,8 @@ export const statusRowFilterTemplate = (options) => {
       options={Object.values(statuses)}
       onChange={(e) => options.filterApplyCallback(e.value)}
       itemTemplate={statusItemTemplate}
-      placeholder="סנן"
-      className="p-column-filter"
+      placeholder='סנן'
+      className='p-column-filter'
     />
   );
 };
@@ -26,9 +26,9 @@ export const statusBodyTemplate = (rowData) => {
       value={rowData.status}
       style={{
         background: getStatusColor(rowData.status),
-        width: "5rem",
-        height: "3rem",
-        fontSize: "0.8rem",
+        width: '5rem',
+        height: '3rem',
+        fontSize: '0.8rem',
       }}
     />
   );

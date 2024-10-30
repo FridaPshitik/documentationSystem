@@ -1,9 +1,9 @@
-import { get, post } from "./axiosInstance";
-const serverPath = process.env.REACT_APP_SERVER_PATH || "http://localhost:8000";
+import { get, post } from './axiosInstance';
+const serverPath = process.env.REACT_APP_SERVER_PATH || 'http://localhost:8000';
 
 export const getExternals = async () => {
   try {
-    return await get("external-factor");
+    return await get('external-factor');
   } catch (error) {
     return error;
   }
@@ -11,7 +11,7 @@ export const getExternals = async () => {
 
 export const getExternalDisplay = (externalData) => {
   try {
-    return [...externalData, { name: "אחר" }];
+    return [...externalData, { name: 'אחר' }];
   } catch (error) {
     return error;
   }
@@ -38,7 +38,7 @@ export const getExternalImage = (image) => {
 
 export const createExternal = async (data) => {
   try {
-    return await post("external-factor", data);
+    return await post('external-factor', data);
   } catch (error) {
     return error;
   }
