@@ -107,3 +107,7 @@ div.p-column-header-content {
     direction: ltr;
     text-align: left
 }
+
+.p-paginator-pages{
+    direction: ltr;
+}

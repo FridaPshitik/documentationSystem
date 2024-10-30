@@ -94,7 +94,7 @@ export const AddProject = ({toast,hide}) => {
         if (dataValidation(data)) {
             const res = await createProject(data);
             if(res.data){
-                if(!res.data.productionTime) res.data.productionTime = new Date('')
+                res.data.productionTime? res.data.productionTime = new Date(res.data.productionTime) : res.data.productionTime = new Date('')
                 setProjects(pro => [...pro, res.data]);
                 setDisplayProjects(pro => [...pro, addPerform(res.data)]);
                 displayToast(toast, 'success', 'Success', res.data.name+' נוסף בהצלחה')
