@@ -1,6 +1,6 @@
-import { Dropdown } from "primereact/dropdown";
-import { Tag } from "primereact/tag";
-import { classifications, getClassificationColor } from "../services/consts";
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
+import { classifications, getClassificationColor } from '../services/consts';
 
 
 export const classificationRowFilterTemplate = (options) => {
@@ -11,8 +11,8 @@ export const classificationRowFilterTemplate = (options) => {
       options={Object.values(classifications)}
       onChange={(e) => options.filterApplyCallback(e.value)}
       itemTemplate={classificationItemTemplate}
-      placeholder="סנן"
-      className="p-column-filter"
+      placeholder='סנן'
+      className='p-column-filter'
     />
   );
 };
@@ -32,9 +32,9 @@ export const classificationBodyTemplate = (rowData) => {
       value={rowData.classification}
       style={{
         background: getClassificationColor(rowData.classification),
-        width: "5rem",
-        height: "3rem",
-        fontSize: "0.8rem",
+        width: '5rem',
+        height: '3rem',
+        fontSize: '0.8rem',
       }}
     />
   );
@@ -46,7 +46,7 @@ export const classificationEditor = (options) => {
       value={options.value}
       options={Object.values(classifications)}
       onChange={(e) => options.editorCallback(e.value)}
-      placeholder="בחר סוג סיווג"
+      placeholder='בחר סוג סיווג'
       itemTemplate={(option) => {
         return (
           <Tag

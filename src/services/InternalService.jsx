@@ -1,9 +1,9 @@
-import { get, post } from "./axiosInstance";
-import { internalImage } from "./consts";
+import { get, post } from './axiosInstance';
+import { internalImage } from './consts';
 
 export const createInternal = async (data) => {
   try {
-    return await post("internal-factor", data);
+    return await post('internal-factor', data);
   } catch (error) {
     return error;
   }
@@ -11,7 +11,7 @@ export const createInternal = async (data) => {
 
 export const getInternals = async () => {
   try {
-    return await get("internal-factor");
+    return await get('internal-factor');
   } catch (error) {
     return error;
   }
@@ -27,7 +27,7 @@ export const getInternalsArray = (internalsData) => {
 
 export const getInternalDisplay = (internalsData) => {
   try {
-    return [...internalsData,{ command: "אחר" }];
+    return [...internalsData,{ command: 'אחר' }];
   } catch (error) {
     return error;
   }

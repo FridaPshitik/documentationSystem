@@ -1,4 +1,4 @@
-import { Button } from "primereact/button";
+import { Button } from 'primereact/button';
 
 export const DeleteDialog = ({
   project,
@@ -9,26 +9,26 @@ export const DeleteDialog = ({
     <>
       <div>
         <i
-          className="pi pi-exclamation-triangle mr-3"
-          style={{ fontSize: "2rem", paddingLeft: "1rem" }}
+          className='pi pi-exclamation-triangle mr-3'
+          style={{ fontSize: '2rem', paddingLeft: '1rem' }}
         />
         {project && (
           <span>
             האם למחוק <b>{project.name}</b>?
           </span>
         )}
-        <div style={{ direction: "ltr", marginTop: "10px", marginLeft: "5px" }}>
+        <div style={{ direction: 'ltr', marginTop: '10px', marginLeft: '5px' }}>
           <Button
-            icon="pi pi-times"
+            icon='pi pi-times'
             outlined
             text
             onClick={hideDeleteProjectDialog}
           />
           <Button
-            icon="pi pi-check"
+            icon='pi pi-check'
             outlined
             text
-            severity="danger"
+            severity='danger'
             onClick={confirmDelete}
           />
         </div>

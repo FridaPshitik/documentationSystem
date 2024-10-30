@@ -1,7 +1,7 @@
-import { MultiSelect } from "primereact/multiselect";
-import { Dropdown } from "primereact/dropdown";
-import { Tag } from "primereact/tag";
-import { getPopulationColor, populations } from "../services/consts";
+import { MultiSelect } from 'primereact/multiselect';
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
+import { getPopulationColor, populations } from '../services/consts';
 
 
 export const populationRowFilterTemplate = (options) => {
@@ -11,8 +11,8 @@ export const populationRowFilterTemplate = (options) => {
       options={Object.values(populations)}
       onChange={(e) => options.filterApplyCallback(e.value)}
       itemTemplate={populationItemTemplate}
-      placeholder="סנן"
-      className="p-column-filter"
+      placeholder='סנן'
+      className='p-column-filter'
     />
   );
 };
@@ -30,8 +30,8 @@ export const populationEditor = (options) => {
       options={Object.values(populations)}
       itemTemplate={populationItemTemplate}
       onChange={(e) => options.editorCallback(e.value)}
-      placeholder="בחר סוג אכלוסייה"
-      className="p-column-filter"
+      placeholder='בחר סוג אכלוסייה'
+      className='p-column-filter'
     />
   );
 };
@@ -45,9 +45,9 @@ export const populationBodyTemplate = (rowData) => {
           value={population}
           style={{
             background: getPopulationColor(population),
-            width: "5rem",
-            height: "3rem",
-            fontSize: "0.8rem",
+            width: '5rem',
+            height: '3rem',
+            fontSize: '0.8rem',
           }}
         />
       ))}

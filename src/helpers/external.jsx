@@ -1,14 +1,14 @@
-import { factorableTypes } from "../services/consts";
-import { getExternalImage } from "../services/ExternalsService";
+import { factorableTypes } from '../services/consts';
+import { getExternalImage } from '../services/ExternalsService';
 
 
 export const externalItemTemplate = (option) => {
   return (
-    <div className="flex align-items-center gap-2">
+    <div className='flex align-items-center gap-2'>
       <img
         alt={option.name}
         src={getExternalImage(option.image)}
-        width="32"
+        width='32'
       />
       <span>{option.name}</span>
     </div>
@@ -23,14 +23,14 @@ export const externalBodyTemplate = (rowData) => {
     factor = rowData.external;
   else {
     factor.name = rowData.internal.command;
-    factor.image = "inside.png";
+    factor.image = 'inside.png';
   }
   return (
-    <div className="flex align-items-center gap-2">
+    <div className='flex align-items-center gap-2'>
       <img
         alt={factor.name}
         src={getExternalImage(factor.image)}
-        width="32"
+        width='32'
       />
       <p>{factor.name}</p>
     </div>

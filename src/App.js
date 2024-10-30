@@ -7,8 +7,8 @@ import SystemsTable from './components/table/SystemsTable';
 function App() {
 
   return <>
-      <SystemsTable></SystemsTable>
-  </>
+    <SystemsTable></SystemsTable>
+  </>;
 }
 
 export default App;

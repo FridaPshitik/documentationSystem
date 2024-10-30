@@ -1,6 +1,6 @@
-import { Dropdown } from "primereact/dropdown";
-import { Tag } from "primereact/tag";
-import { environments, getEnvironmentColor } from "../services/consts";
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
+import { environments, getEnvironmentColor } from '../services/consts';
 
 
 export const environmentRowFilterTemplate = (options) => {
@@ -10,8 +10,8 @@ export const environmentRowFilterTemplate = (options) => {
       options={Object.values(environments)}
       onChange={(e) => options.filterApplyCallback(e.value)}
       itemTemplate={environmentItemTemplate}
-      placeholder="סנן"
-      className="p-column-filter"
+      placeholder='סנן'
+      className='p-column-filter'
     />
   );
 };
@@ -28,9 +28,9 @@ export const environmentBodyTemplate = (rowData) => {
       value={rowData.environment}
       style={{
         background: getEnvironmentColor(rowData.environment),
-        width: "5rem",
-        height: "3rem",
-        fontSize: "0.8rem",
+        width: '5rem',
+        height: '3rem',
+        fontSize: '0.8rem',
       }}
     />
   );
@@ -42,7 +42,7 @@ export const environmentEditor = (options) => {
       value={options.value}
       options={Object.values(environments)}
       onChange={(e) => options.editorCallback(e.value)}
-      placeholder="בחר סביבת פיתוח"
+      placeholder='בחר סביבת פיתוח'
       itemTemplate={(option) => {
         return (
           <Tag

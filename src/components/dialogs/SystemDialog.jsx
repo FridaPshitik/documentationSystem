@@ -1,5 +1,5 @@
-import { Card } from "primereact/card";
-import { Tag } from "primereact/tag";
+import { Card } from 'primereact/card';
+import { Tag } from 'primereact/tag';
 
 import {
   getStatusColor,
@@ -9,10 +9,10 @@ import {
   getClassificationColor,
   getEnvironmentColor,
   getPopulationColor,
-} from "../../services/consts";
-import { getExternalImage } from "../../services/ExternalsService";
+} from '../../services/consts';
+import { getExternalImage } from '../../services/ExternalsService';
 
-import "./SystemDialog.css";
+import './SystemDialog.css';
 
 
 export const SystemDialog = (system) => {
@@ -25,35 +25,35 @@ export const SystemDialog = (system) => {
       : { name: system.internal.command, image: internalImage };
 
   const formatDate = (value) => {
-    return value.toLocaleDateString("en-IL", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
+    return value.toLocaleDateString('en-IL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
     });
   };
 
   return (
     <div
-      className="card flex justify-content-center"
-      style={{ border: "solid black 3px" }}
+      className='card flex justify-content-center'
+      style={{ border: 'solid black 3px' }}
     >
       <Card title={system.name} subTitle={system.purpose}>
         <p>{system.description}</p>
         <div>
-          <div className="flex align-items-center gap-2">
+          <div className='flex align-items-center gap-2'>
             <h3>גוף דורש:</h3>
             <p>{system.requires.command}</p>
           </div>
-          <div className="flex align-items-center gap-2">
+          <div className='flex align-items-center gap-2'>
             <h3>איש קשר:</h3>
             <p>
               {system.requires.contact} | {system.requires.phone} |
-              <a href={"mailto:" + system.requires.email}>
+              <a href={'mailto:' + system.requires.email}>
                 {system.requires.email}
               </a>
             </p>
           </div>
-          <div className="flex align-items-center gap-2">
+          <div className='flex align-items-center gap-2'>
             <h3>גוף מבצע:</h3>
             <Tag
               value={system.factorableType}
@@ -62,16 +62,16 @@ export const SystemDialog = (system) => {
               }}
             />
             <span> |</span>
-            <div className="flex align-items-center gap-2">
+            <div className='flex align-items-center gap-2'>
               <img
                 alt={factor.name}
                 src={getExternalImage(factor.image)}
-                width="32"
+                width='32'
               />
               <span>{factor.name}</span>
             </div>
           </div>
-          <div className="flex align-items-center gap-2">
+          <div className='flex align-items-center gap-2'>
             <h3>סטטוס:</h3>
             <Tag
               value={system.status}
@@ -79,11 +79,11 @@ export const SystemDialog = (system) => {
             ></Tag>
             <span>
               {system.status === statuses.DONE
-                ? "|" + formatDate(system.productionTime)
-                : ""}
+                ? '|' + formatDate(system.productionTime)
+                : ''}
             </span>
           </div>
-          <div className="flex align-items-center gap-2">
+          <div className='flex align-items-center gap-2'>
             <h3>סיווג:</h3>
             <Tag
               value={system.classification}
@@ -92,7 +92,7 @@ export const SystemDialog = (system) => {
               }}
             />
           </div>
-          <div className="flex align-items-center gap-2">
+          <div className='flex align-items-center gap-2'>
             <h3>סביבת פיתוח: </h3>
             <Tag
               value={system.environment}
@@ -101,7 +101,7 @@ export const SystemDialog = (system) => {
               }}
             />
           </div>
-          <div className="flex align-items-center gap-2">
+          <div className='flex align-items-center gap-2'>
             <h3>סוג אוכלוסיה:</h3>
             {system.population.map((population, index) => (
               <Tag
@@ -109,7 +109,7 @@ export const SystemDialog = (system) => {
                 value={population}
                 severity={getPopulationColor(population)}
                 style={{
-                  margin: "2px",
+                  margin: '2px',
                   backgroundColor: getPopulationColor(population),
                 }}
               />
