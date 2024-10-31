@@ -246,13 +246,17 @@ export default function SystemsTable() {
       
       externals.status === 200 ? setExternals(externals.data) : displayToast(toast, 'error', 'Error', externals.message );
       internals.status === 200 ? setInternals(internals.data) : displayToast(toast, 'error', 'Error', internals.message );
-
+      let interval;
       if (getProject.status == 200) {
+        clearInterval(interval);
         setProjects(convertDate(getProject.data));
         setDisplayProjects(convertDate(getProject.data).map(obj =>addPerform(obj) ));
         setLoading(false);
       }
-      else displayToast(toast, 'error', 'Error', getProject.message );
+      else{
+        displayToast(toast, 'error', 'Error', getProject.message );
+        interval = setInterval(fetchData, 10000);
+      } 
     };
     fetchData();
   }, []);
