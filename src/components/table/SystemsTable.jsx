@@ -116,6 +116,11 @@ export default function SystemsTable() {
   };
 
   const exportCSV = () => {
+    dt.current.props.value.map((item => { 
+      item.requires = item.requires['name'];
+      item.perform = item.perform['name'];
+      item.productionTime = item.productionTime == 'Invalid Date' ? '' : item.productionTime;
+    }));
     dt.current.exportCSV();
   };
 
