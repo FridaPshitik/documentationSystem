@@ -23,6 +23,7 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
 
 
   const submit = async (data) => {
+    data.department='';
     const res = await createInternal(data);
     let updates;
 
@@ -90,7 +91,7 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
               type: { String: true },
               phone: { value: true, message: 'טלפון לא חוקי ' },
               pattern: {
-                value: /^[0-9]{10}$/,
+                value: /^\d{10}$/,
                 message: ' טלפון לא חוקי '
               }
             })} />
