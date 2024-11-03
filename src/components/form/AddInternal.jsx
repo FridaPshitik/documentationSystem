@@ -23,7 +23,7 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
 
 
   const submit = async (data) => {
-    data.department='';
+    data.department = '';
     const res = await createInternal(data);
     let updates;
 
@@ -44,76 +44,89 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
   };
 
   return (<>
-    <form action='' onSubmit={handleSubmit(submit)}>
+    <form action='' noValidate onSubmit={handleSubmit(submit)}>
       <div>
+        <div className='gap'>
+          <FloatLabel className='field'>
+            <InputText id='name' aria-describedby="name-help" className='input md:w-14rem field'
+              type='name'
+              {...register('name', {
+                required: { value: true, message: '  שם יחידה הינו שדה חובה  ' },
+              })} />
+            <label htmlFor='name'>שם יחידה</label>
+          </FloatLabel>
+          {errors.name && (
+            <Message id="name-help" severity='error' text={errors.name.message} />
+          )}
+        </div>
+        
+        <div className='gap'>
+          <FloatLabel className='field'>
+            <InputText id='command' aria-describedby="command-help" className='input md:w-14rem field'
+              type='command'
+              {...register('command', {
+                required: { value: true, message: 'אזור פיקוד הינו שדה חובה' },
+              })} />
+            <label htmlFor='command'>אזור פיקוד</label>
+          </FloatLabel>
+          {errors.command && (
+            <Message id="command-help" severity='error' text={errors.command.message} />
+          )}
+        </div>
 
-        <FloatLabel className='field'>
-          <InputText id='name' aria-describedby="name-help" className='input md:w-14rem field'
-            type='name'
-            {...register('name', {
-              required: { value: true, message: '  שם יחידה הינו שדה חובה  ' },
-            })} />
-          <label htmlFor='name'>שם יחידה</label>
-        </FloatLabel>
-        {errors.name && (
-          <Message id="name-help" severity='error' text={errors.name.message} />
-        )}
+        <div className='gap'>
+          <FloatLabel className='field'>
+            <InputText id='contact' aria-describedby="contact-help" className='input md:w-14rem field'
+              type='contact'
+              {...register('contact', {
+                required: { value: true, message: '  שם איש קשר הינו שדה חובה  ' },
+              })} />
+            <label htmlFor='contact'>שם איש קשר</label>
+          </FloatLabel>
+          {errors.contact && (
+            <Message id="contact-help" severity='error' text={errors.contact.message} />
+          )}
+        </div>
 
-        <FloatLabel className='field'>
-          <InputText id='command' aria-describedby="command-help" className='input md:w-14rem field'
-            type='command'
-            {...register('command', {
-              required: { value: true, message: 'אזור פיקוד הינו שדה חובה' },
-            })} />
-          <label htmlFor='command'>אזור פיקוד</label>
-        </FloatLabel>
-        {errors.command && (
-          <Message id="command-help" severity='error' text={errors.command.message} />
-        )}
+        <div className='gap'>
+          <FloatLabel className='field'>
+            <InputText id='phone' aria-describedby="phone-help" className='input md:w-14rem field'
+              type='phone'
+              {...register('phone', {
+                required: { value: true, message: '  טלפון הינו שדה חובה  ' },
+                type: { String: true },
+                phone: { value: true, message: 'טלפון לא חוקי ' },
+                pattern: {
+                  value: /^\d{10}$/,
+                  message: ' טלפון לא חוקי '
+                }
+              })} />
+            <label htmlFor='phone'>טלפון איש קשר</label>
+          </FloatLabel>
+          {errors.phone && (
+            <Message id="phone-help" severity='error' text={errors.phone.message} />
+          )}
+        </div>
 
-        <FloatLabel className='field'>
-          <InputText id='contact' aria-describedby="contact-help" className='input md:w-14rem field'
-            type='contact'
-            {...register('contact', {
-              required: { value: true, message: '  שם איש קשר הינו שדה חובה  ' },
-            })} />
-          <label htmlFor='contact'>שם איש קשר</label>
-        </FloatLabel>
-        {errors.contact && (
-          <Message id="contact-help" severity='error' text={errors.contact.message} />
-        )}
-
-        <FloatLabel className='field'>
-          <InputText id='phone' aria-describedby="phone-help" className='input md:w-14rem field'
-            type='phone'
-            {...register('phone', {
-              required: { value: true, message: '  טלפון הינו שדה חובה  ' },
-              type: { String: true },
-              phone: { value: true, message: 'טלפון לא חוקי ' },
-              pattern: {
-                value: /^\d{10}$/,
-                message: ' טלפון לא חוקי '
-              }
-            })} />
-          <label htmlFor='phone'>טלפון איש קשר</label>
-        </FloatLabel>
-        {errors.phone && (
-          <Message id="phone-help" severity='error' text={errors.phone.message} />
-        )}
-
-
-        <FloatLabel className='field'>
-          <InputText id='email' aria-describedby="email-help" className='input md:w-14rem field'
-            type='email'
-            {...register('email', {
-              required: { value: true, message: '  אימייל הינו  חובה  ' },
-              email: { value: true, message: ' כתובת אימייל לא חוקית ' },
-            })} />
-          <label htmlFor='email'>מייל איש קשר</label>
-        </FloatLabel>
-        {errors.email && (
-          <Message id="email-help" severity='error' text={errors.email.message} />
-        )}
+        <div className='gap'>
+          <FloatLabel className='field'>
+            <InputText id='email' placeholder="me@example.com" aria-describedby="email-help" className='input md:w-14rem field'
+              type='email'
+              {...register('email', {
+                required: { value: true, message: '  אימייל הינו  חובה  ' },
+                // email: { value: true, message: ' כתובת אימייל לא חוקית ' },
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  // value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: ' כתובת אימייל לא חוקית '
+                }
+              })} />
+            <label htmlFor='email'>מייל איש קשר</label>
+          </FloatLabel>
+          {errors.email && (
+            <Message id="email-help" severity='error' text={errors.email.message} />
+          )}
+        </div>
 
       </div>
       <div id='button'>
