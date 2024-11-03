@@ -245,7 +245,6 @@ export default function SystemsTable() {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('hhhhhhhhhhhh');
       let getProject = await getProjects();
       let externals = await getExternals();
       let internals = await getInternals();
