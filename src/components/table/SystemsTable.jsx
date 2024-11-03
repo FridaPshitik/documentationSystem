@@ -264,7 +264,8 @@ export default function SystemsTable() {
       } 
     };
     fetchData();
-  }, []);
+    const myInterval = setInterval(fetchData, 1000 * 60 * 24 * process.env.REACT_APP_REFRESH_TIME);
+    return () => clearInterval(myInterval);  }, []);
 
   const addPerform = (obj) => {
     if (obj.internal)
@@ -403,8 +404,7 @@ export default function SystemsTable() {
             <span style={{ fontWeight: 'bold', fontSize: '2em' }}> תיעוד </span>
             <h3 id='titleH3'>תצוגת מערכות מידע</h3>
           </div>
-          <DataTable ref={dt} value={displayProjects} exportFilename='documentation' paginator editMode='row' rows={10} dataKey='id' onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} filters={filters} filterDisplay='row' loading={loading} scrollable
-            selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
+          <DataTable ref={dt} value={displayProjects} exportFilename="documentation" paginator editMode="row" rows={10} dataKey="id" onRowEditComplete={onRowEditComplete} onRowEditInit={onRowEditInit} sortField="name" sortOrder={1} filters={filters} filterDisplay="row" loading={loading} scrollable            selectionMode={'checkbox'} selection={selectedProjects} onSelectionChange={(e) => setSelectedProjects(e.value)}
             globalFilterFields={['name', 'purpose', 'description', 'status', 'productionTime', 'requires.command', 'factorableType', 'perform.name', 'population', 'classification', 'environment']} header={header} emptyMessage='אין מערכות להציג' >
             <Column style={{ minWidth: '5rem' }} body={openCardBodyTemplate} />
             <Column field='name' header='שם המערכת' editor={(options) => textEditor(options)} sortable filter filterPlaceholder='חפש' style={{ minWidth: '15rem' }} />
