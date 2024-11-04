@@ -164,7 +164,7 @@ export default function SystemsTable() {
   const onRowEditComplete = async (event) => {
     let _projects = [...projects];
     let _displayProjects = [...displayProjects];
-    let { newData, index } = event;
+    let { newData } = event;
 
     if (newData.status === statuses.DONE && newData.productionTime == 'Invalid Date') {
       newData.productionTime = new Date();
@@ -175,6 +175,7 @@ export default function SystemsTable() {
     const res = await updateProject(updatedData.id, updatedData);
     if (res.data) {
       displayToast(toast, 'success', 'Success', res.data.name + ' עודכן בהצלחה');
+      let index = _projects.findIndex(obj => obj.id === newData.id);
       _projects[index] = newData;
       _displayProjects[index] = displayData;
     }
@@ -265,7 +266,8 @@ export default function SystemsTable() {
     };
     fetchData();
     const myInterval = setInterval(fetchData, 1000 * 60 * 24 * process.env.REACT_APP_REFRESH_TIME);
-    return () => clearInterval(myInterval);  }, []);
+    return () => clearInterval(myInterval);
+  }, []);
 
   const addPerform = (obj) => {
     if (obj.internal)
