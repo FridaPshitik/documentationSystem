@@ -116,7 +116,7 @@ export default function SystemsTable() {
   };
 
   const exportCSV = () => {
-    dt.current.props.value.map((item => { 
+    dt.current.props.value.map((item => {
       item.requires = item.requires['name'];
       item.perform = item.perform['name'];
       item.productionTime = item.productionTime == 'Invalid Date' ? '' : item.productionTime;
@@ -241,27 +241,25 @@ export default function SystemsTable() {
     setDeleteProjectDialog(false);
     setProject(emptyProject);
   };
-    
 
   useEffect(() => {
     const fetchData = async () => {
       let getProject = await getProjects();
       let externals = await getExternals();
       let internals = await getInternals();
-      
-      externals.status === 200 ? setExternals(externals.data) : displayToast(toast, 'error', 'Error', externals.message );
-      internals.status === 200 ? setInternals(internals.data) : displayToast(toast, 'error', 'Error', internals.message );
-      let interval;
+
+      externals.status === 200 ? setExternals(externals.data) : displayToast(toast, 'error', 'Error', externals.message);
+      internals.status === 200 ? setInternals(internals.data) : displayToast(toast, 'error', 'Error', internals.message);
+
       if (getProject.status == 200) {
-        clearInterval(interval);
         setProjects(convertDate(getProject.data));
-        setDisplayProjects(convertDate(getProject.data).map(obj =>addPerform(obj) ));
+        setDisplayProjects(convertDate(getProject.data).map(obj => addPerform(obj)));
         setLoading(false);
       }
-      else{
-        displayToast(toast, 'error', 'Error', getProject.message );
-        interval = setInterval(fetchData, 10000);
-      } 
+      else {
+        displayToast(toast, 'error', 'Error', getProject.message);
+        setTimeout(fetchData, 10000);
+      }
     };
     fetchData();
     const myInterval = setInterval(fetchData, 1000 * 60 * 24 * process.env.REACT_APP_REFRESH_TIME);
@@ -334,8 +332,8 @@ export default function SystemsTable() {
       return exter.concat(inter);
     } catch (error) {
       return error;
-    } 
-  };  
+    }
+  };
 
   const performRowFilterTemplate = (options) => {
     let performs = getPerforms();
@@ -395,7 +393,7 @@ export default function SystemsTable() {
   };
 
   return <>
-    <ProjectContext.Provider value={{ projects, setProjects,displayProjects, setDisplayProjects, externals, setExternals, internals, setInternals}}>
+    <ProjectContext.Provider value={{ projects, setProjects, displayProjects, setDisplayProjects, externals, setExternals, internals, setInternals }}>
       <div>
         <Toast ref={toast} position='top-left' />
         <div className='card'>
@@ -424,11 +422,11 @@ export default function SystemsTable() {
           <Dialog visible={deleteProjectDialog} style={{ width: '20%' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header='אזהרה!' modal onHide={hideDeleteProjectDialog}>
             <DeleteDialog project={project} confirmDelete={confirmDelete} hideDeleteProjectDialog={hideDeleteProjectDialog}></DeleteDialog>
           </Dialog>
-  
+
           <Dialog visible={visibleSystemDialog} style={{ width: '25%' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
             <SystemDialog dataSystem={dataSystem} style={{ width: '100%' }}></SystemDialog>
           </Dialog>
-  
+
           <Dialog visible={visibleRequireDialog} onHide={() => { if (!visibleRequireDialog) return; setVisibleRequireDialog(false); }}>
             <RequireDialog dataSystem={requireConcats}></RequireDialog>
           </Dialog>
