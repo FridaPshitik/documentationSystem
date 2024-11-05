@@ -17,10 +17,17 @@ export const AddExternal = ({ setProject, hide, toast }) => {
   const { externals, setExternals } = useContext(ProjectContext);
   const [external, setExternal] = useState({ name: '', image: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const dataValidation = (data) => { 
     return data.name &&
       data.image;
+  };
+
+  const handleValidation = (name) => {
+    const isValid = externals.some(obj => obj.name === name);
+    setVisible(isValid);
+    return isValid;
   };
 
   const submit = async (event) => {
@@ -29,8 +36,7 @@ export const AddExternal = ({ setProject, hide, toast }) => {
     const formData = new FormData();
     formData.append('name', external.name);
     formData.append('image', external.image);
-
-    if (dataValidation({'name':external.name, 'image':external.image})) {
+    if (!handleValidation(external.name) && dataValidation({'name':external.name, 'image':external.image})) {
       setExternal((prevExternal) => ({ ...prevExternal, image: external.name }));
 
       const res = await createExternal(formData);
@@ -62,15 +68,20 @@ export const AddExternal = ({ setProject, hide, toast }) => {
     let selectedImage = event.files[0];
     setExternal((prevExternal) => ({ ...prevExternal, image: selectedImage }));
   };
-    
-
+  
   return (<>
     <div id='addOperatingFactorForm'>
       <div className='card field'>
         <FloatLabel className='field'>
-          <InputText className='input md:w-14rem field' id='factorName' value={external.name} onChange={(e) => setExternal((prevExternal) => ({ ...prevExternal, name: e.target.value }))} />
+          <InputText className='input md:w-14rem field' id='factorName' value={external.name} onChange={(e) =>{ 
+            setExternal((prevExternal) => ({ ...prevExternal, name: e.target.value }));
+            handleValidation(e.target.value); 
+          }} />
           <label htmlFor='factorName'>שם</label>
         </FloatLabel>
+        {visible && (
+          <Message severity='error' text='כבר קיים גוף חיצוני בשם זה.' />
+        )}
         {formSubmitted && !external.name && (
           <Message severity='error' text='שם החברה הינו שדה חובה' />
         )}
