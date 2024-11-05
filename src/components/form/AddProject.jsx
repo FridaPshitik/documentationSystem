@@ -55,7 +55,7 @@ export const AddProject = ({toast,hide}) => {
   const formRef = useRef(null);
 
   const handleValidation = (name) => {
-    const isValid = externals.some(obj => obj.name === name);
+    const isValid = projects.some(obj => obj.name === name);
     setVisible(isValid);
     return isValid;
   };
