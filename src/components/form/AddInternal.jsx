@@ -14,13 +14,14 @@ import './Form.css';
 
 export const AddInternal = ({ setProject, hide, parent, toast }) => {
   const { internals, setInternals } = useContext(ProjectContext);
+  const commandList = internals.map(item => item.command);
+
 
   let {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({});
-
 
   const submit = async (data) => {
     data.department = '';
@@ -43,13 +44,17 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
     hide(false);
   };
 
+  const handleValidation = (command) => {
+    return commandList.includes(command);
+  };
+
   return (<>
     <form action='' noValidate onSubmit={handleSubmit(submit)}>
       <div>
         <div className='gap'>
           <FloatLabel className='field'>
             <InputText id='name' aria-describedby="name-help" className='input md:w-14rem field'
-              type='name'
+              type='text'
               {...register('name', {
                 required: { value: true, message: '  שם יחידה הינו שדה חובה  ' },
               })} />
@@ -59,13 +64,14 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
             <Message id="name-help" severity='error' text={errors.name.message} />
           )}
         </div>
-        
+
         <div className='gap'>
           <FloatLabel className='field'>
             <InputText id='command' aria-describedby="command-help" className='input md:w-14rem field'
-              type='command'
+              type='text'
               {...register('command', {
                 required: { value: true, message: 'אזור פיקוד הינו שדה חובה' },
+                validate: (value) => handleValidation(value) === true ? 'כבר קיים גוף פנימי בשם זה.' : null,
               })} />
             <label htmlFor='command'>אזור פיקוד</label>
           </FloatLabel>
@@ -77,7 +83,7 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
         <div className='gap'>
           <FloatLabel className='field'>
             <InputText id='contact' aria-describedby="contact-help" className='input md:w-14rem field'
-              type='contact'
+              type='text'
               {...register('contact', {
                 required: { value: true, message: '  שם איש קשר הינו שדה חובה  ' },
               })} />
@@ -91,7 +97,7 @@ export const AddInternal = ({ setProject, hide, parent, toast }) => {
         <div className='gap'>
           <FloatLabel className='field'>
             <InputText id='phone' aria-describedby="phone-help" className='input md:w-14rem field'
-              type='phone'
+              type='text'
               {...register('phone', {
                 required: { value: true, message: '  טלפון הינו שדה חובה  ' },
                 type: { String: true },
