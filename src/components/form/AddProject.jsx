@@ -19,7 +19,6 @@ import { displayToast } from '../../services/toast';
 
 import { AddInternal } from './AddInternal';
 import { AddExternal } from './AddExternal';
-import { CheckMultipleName } from './CheckMultipleName';
 
 import './Form.css';
 
@@ -56,11 +55,9 @@ export const AddProject = ({toast,hide}) => {
   const formRef = useRef(null);
 
   const handleValidation = (name) => {
-    projects.forEach(obj => {
-      if (obj.name === name) {
-        setVisible(true);
-      }
-    });
+    const isValid = externals.some(obj => obj.name === name);
+    setVisible(isValid);
+    return isValid;
   };
 
   const handelSelectRequire = (value) => {
@@ -91,7 +88,7 @@ export const AddProject = ({toast,hide}) => {
     event.preventDefault();
     setFormSubmitted(true);
     let { external, internal, require, ...data } = project;
-    if (dataValidation(data)) {
+    if (!handleValidation(data.name) && dataValidation(data)) {
       const res = await createProject(data);
       if(res.data){
         res.data.productionTime? res.data.productionTime = new Date(res.data.productionTime) : res.data.productionTime = new Date('');
@@ -146,6 +143,9 @@ export const AddProject = ({toast,hide}) => {
                 }} rows={4} cols={30}/>
                 <label htmlFor='name'>שם המערכת</label>
               </FloatLabel>
+              {visible && (
+                <Message severity='error' text='כבר קיימת מערכת בשם זה.' />
+              )}
               {formSubmitted && !project.name && (
                 <Message severity='error' text='שם מערכת הינו שדה חובה' />
               )}
@@ -293,10 +293,6 @@ export const AddProject = ({toast,hide}) => {
           </div>
         </form>
 
-        <Dialog header='אזהרה ⚠️' visible={visible} onHide={() => setVisible(false)}>
-          <CheckMultipleName setVisible={setVisible} setProject={setProject} />
-        </Dialog>
-  
         <Dialog header='הוספת גוף דורש' visible={hideAddDemand} onHide={() => { if (!hideAddDemand) return; setHideAddDemand(false); }}
           footer={<AddInternal setProject={setProject} hide={setHideAddDemand} parent={'require'} toast={toast}/>}>
         </Dialog>
