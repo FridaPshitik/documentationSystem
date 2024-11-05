@@ -425,7 +425,7 @@ export default function SystemsTable() {
             <DeleteDialog project={project} confirmDelete={confirmDelete} hideDeleteProjectDialog={hideDeleteProjectDialog}></DeleteDialog>
           </Dialog>
 
-          <Dialog visible={visibleSystemDialog} style={{ width: '25%' }} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
+          <Dialog visible={visibleSystemDialog} onHide={() => { if (!visibleSystemDialog) return; setVisibleSystemDialog(false); }}>
             <SystemDialog dataSystem={dataSystem} style={{ width: '100%' }}></SystemDialog>
           </Dialog>
 
